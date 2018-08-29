@@ -262,23 +262,35 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          {
             NumLidos = LER_LerParametros("i",&IndiceArvore);
 
-             if ( NumLidos != 1 || IndiceArvore>9 || IndiceArvore<0)
+            if ( NumLidos != 1 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            ARV_DestruirArvore( &vtArvores[IndiceArvore] ) ;
+            CondRetObtido = ARV_DestruirArvore( &vtArvores[IndiceArvore] ) ;
 
-            return TST_CondRetOK ;
+            return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+                                   "Retorno errado ao destruir árvore." );
 
          } /* fim ativa: Testar ARV Destruir árvore */
 
       /* Testar ARV Exibir árvore */
+
          else if ( strcmp( ComandoTeste , EXIBE_CMD ) == 0 )
          {
+            NumLidos = LER_LerParametros("i",&IndiceArvore);
 
-            return TST_CondRetOK ;
-         }
+            if ( NumLidos != 1 || IndiceArvore>9 || IndiceArvore<0)
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            CondRetObtido = ARV_ExibirArvore( vtArvores[IndiceArvore] );
+
+            return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+                                   "Retorno errado ao exibir árvore." );
+
+         } /* fim ativa: Testar ARV Exibir árvore */
 
       return TST_CondRetNaoConhec ;
 
