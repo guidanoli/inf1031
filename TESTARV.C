@@ -65,6 +65,8 @@
 #define     OBTER_VAL_CMD       "=obter"
 #define     DESTROI_CMD         "=destruir"
 
+/* Vetor de ponteiros para as árvores */
+
 #define DIM_VT_ARVORES 10
 
 void * vtArvores [ DIM_VT_ARVORES ] ;
@@ -115,7 +117,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_CriarArvore( ) ;
+            CondRetObtido = ARV_CriarArvore( &vtArvores[0] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao criar árvore." );
@@ -134,7 +136,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_InserirDireita( ValorDado ) ;
+            CondRetObtido = ARV_InserirDireita( vtArvores[0], ValorDado ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado inserir àa direita." );
@@ -153,7 +155,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_InserirEsquerda( ValorDado ) ;
+            CondRetObtido = ARV_InserirEsquerda( vtArvores[0] , ValorDado ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao inserir à esquerda." );
@@ -172,7 +174,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_IrPai( ) ;
+            CondRetObtido = ARV_IrPai( vtArvores[0] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao ir para pai." );
@@ -191,7 +193,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_IrNoEsquerda( ) ;
+            CondRetObtido = ARV_IrNoEsquerda( vtArvores[0] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao ir para esquerda." );
@@ -210,7 +212,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_IrNoDireita( ) ;
+            CondRetObtido = ARV_IrNoDireita( vtArvores[0] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao ir para direita." );
@@ -229,7 +231,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_ObterValorCorr( &ValorObtido ) ;
+            CondRetObtido = ARV_ObterValorCorr( vtArvores[0] , &ValorObtido ) ;
 
             Ret = TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                    "Retorno errado ao obter valor corrente." );
@@ -249,7 +251,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , DESTROI_CMD ) == 0 )
          {
 
-            ARV_DestruirArvore( ) ;
+            ARV_DestruirArvore( &vtArvores[0] ) ;
 
             return TST_CondRetOK ;
 
