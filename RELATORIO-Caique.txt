@@ -1,2 +1,3 @@
 Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
+29/08	1h			estudar				Estudamos o código no labgrad e configuramos o github para uso coletivo
