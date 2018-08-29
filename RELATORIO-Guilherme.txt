@@ -11,3 +11,8 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 25/08	2h			revisar código do módulo	Revisar exibeArvore de ARVORE.C
 29/08	30min			codificar módulo		Codificar TESTARV.C para trabalhar com um número
 								pré-determinado de árvores (no caso, 10)
+29/08	30min			codificar módulo		Codificar TESTARV.C para que aceite o comando
+								"=exibe" para acionar a função de acesso exibeArvore(),
+								e, para isso, mudar o tipo de retorno desta função
+								para ARV_tpCondRet. Consequentemente, alterando ARVORE.C e
+								ARVORE.H e a documentação da função.

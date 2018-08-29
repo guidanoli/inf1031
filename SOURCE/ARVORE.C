@@ -140,7 +140,7 @@
 *  Função: ARV Destruir árvore
 *  ****/
 
-   void ARV_DestruirArvore( void ** ppArvoreParm )
+   ARV_tpCondRet ARV_DestruirArvore( void ** ppArvoreParm )
    {
 
       tpArvore * pArvore ;
@@ -156,6 +156,8 @@
          *ppArvoreParm = NULL ;
       } /* if */
 
+      return ARV_CondRetOK;
+
    } /* Fim função: ARV Destruir árvore */
 
 /***************************************************************************
@@ -163,7 +165,7 @@
 *  Função: ARV Exibe a árvore
 *  ****/
 
-   void ARV_ExibirArvore( void * pArvoreParm )
+   ARV_tpCondRet ARV_ExibirArvore( void * pArvoreParm )
    {
       
       /* variáveis auxiliares */
@@ -178,8 +180,7 @@
 
       if(pArvoreParm == NULL)
       {
-         printf("Arvore inexistente\n");
-         return;
+         return ARV_CondRetArvoreNaoExiste;
       } /* if */
 
       pArvore = ( tpArvore * ) ( pArvoreParm );
@@ -188,8 +189,7 @@
 
       if(pArvore->pNoRaiz == NULL)
       {
-         printf("Arvore vazia\n");
-         return;
+         return ARV_CondRetArvoreVazia;
       } /* if */
 
       /* A partir daqui ignoramos as seguntes condições de retorno:
@@ -217,7 +217,7 @@
 
          ARV_ObterValorCorr(pArvore,&valor);
          printf("( %c )",valor);
-         return;
+         return ARV_CondRetOK;
       } /* else */
 
       printf("(");
@@ -426,6 +426,8 @@
          } /* if */
 
       } /* while */
+
+      return ARV_CondRetOK;
 
    } /* Fim função: ARV Exibe a árvore */
 

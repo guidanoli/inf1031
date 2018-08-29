@@ -110,6 +110,9 @@
 *     Cria uma nova árvore vazia.
 *     Caso já exista uma árvore, esta será destruída.
 *
+*  $EP Parâmetros
+*     $P ppArvoreParm - endereço de ponteiro para árvore a ser destruída
+*
 *  $FV Valor retornado
 *     ARV_CondRetOK
 *     ARV_CondRetFaltouMemoria
@@ -127,9 +130,15 @@
 *     Destrói o corpo e a cabeça da árvore, anulando a árvore corrente.
 *     Faz nada caso a árvore corrente não exista.
 *
+*  $EP Parâmetros
+*     $P ppArvoreParm - endereço de ponteiro para árvore a ser destruída
+*
+*  $FV Valor retornado
+*     ARV_CondRetOK
+*
 ***********************************************************************/
 
-   void ARV_DestruirArvore( void ** ppArvoreParm ) ;
+   ARV_tpCondRet ARV_DestruirArvore( void ** ppArvoreParm ) ;
 
 /***********************************************************************
 *
@@ -140,9 +149,17 @@
 *     Entre parênteses estão os filhos do pai cujo valor foi impresso
 *     anteriormente, e lado a lado estão os valores de irmãos.
 *
+*  $EP Parâmetros
+*     $P pArvoreParm - ponteiro para árvore a ser exibida
+*
+*  $FV Valor retornado
+*     ARV_CondRetOK
+*     ARV_CondRetArvoreNaoExiste
+*     ARV_CondRetArvoreVazia
+*
 ***********************************************************************/
 
-   void ARV_ExibirArvore( void * pArvoreParm ) ;
+   ARV_tpCondRet ARV_ExibirArvore( void * pArvoreParm ) ;
 
 /***********************************************************************
 *

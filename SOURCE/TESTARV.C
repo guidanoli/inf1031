@@ -64,6 +64,7 @@
 #define     IR_DIR_CMD          "=irdir"
 #define     OBTER_VAL_CMD       "=obter"
 #define     DESTROI_CMD         "=destruir"
+#define     EXIBE_CMD           "=exibir"
 
 /* Vetor de ponteiros para as árvores */
 
@@ -256,6 +257,13 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
             return TST_CondRetOK ;
 
          } /* fim ativa: Testar ARV Destruir árvore */
+
+      /* Testar ARV Exibir árvore */
+         else if ( strcmp( ComandoTeste , EXIBE_CMD ) == 0 )
+         {
+
+            return TST_CondRetOK ;
+         }
 
       return TST_CondRetNaoConhec ;
 
