@@ -97,6 +97,8 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
       ARV_tpCondRet CondRetEsperada = ARV_CondRetFaltouMemoria ;
                                       /* inicializa para qualquer coisa */
 
+      int IndiceArvore;
+
       char ValorEsperado = '?'  ;
       char ValorObtido   = '!'  ;
       char ValorDado     = '\0' ;
@@ -110,14 +112,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          if ( strcmp( ComandoTeste , CRIAR_ARV_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "i" ,
+            NumLidos = LER_LerParametros( "ii" ,
+                               &IndiceArvore,
                                &CondRetEsperada ) ;
-            if ( NumLidos != 1 )
+            if ( NumLidos != 2 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_CriarArvore( &vtArvores[0] ) ;
+            CondRetObtido = ARV_CriarArvore( &vtArvores[IndiceArvore] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao criar árvore." );
@@ -129,14 +132,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , INS_DIR_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "ci" ,
+            NumLidos = LER_LerParametros( "ici" ,
+                               &IndiceArvore,
                                &ValorDado , &CondRetEsperada ) ;
-            if ( NumLidos != 2 )
+            if ( NumLidos != 3 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_InserirDireita( vtArvores[0], ValorDado ) ;
+            CondRetObtido = ARV_InserirDireita( vtArvores[IndiceArvore], ValorDado ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado inserir àa direita." );
@@ -148,14 +152,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , INS_ESQ_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "ci" ,
+            NumLidos = LER_LerParametros( "ici" ,
+                               &IndiceArvore,
                                &ValorDado , &CondRetEsperada ) ;
-            if ( NumLidos != 2 )
+            if ( NumLidos != 3 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_InserirEsquerda( vtArvores[0] , ValorDado ) ;
+            CondRetObtido = ARV_InserirEsquerda( vtArvores[IndiceArvore] , ValorDado ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao inserir à esquerda." );
@@ -167,14 +172,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , IR_PAI_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "i" ,
+            NumLidos = LER_LerParametros( "ii" ,
+                               &IndiceArvore,
                                &CondRetEsperada ) ;
-            if ( NumLidos != 1 )
+            if ( NumLidos != 2 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_IrPai( vtArvores[0] ) ;
+            CondRetObtido = ARV_IrPai( vtArvores[IndiceArvore] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao ir para pai." );
@@ -186,14 +192,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , IR_ESQ_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "i" ,
+            NumLidos = LER_LerParametros( "ii" ,
+                               &IndiceArvore,
                                &CondRetEsperada ) ;
-            if ( NumLidos != 1 )
+            if ( NumLidos != 2 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_IrNoEsquerda( vtArvores[0] ) ;
+            CondRetObtido = ARV_IrNoEsquerda( vtArvores[IndiceArvore] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao ir para esquerda." );
@@ -205,14 +212,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , IR_DIR_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "i" ,
+            NumLidos = LER_LerParametros( "ii" ,
+                               &IndiceArvore,
                                &CondRetEsperada ) ;
-            if ( NumLidos != 1 )
+            if ( NumLidos != 2 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_IrNoDireita( vtArvores[0] ) ;
+            CondRetObtido = ARV_IrNoDireita( vtArvores[IndiceArvore] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao ir para direita." );
@@ -224,14 +232,15 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
          else if ( strcmp( ComandoTeste , OBTER_VAL_CMD ) == 0 )
          {
 
-            NumLidos = LER_LerParametros( "ci" ,
+            NumLidos = LER_LerParametros( "ici" ,
+                               &IndiceArvore,
                                &ValorEsperado , &CondRetEsperada ) ;
-            if ( NumLidos != 2 )
+            if ( NumLidos != 3 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_ObterValorCorr( vtArvores[0] , &ValorObtido ) ;
+            CondRetObtido = ARV_ObterValorCorr( vtArvores[IndiceArvore] , &ValorObtido ) ;
 
             Ret = TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                    "Retorno errado ao obter valor corrente." );
@@ -250,8 +259,14 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
 
          else if ( strcmp( ComandoTeste , DESTROI_CMD ) == 0 )
          {
+            NumLidos = LER_LerParametros("i",&IndiceArvore);
 
-            ARV_DestruirArvore( &vtArvores[0] ) ;
+             if ( NumLidos != 1 || IndiceArvore>9 || IndiceArvore<0)
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            ARV_DestruirArvore( &vtArvores[IndiceArvore] ) ;
 
             return TST_CondRetOK ;
 
