@@ -16,3 +16,5 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								e, para isso, mudar o tipo de retorno desta função
 								para ARV_tpCondRet. Consequentemente, alterando ARVORE.C e
 								ARVORE.H e a documentação da função.
+29/08	2h			redigir script de teste		Familiarizar-se com o script de teste. Surgiram insconsistências
+								que devem ser advindas do arcabouço, e não do script.

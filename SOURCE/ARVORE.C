@@ -683,6 +683,7 @@
 *     caso haja árvore, e que não esteja vazia.
 *
 *  $EP Parâmetros
+*     $P pArvore - ponteiro para a árvore a ser manipulada
 *     $P ValorParm - novo modo do nó corrente.
 *
 *  $FV Valor retornado
@@ -714,6 +715,7 @@
 *  $FC Função: ARV Obter modo de visita do nó corrente
 *
 *  $EP Parâmetros
+*     $P pArvore - ponteiro para a árvore a ser analisada
 *     $P ModoParm - é o valor que receberá o modo de visita do
 *                   nó corrente
 *
@@ -744,6 +746,9 @@
 /***********************************************************************
 *
 *  $FC Função: ARV Criar nó da árvore
+*
+*  $EP Parâmetros
+*     $P ValorParm - valor a ser armazenado no novo nó
 *
 *  $FV Valor retornado
 *     Ponteiro para o nó criado.
@@ -777,6 +782,10 @@
 /***********************************************************************
 *
 *  $FC Função: ARV Criar nó raiz da árvore
+*
+*  $EP Parâmetros
+*     $P pArvore - ponteiro para a árvore a ser analisada
+*     $P ValorParm - valor a ser armazenado no novo nó
 *
 *  $FV Valor retornado
 *     ARV_CondRetOK
@@ -812,6 +821,9 @@
 /***********************************************************************
 *
 *  $FC Função: ARV Destruir a estrutura da árvore
+*
+*  $EP Parâmetros
+*     $P pNo - ponteiro para nó cujos filhos (e ele mesmo) serão destruídos
 *
 *  $EAE Assertivas de entradas esperadas
 *     pNoArvore != NULL

@@ -124,7 +124,7 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
             CondRetObtido = ARV_CriarArvore( &vtArvores[IndiceArvore] ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
-                                    "Retorno errado2 ao criar árvore." );
+                                    "Retorno errado ao criar árvore." );
 
          } /* fim ativa: Testar ARV Criar árvore */
 

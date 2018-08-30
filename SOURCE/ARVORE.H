@@ -154,8 +154,8 @@
 *
 *  $FV Valor retornado
 *     ARV_CondRetOK
-*     ARV_CondRetArvoreNaoExiste
-*     ARV_CondRetArvoreVazia
+*     ARV_CondRetArvoreNaoExiste ( = 4 )
+*     ARV_CondRetArvoreVazia ( = 5 )
 *
 ***********************************************************************/
 
