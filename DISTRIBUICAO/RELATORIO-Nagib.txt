@@ -1,5 +1,0 @@
-Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
--------------------------------------------------------------------------------------------------------------------
-27/8        2                        Estudar                         Estudando TESTARV.C
-29/8        1.5                      Codificar Módulo                Introduzir suporte para até 10 arvores
-29/8        1.5                      Estudar                         Configurar github para uso coletivo do grupo

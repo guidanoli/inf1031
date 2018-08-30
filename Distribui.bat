@@ -2,8 +2,7 @@ REM Copia apenas os arquivos importantes para a distruibuição na pasta DISTRIBUI
 
 if not exist DISTRIBUICAO mkdir DISTRIBUICAO
 
-copy RELATORIO*.txt DISTRIBUICAO
+copy TEXTO\*.txt DISTRIBUICAO
 copy SOURCE\* DISTRIBUICAO
-copy LEIAME.txt DISTRIBUICAO
-copy ..\*.exe DISTRIBUICAO
 copy SCRIPTS\* DISTRIBUICAO
+copy ..\*.exe DISTRIBUICAO
