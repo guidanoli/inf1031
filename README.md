@@ -6,7 +6,7 @@ Para trabalhar no Visual Studio 2010 com estes arqvuiso, basta arrastá-los para
 
 ## Scripts
 
-Na pasta **_SCRIPTS_**, edite o arquivo de nome **_TesteArvore.script_**, mas não altere o nome. Para testar o script, rode o batch **__Distruibui.bat__** e dentro da pasta **DISTRIBUICAO**, rode o batch **__Testa.bat__** e a saída estará salva como **__saida.txt__**.
+Na pasta **_SCRIPTS_** se encontram todos os scripts de teste. Você pode editar um arquivo de script seu ou criar um novo. Para testar o script, rode o batch  **__LimpaDistribuicao.bat__** e, em seguida, **__Distruibui.bat__**. Dentro da pasta **DISTRIBUICAO**, rode o batch **__TestaScript.bat__**, e escreva o nome do seu arquivo de script (Dica: use TAB para auto-completar) e a saída estará salva como **__saida.txt__** na mesma pasta.
 
 ## Relatórios
 

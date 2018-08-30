@@ -21,7 +21,3 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								que devem ser advindas do arcabouço, e não do script.
 30/08	30min			revisar código do módulo	Faltava receber "CondRetEsperada" para os comands exibirArvore
 								e DestruirArvore.
-30/08	30min			projetar			Arquitetado um arquivo .bat para que seja criada a pasta DISTRIBUICAO,
-								outro para deletar todos os arquivos nesta pasta, e um outro para
-								rodar um script com nome qualquer (o prompt do cmd recebe o nome),
-								otimizando bastante a fase de scripts de teste.

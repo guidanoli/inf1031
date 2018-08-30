@@ -1,1 +1,0 @@
-Grupo7Arv1.exe /sTesteArvore.script >saida.txt

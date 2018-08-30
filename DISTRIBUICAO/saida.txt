@@ -1,0 +1,29 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: Grupo7Arv1.exe
+
+      Arquivo de teste:    TesteArvore.script
+
+
+!!!    0  Linha:     1  // Script:    TesteArvore.script 
+!!!    0  Linha:     2  // Autor:     Fulano 
+!!!    0  Linha:     3  // Data:      --/--/-- 
+!!!    0  Linha:     4  // Propósito: -- 
+!!!    0  Linha:     5  // 
+    7  == Cria a árvore
+   10  == Destrói a árvore
+!!!    0  Linha:    13  // Fim 
+
+!!! Número de linhas lidas:          13
+!!! Número de casos de teste:         2
+!!! Número comandos corretos:         2
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0
