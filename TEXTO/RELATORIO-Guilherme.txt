@@ -27,3 +27,5 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								otimizando bastante a fase de scripts de teste.
 30/08	30min			redigir script de teste		Feito a primeira versão do script que engloba todas as funções do módulo.
 								Não é a versão final, é claro, mas estabelece uma base para as próximas.
+31/08	30min			redigir script de teste		Adaptar os scripts fornecidos na pasta simples do ARCABOUÇO para os
+								comandos alterados, fornecendo sempre o índice da árvore corrente.
