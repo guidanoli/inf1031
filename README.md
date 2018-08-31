@@ -14,6 +14,10 @@ Para trabalhar no Visual Studio 2010 com estes arquivos, basta arrastá-los para
 
 Na pasta **_SCRIPTS_** se encontram todos os scripts de teste. Você pode editar um arquivo de script seu ou criar um novo. Para testar o script, rode o batch  **__LimpaDistribuicao.bat__** e, em seguida, **__Distruibui.bat__**. Dentro da pasta **DISTRIBUICAO**, rode o batch **__TestaScript.bat__**, e escreva o nome do seu arquivo de script (Dica: use TAB para auto-completar) e a saída estará salva como **__saida.txt__** na mesma pasta.
 
+## Executável
+
+Como este repositório se encontra na pasta Debug, é fácil acessar o executável gerado pelo Visual Basic. Lembre-se sempre que não basta salvar os módulos alterados, você há de compilar o projeto toda vez para atualizar o executável. Em seguida, limpe a pasta distribuição e repopule-a com os arquivos mais recentes.
+
 ## Relatórios
 
 Sempre que fizer alguma alteração relevante no programa, dê commit e sinalize no arquivo "RELATORIO-SeuNome.txt" a tarefa que você realizou no seguinte formato:
