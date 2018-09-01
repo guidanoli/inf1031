@@ -22,6 +22,7 @@
 
 #include   <malloc.h>
 #include   <stdio.h>
+#include   <string.h>
 
 #define ARVORE_OWN
 #include "ARVORE.H"
@@ -104,6 +105,8 @@
 
    static ARV_tpCondRet MarcarVisitado( tpArvore * pArvore , ARV_tpModoVisita Modo ) ;
 
+   static void LimpaModo( tpArvore * pArvore , ARV_tpModoVisita ModoAtual , ARV_tpModoVisita ModoNovo ) ;
+
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
@@ -165,15 +168,15 @@
 *  Função: ARV Exibe a árvore
 *  ****/
 
-   ARV_tpCondRet ARV_ExibirArvore( void * pArvoreParm )
+   ARV_tpCondRet ARV_ExibirArvore( void * pArvoreParm , char * Str )
    {
       
       /* variáveis auxiliares */
 
       int NoEsq, NoDir, NoDirNulo;
-      char valor;
+      char valor, temp[6];
       ARV_tpCondRet retorno;
-      ARV_tpModoVisita modo = ARV_ModoNulo;
+      ARV_tpModoVisita modo;
       tpArvore *pArvore;
       
       /* Tratar de árvore inexistente */
@@ -201,6 +204,20 @@
 
       pArvore->pNoCorr = pArvore->pNoRaiz;
 
+      /* Verifica modo de visita inicial e tamanho da string de saída */
+
+      ObterModoNoCorr(pArvore,&modo);
+      if(modo == ARV_ModoNulo)
+      {
+         LimpaModo(pArvore,ARV_ModoNulo,ARV_ModoDePai);
+      }
+      else if(modo != ARV_ModoDePai)
+      {
+         return ARV_CondRetErroEstrutura;
+      }
+
+      LimpaModo(pArvore,ARV_ModoDePai,ARV_ModoNulo);
+
       /* Testa se o nó raiz é folha ou não */
 
       if(ARV_IrNoEsquerda(pArvore) == ARV_CondRetOK)
@@ -216,11 +233,12 @@
          /* Se o nó raiz for folha, rodar caso elementar */
 
          ARV_ObterValorCorr(pArvore,&valor);
-         printf("( %c )",valor);
+         sprintf(temp,"( %c )",valor);
+         strcat(Str,temp);
          return ARV_CondRetOK;
       } /* else */
 
-      printf("(");
+      strcat(Str,"(");
 
       /* No algoritmo desta função, é dado um modo de visita a um nó
          para rastrear o caminhamento feito na árvore:
@@ -247,7 +265,8 @@
          {
             ARV_IrPai(pArvore);
             ARV_ObterValorCorr(pArvore,&valor);
-            printf(" %c (",valor);
+            sprintf(temp," %c (",valor);
+            strcat(Str,temp);
             MarcarVisitado(pArvore,ARV_ModoParaEsq);
             ARV_IrNoEsquerda(pArvore);
             NoEsq = 1;
@@ -259,7 +278,8 @@
          {
             ARV_IrPai(pArvore);
             ARV_ObterValorCorr(pArvore,&valor);
-            printf(" %c",valor);
+            sprintf(temp," %c",valor);
+            strcat(Str,temp);
             MarcarVisitado(pArvore,ARV_ModoParaDir);
             ARV_IrNoDireita(pArvore);
             NoDir = 1;
@@ -288,7 +308,8 @@
                      if(modo == ARV_ModoNulo)
                      {                        
                         ARV_ObterValorCorr(pArvore,&valor);
-                        printf(" %c )",valor);
+                        sprintf(temp," %c )",valor);
+                        strcat(Str,temp);
                         
                      }
                      MarcarVisitado(pArvore,ARV_ModoDePai);
@@ -309,7 +330,8 @@
                      if(modo == ARV_ModoNulo)
                      {                        
                         ARV_ObterValorCorr(pArvore,&valor);
-                        printf(" %c )",valor);
+                        sprintf(temp," %c )",valor);
+                        strcat(Str,temp);
                         
                      }
                      MarcarVisitado(pArvore,ARV_ModoDePai);
@@ -322,9 +344,8 @@
 
                   /* Caso o nó corrente seja o nó raiz */
 
-                  /* Neste bloco já assumimos que ou todos os filhos à
-                     esquerda do nó raiz foram explorados ou ele não
-                     possui nós filhos, e, portanto, é folha */
+                  /* Neste bloco já assumimos que todos os filhos à
+                     esquerda do nó raiz foram explorados */
 
                   /* Portanto, testamos se há um filho à direita
                      inexplorado. */
@@ -352,9 +373,8 @@
                   {
                      /* Se não houver filhos à direita, declaramos fim do caminhamento */
 
-                     ARV_IrPai(pArvore);
                      MarcarVisitado(pArvore,ARV_ModoDePai);
-                     printf(" )");
+                     strcat(Str," )");
                      break;   
                   }  /* else */           
                } /* else */
@@ -742,6 +762,236 @@
       return ARV_CondRetOK;
 
    } /* Fim função: ARV Recebe modo de visita do nó corrente */
+
+/***********************************************************************
+*
+*  $FC Função: ARV Limpar Modo
+*
+*  $ED Descrição da função
+*     Altera o modo de visita de todos os nós para NULO
+*
+*  $EP Parâmetros
+*     $P pArvore - ponteiro para árvore
+*     $P ModoAtual - modo de visita de todos os nós no começo
+*     $P ModoNovo - modo de visita de todos os nós no final
+*
+*  $EAE Assertivas de entradas esperadas
+*     pNoArvore != NULL
+*     pNoArvore->pNoRaiz != NULL
+*
+*  $FV Valor retornado
+*     Tamanho da string do caminhamento da árvore (incluindo "/0")
+*
+***********************************************************************/
+
+   void LimpaModo( tpArvore * pArvore , ARV_tpModoVisita ModoAtual , ARV_tpModoVisita ModoNovo )
+   {
+
+      /* variáveis auxiliares */
+
+      int NoEsq, NoDir, NoDirPai;
+      char valor;
+      ARV_tpCondRet retorno;
+      ARV_tpModoVisita modo;
+
+      /* Retornar ponteiro corrente para raiz */
+
+      pArvore->pNoCorr = pArvore->pNoRaiz;
+
+      /* Testa se o nó raiz é folha ou não */
+
+      if(ARV_IrNoEsquerda(pArvore) == ARV_CondRetOK)
+      {
+         ARV_IrPai(pArvore);
+      } /* if */
+      else if(ARV_IrNoDireita(pArvore) == ARV_CondRetOK)
+      {
+         ARV_IrPai(pArvore);
+      } /* else if */
+      else
+      {
+         /* Se o nó raiz for folha, rodar caso elementar */
+
+         MarcarVisitado(pArvore,ModoNovo);
+         return;
+      } /* else */
+
+      while(pArvore->pNoRaiz->ModoVisita != ModoNovo)
+      {
+
+         /* flags: caso nenhum dos nós filhos puderam ser acessados, portanto,
+            inexistentes, o nó corrente é uma folha */
+
+         NoDir = 0;
+         NoEsq = 0;
+
+         /* Apontar para o nó mais a esquerda */
+
+         while(ARV_IrNoEsquerda(pArvore) == ARV_CondRetOK)
+         {
+            ARV_IrPai(pArvore);
+            MarcarVisitado(pArvore,ARV_ModoParaEsq);
+            ARV_IrNoEsquerda(pArvore);
+            NoEsq = 1;
+         } /* while */
+
+         /* Caso não haja nó a esquerda, ir para direita uma vez */
+
+         if(ARV_IrNoDireita(pArvore) == ARV_CondRetOK)
+         {
+            ARV_IrPai(pArvore);
+            MarcarVisitado(pArvore,ARV_ModoParaDir);
+            ARV_IrNoDireita(pArvore);
+            NoDir = 1;
+         } /* if */
+
+         /* Caso não houver nem nó à esquerda nem à direita, ou seja,
+            for folha, retornar até o nó mais próximo ainda não visitado */
+
+         if(!NoDir && !NoEsq)
+         {
+
+            /* O nó corrente passa a ser o nó pai enquanto a folha tiver modo de
+               visita igual a ARV_ModoParaDir (vai para o pai uma vez ao menos) */
+            
+            do
+            {
+               if(ARV_IrPai(pArvore) == ARV_CondRetOK)
+               {
+                  ObterModoNoCorr(pArvore,&modo);
+                  if(modo == ARV_ModoParaDir)
+                  {
+                     /* O nó corrente é o último dos irmãos */
+
+                     ARV_IrNoDireita(pArvore);
+                     ObterModoNoCorr(pArvore,&modo);
+                     MarcarVisitado(pArvore,ModoNovo);
+                     ARV_IrPai(pArvore);
+                     ObterModoNoCorr(pArvore,&modo);
+                  } /* if */
+                  else  /* são desconsiderados os modos de visita ARV_ModoDePai e ARV_ModoNulo
+                           pois é ilógico este nó corrente ter sido acessado sem que
+                           seu pai (que existe, como ARV_IrPai() = ARV_CondRetOK) tenha
+                           sido percorrido (portanto não é ARV_ModoPai) ou declarado como
+                           inteiramente explorado (portanto não é ARV_ModoNulo). Portanto,
+                           só resta ser ARV_ModoParaEsq */
+                  {
+                     /* O nó corrente é o primeiro filho */
+
+                     ARV_IrNoEsquerda(pArvore);
+                     ObterModoNoCorr(pArvore,&modo);
+                     MarcarVisitado(pArvore,ModoNovo);
+                     ARV_IrPai(pArvore);
+                     ObterModoNoCorr(pArvore,&modo);
+                  } /* else */
+               } /* if */
+               else
+               {
+
+                  /* Caso o nó corrente seja o nó raiz */
+
+                  /* Neste bloco já assumimos que todos os filhos à
+                     esquerda do nó raiz foram explorados */
+
+                  /* Portanto, testamos se há um filho à direita
+                     inexplorado. */
+
+                  if(ARV_IrNoDireita(pArvore) == ARV_CondRetOK)
+                  {
+                     /* Se sim, alteramos o modo do nó raiz para ARV_ModoParaDir
+                        e o filho à direita se torna o nó corrente */
+                     ObterModoNoCorr(pArvore,&modo);
+                     ARV_IrPai(pArvore);
+                     if(modo == ModoAtual)
+                     {
+                        MarcarVisitado(pArvore,ARV_ModoParaDir);
+                        ARV_IrNoDireita(pArvore);
+                        ObterModoNoCorr(pArvore,&modo); /* modo = ARV_ModoDePai */
+                     }
+                     else
+                     {
+                        MarcarVisitado(pArvore,ModoNovo);
+                        ObterModoNoCorr(pArvore,&modo); /* modo = ARV_ModoNulo */
+                     }
+                     break;
+                  } /* if */
+                  else
+                  {
+                     /* Se não houver filhos à direita, declaramos fim do caminhamento */
+
+                     MarcarVisitado(pArvore,ModoNovo);
+                     break;   
+                  }  /* else */           
+               } /* else */
+
+            }while(modo == ARV_ModoParaDir); /* do-while */
+
+            /* Caso a folha seja o nó a esquerda do seu pai */
+
+            if(modo == ARV_ModoParaEsq)
+            {
+
+               NoDirPai = 0;
+               
+               /* Enquanto não houver um nó a direita cujo modo de visita
+                  seja ARV_tpModoDePai, ou seja, que não foi explorado ainda*/
+
+               while(!NoDirPai)
+               {
+                  if(ARV_IrNoDireita(pArvore) == ARV_CondRetOK)
+                  {
+                     ObterModoNoCorr(pArvore,&modo);
+                     if(modo == ModoAtual)
+                     {
+                        NoDirPai = 1; /* Achado o nó não explorado ainda, sairemos deste loop */
+
+                        /* Caso o nó corrente seja a raiz e tiver um filho à direita, ARV_IrPai() vai falhar
+                           mas o algoritmo continuará funcionando, pois ele irá retornar ao nó raiz quando
+                           a àrvore à sua direita for completamente explorado */
+
+                        ARV_IrPai(pArvore);
+                        MarcarVisitado(pArvore,ARV_ModoParaDir);
+                        ARV_IrNoDireita(pArvore);
+                        break;
+
+                     } /* if */
+                     else if(modo == ModoNovo)
+                     {
+                        ARV_IrPai(pArvore);
+                        MarcarVisitado(pArvore,ModoNovo);
+                        if(ARV_IrPai(pArvore) == ARV_CondRetNohEhRaiz)
+                        {
+                           break;
+                        }
+                     }
+                  } /* if */
+                  else if(ARV_IrPai(pArvore) == ARV_CondRetOK)
+                  {
+                     ObterModoNoCorr(pArvore,&modo);
+                     if(modo == ARV_ModoParaDir)
+                     {
+                        ARV_IrNoDireita(pArvore);
+                        MarcarVisitado(pArvore,ModoNovo);
+                        ARV_IrPai(pArvore);
+                     } /* if */
+                     else
+                     {
+                        ARV_IrNoEsquerda(pArvore);
+                        MarcarVisitado(pArvore,ModoNovo);
+                        ARV_IrPai(pArvore);
+                     } /* else */
+                  } /* else-if */
+                  else
+                  {
+                     MarcarVisitado(pArvore,ModoNovo);
+                     break;
+                  } /* else */
+               } /* while */
+            } /* if */
+         } /* if */
+      } /* while */
+
+   } /* Fim função: ARV Limpar Modo */
 
 /***********************************************************************
 *

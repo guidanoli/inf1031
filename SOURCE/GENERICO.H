@@ -550,7 +550,7 @@
 *  $FC Função: TSTG &Comparar string
 *
 *  $ED Descrição da função
-*     Compara string esperado com string obtido, reportamdo uma falha
+*     Compara string esperado com string obtido, reportando uma falha
 *     caso não sejam iguais. Ambos os strings devem obedecer o
 *     padrão C, terminando em zero.
 *

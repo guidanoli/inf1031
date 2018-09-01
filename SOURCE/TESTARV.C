@@ -64,7 +64,11 @@
 #define     IR_DIR_CMD          "=irdir" // =irdir <indice arv.> <retorno esperado>
 #define     OBTER_VAL_CMD       "=obter" // =obter <indice arv.> <valor esperado> <retorno esperado>
 #define     DESTROI_CMD         "=destruir" // =destruir <indice arv.> <retorno esperado>
-#define     EXIBE_CMD           "=exibir" // =exibir <indice arv.> <retorno esperado>
+#define     EXIBE_CMD           "=exibir" // =exibir <indice arv.> <string esperada> <retorno esperado>
+
+/* Tamanho do buffer para strings */
+
+#define DIM_STR_BUFFER 500
 
 /* Vetor de ponteiros para as árvores */
 
@@ -99,6 +103,9 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
                                       /* inicializa para qualquer coisa */
 
       int IndiceArvore;
+
+      char StringEsperada[DIM_STR_BUFFER] = "";
+      char StringObtida[DIM_STR_BUFFER] = "";
 
       char ValorEsperado = '?'  ;
       char ValorObtido   = '!'  ;
@@ -278,17 +285,25 @@ void * vtArvores [ DIM_VT_ARVORES ] ;
 
          else if ( strcmp( ComandoTeste , EXIBE_CMD ) == 0 )
          {
-            NumLidos = LER_LerParametros( "ii" , &IndiceArvore , &CondRetEsperada );
+            NumLidos = LER_LerParametros( "isi" , &IndiceArvore , &StringEsperada , &CondRetEsperada );
 
-            if ( NumLidos != 2 || IndiceArvore>9 || IndiceArvore<0)
+            if ( NumLidos != 3 || IndiceArvore>9 || IndiceArvore<0)
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = ARV_ExibirArvore( vtArvores[IndiceArvore] );
+            CondRetObtido = ARV_ExibirArvore( vtArvores[IndiceArvore] , StringObtida );
 
-            return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+            Ret =  TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                    "Retorno errado ao exibir árvore." );
+
+            if ( Ret != TST_CondRetOK )
+            {
+               return Ret ;
+            } /* if */
+
+            return TST_CompararString( StringEsperada , StringObtida ,
+                                     "String de retorno está errada." ) ;
 
          } /* fim ativa: Testar ARV Exibir árvore */
 

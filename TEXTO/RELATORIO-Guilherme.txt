@@ -29,3 +29,9 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								Não é a versão final, é claro, mas estabelece uma base para as próximas.
 31/08	30min			redigir script de teste		Adaptar os scripts fornecidos na pasta simples do ARCABOUÇO para os
 								comandos alterados, fornecendo sempre o índice da árvore corrente.
+01/09	1h			codificar módulo		Adatação da função exibeArvore(), passando por referência uma string, que é
+								o caminhamento pela esquerda da árvore em questão. Além disso, adaptou-se
+								o comando de script para receber a string esperada, comparando com a obtida.
+								Além disso, implementou-se a função LimpaModo(), que substitui todos os
+								modos de visita de uma árvore por outra, essencial para a função exibeArvore().
+01/09	15min			redigir script de teste		Script para testar a exibição da árvore "TesteArvoreExibe.script". Rodou sem erros.

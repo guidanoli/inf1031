@@ -151,15 +151,17 @@
 *
 *  $EP Parâmetros
 *     $P pArvoreParm - ponteiro para árvore a ser exibida
+*     $P Str         - endereço para string da exibição da árvore
 *
 *  $FV Valor retornado
 *     ARV_CondRetOK
+*     ARV_CondRetErroEstrutura   - modos de visita inconsistentes
 *     ARV_CondRetArvoreNaoExiste ( = 4 )
 *     ARV_CondRetArvoreVazia ( = 5 )
 *
 ***********************************************************************/
 
-   ARV_tpCondRet ARV_ExibirArvore( void * pArvoreParm ) ;
+   ARV_tpCondRet ARV_ExibirArvore( void * pArvoreParm , char * Str ) ;
 
 /***********************************************************************
 *
