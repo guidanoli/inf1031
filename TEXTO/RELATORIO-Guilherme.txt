@@ -35,3 +35,5 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								Além disso, implementou-se a função LimpaModo(), que substitui todos os
 								modos de visita de uma árvore por outra, essencial para a função exibeArvore().
 01/09	15min			redigir script de teste		Script para testar a exibição da árvore "TesteArvoreExibe.script". Rodou sem erros.
+03/09	1h30min			redigir script de teste		Toques finais no script para testar a função de acesso "exibirArvore", com mudanças
+								sutis no código para árvores elementares e complexas.

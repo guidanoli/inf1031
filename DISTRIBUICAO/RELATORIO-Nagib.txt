@@ -1,8 +1,0 @@
-Data	Horas Trabalhadas              Tipo de Tarefa			             Descrição da Tarefa Realizada
--------------------------------------------------------------------------------------------------------------------
-16/8        1h                       Estudar                         Ler enunciado e leia-me
-20/8        2h                       Estudar                         Estudar o arcabouço, Gerar um executável e a saída.txt 
-27/8        2h                       Estudar                         Estudando TESTARV.C
-29/8        1.5h                     Codificar Módulo                Introduzir suporte para até 10 arvores
-29/8        1.5h                     Estudar                         Configurar github para uso coletivo do grupo
-31/8        1h                       Redigir script de teste         Criando mais casos de teste a serem testados
