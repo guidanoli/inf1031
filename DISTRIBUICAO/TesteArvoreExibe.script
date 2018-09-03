@@ -1,0 +1,23 @@
+// Script:    TesteArvore.script
+// Autor:     Guilherme Dantas
+// Data:      30/08/2018
+// Propósito: Testar a exibição de uma árvore
+//
+
+== Exibir árvore inexistente
+=exibir 0 "" 4
+
+== Criar árvore
+=criar 0 0
+
+== Exibir árvore vazia
+=exibir 0 "" 5
+
+== Inserir um nó
+=insdir 0 'a' 0
+
+== Exibir árvore com 1 nó
+=exibir 0 "( a )" 0
+
+== Destruir árvore
+=destruir 0 0

@@ -1,0 +1,106 @@
+// Script:    TesteArvoreSimb.script
+// Autor:     Arndt von Staa
+// Data:      20/fev/2006
+// Propósito: Ilustrar arquivo de script, 
+//            Testa a construção de uma árvore usando parâmetros simbólicos
+//            Não verifica se as operações modificaram corretamente as referências
+//            Este script é muito superficial !!!
+//
+
+
+
+
+// Script:    TesteArvore.script
+// Autor:     Arndt von Staa
+// Data:      12/ago/2003
+// Propósito: Ilustrar arquivo de script, testar construção de árvore
+//            Este script é muito superficial
+//
+
+== Declarar as condicoes de retorno
+=declararparm  OK           int 0
+=declararparm  NaoRaiz      int 1 
+=declararparm  Estrutura    int 2
+=declararparm  NaoFolha     int 3
+=declararparm  NaoArvore    int 4
+=declararparm  NaoCorr      int 5
+=declararparm  EhRaiz       int 6
+=declararparm  NaoFilho     int 7
+=declararparm  Memoria      int 8
+
+== Declarar os conteúdos dos nós
+=declararparm  CharErro     char  '!'
+=declararparm  CharA        char  'a'
+=declararparm  CharB        char  'b'
+=declararparm  CharC        char  'c'
+
+
+== Verificar assertivas de entrada de irdir
+=irdir      0 NaoArvore
+
+== Verificar comando recuperar
+=irdir      0 OK
+=recuperar 
+
+== Verificar ObterValorCorr relativo a árvore inexistente
+=obter      0 CharErro   NaoArvore
+
+== Verificar recuperar de ObterValorCorr relativo a árvore inexistente
+=obter      0 CharErro   NaoRaiz  
+=recuperar
+
+== Criar árvore
+=criar      0 OK
+=irdir      0 NaoCorr
+
+== Inserir à direita
+=insdir     0 CharA   OK
+
+== Obter o valor inserido
+=obter      0 CharA   OK
+
+== Verificar controle de obter o valor inserido errado
+=obter      0 'x'   OK
+=recuperar
+
+== Ir para no pai, nao tem
+=irpai      0 EhRaiz
+  
+== Inserir à esquerda
+=insesq     0 CharB   OK
+
+== Obter o valor inserido
+=obter      0 CharB   OK
+
+== Ir para no pai, tem
+=irpai      0 OK
+=obter      0 CharA   OK
+
+== Inserir à direita
+=insdir     0 CharC   OK
+=obter      0 CharC   OK
+
+== Ir para no pai
+=irpai      0 OK
+=obter      0 CharA   OK
+
+== Ir para no pai
+=irpai      0 EhRaiz
+=obter      0 CharA   OK
+
+== Ir para no esquerda tem
+=iresq      0 OK
+=obter      0 CharB   OK
+
+== Ir para no direita tem
+=irpai      0 OK
+=irdir      0 OK
+=obter      0 CharC   OK
+
+== Destroi a arvore
+=destruir   0 OK
+=irdir      0 NaoArvore
+
+
+
+// fim

@@ -1,0 +1,37 @@
+Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
+-------------------------------------------------------------------------------------------------------------------
+15/08	1h			estudar				Ler os documentos .pdf na pasta do arcabouço
+16/08	1h			estudar				Entender a pasta arcabouço
+17/08	30min			estudar				Ler o código fonte de ARVORE.C e TESTARV.C
+21/08	1h			estudar				Gerar o executável e saída.txt
+24/08	3h			especificar as funções		ARVORE.C agora tem funções que recebem tpArvore*
+								para trabalhar com mais de uma árvore
+24/08	1h			estudar				Estudar árvores binárias e caminhamento
+24/08	3h			codificar módulo		Codificar exibeArvore de ARVORE.C
+25/08	2h			revisar código do módulo	Revisar exibeArvore de ARVORE.C
+29/08   30min             	estudar                         Configurar github para uso coletivo do grupo
+29/08	30min			codificar módulo		Codificar TESTARV.C para trabalhar com um número
+								pré-determinado de árvores (no caso, 10)
+29/08	30min			codificar módulo		Codificar TESTARV.C para que aceite o comando
+								"=exibe" para acionar a função de acesso exibeArvore(),
+								e, para isso, mudar o tipo de retorno desta função
+								para ARV_tpCondRet. Consequentemente, alterando ARVORE.C e
+								ARVORE.H e a documentação da função.
+29/08	2h			redigir script de teste		Familiarizar-se com o script de teste. Surgiram insconsistências
+								que devem ser advindas do arcabouço, e não do script.
+30/08	30min			revisar código do módulo	Faltava receber "CondRetEsperada" para os comands exibirArvore
+								e DestruirArvore.
+30/08	30min			projetar			Arquitetado um arquivo .bat para que seja criada a pasta DISTRIBUICAO,
+								outro para deletar todos os arquivos nesta pasta, e um outro para
+								rodar um script com nome qualquer (o prompt do cmd recebe o nome),
+								otimizando bastante a fase de scripts de teste.
+30/08	30min			redigir script de teste		Feito a primeira versão do script que engloba todas as funções do módulo.
+								Não é a versão final, é claro, mas estabelece uma base para as próximas.
+31/08	30min			redigir script de teste		Adaptar os scripts fornecidos na pasta simples do ARCABOUÇO para os
+								comandos alterados, fornecendo sempre o índice da árvore corrente.
+01/09	1h			codificar módulo		Adatação da função exibeArvore(), passando por referência uma string, que é
+								o caminhamento pela esquerda da árvore em questão. Além disso, adaptou-se
+								o comando de script para receber a string esperada, comparando com a obtida.
+								Além disso, implementou-se a função LimpaModo(), que substitui todos os
+								modos de visita de uma árvore por outra, essencial para a função exibeArvore().
+01/09	15min			redigir script de teste		Script para testar a exibição da árvore "TesteArvoreExibe.script". Rodou sem erros.
