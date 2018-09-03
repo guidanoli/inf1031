@@ -210,11 +210,11 @@
       if(modo == ARV_ModoNulo)
       {
          LimpaModo(pArvore,ARV_ModoNulo,ARV_ModoDePai);
-      }
+      } /* if */
       else if(modo != ARV_ModoDePai)
       {
          return ARV_CondRetErroEstrutura;
-      }
+      } /* if */
 
       LimpaModo(pArvore,ARV_ModoDePai,ARV_ModoNulo);
 
@@ -311,7 +311,7 @@
                         sprintf(temp," %c )",valor);
                         strcat(Str,temp);
                         
-                     }
+                     } /* if */
                      MarcarVisitado(pArvore,ARV_ModoDePai);
                      ARV_IrPai(pArvore);
                      ObterModoNoCorr(pArvore,&modo);
@@ -333,7 +333,7 @@
                         sprintf(temp," %c )",valor);
                         strcat(Str,temp);
                         
-                     }
+                     } /* if */
                      MarcarVisitado(pArvore,ARV_ModoDePai);
                      ARV_IrPai(pArvore);
                      ObterModoNoCorr(pArvore,&modo);
@@ -361,12 +361,12 @@
                         MarcarVisitado(pArvore,ARV_ModoParaDir);
                         ARV_IrNoDireita(pArvore);
                         ObterModoNoCorr(pArvore,&modo); /* modo = ARV_ModoNulo */
-                     }
+                     } /* if */
                      else
                      {
                         MarcarVisitado(pArvore,ARV_ModoDePai);
                         ObterModoNoCorr(pArvore,&modo); /* modo = ARV_ModoDePai */
-                     }
+                     } /* if */
                      break;
                   } /* if */
                   else
@@ -418,8 +418,8 @@
                         if(ARV_IrPai(pArvore) == ARV_CondRetNohEhRaiz)
                         {
                            break;
-                        }
-                     }
+                        } /* if */
+                     } /* else-if */
                   } /* if */
                   else if(ARV_IrPai(pArvore) == ARV_CondRetOK)
                   {
@@ -909,12 +909,12 @@
                         MarcarVisitado(pArvore,ARV_ModoParaDir);
                         ARV_IrNoDireita(pArvore);
                         ObterModoNoCorr(pArvore,&modo); /* modo = ARV_ModoDePai */
-                     }
+                     } /* if */
                      else
                      {
                         MarcarVisitado(pArvore,ModoNovo);
                         ObterModoNoCorr(pArvore,&modo); /* modo = ARV_ModoNulo */
-                     }
+                     } /* else */
                      break;
                   } /* if */
                   else
@@ -964,8 +964,8 @@
                         if(ARV_IrPai(pArvore) == ARV_CondRetNohEhRaiz)
                         {
                            break;
-                        }
-                     }
+                        } /* if */
+                     } /* else-if */
                   } /* if */
                   else if(ARV_IrPai(pArvore) == ARV_CondRetOK)
                   {

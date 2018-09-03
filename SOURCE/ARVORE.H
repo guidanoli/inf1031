@@ -155,9 +155,9 @@
 *
 *  $FV Valor retornado
 *     ARV_CondRetOK
-*     ARV_CondRetErroEstrutura   - modos de visita inconsistentes
-*     ARV_CondRetArvoreNaoExiste ( = 4 )
-*     ARV_CondRetArvoreVazia ( = 5 )
+*     ARV_CondRetErroEstrutura - modos de visita iniciais diferentes de ARV_ModoNulo e ARV_ModoDePai
+*     ARV_CondRetArvoreNaoExiste
+*     ARV_CondRetArvoreVazia
 *
 ***********************************************************************/
 
