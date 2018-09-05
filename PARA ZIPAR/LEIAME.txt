@@ -57,6 +57,10 @@ Membros do trio:
 	-- .MAKE --
 	TRAB1.make
 
+[ Observação ]
+
+Renomeie o arquivo TRAB1.exe.txt para TRAB1.exe!
+
 [ Funcionalidades ]
 
 Para gerar o log de saída, basta rodar o batch "testatudo.bat". Ele executará o arcabouço de testes, analisando

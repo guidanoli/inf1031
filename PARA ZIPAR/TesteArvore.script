@@ -1,7 +1,8 @@
-// Script:    TesteArvore.script
-// Autor:     Guilherme Dantas
-// Data:      30/08/2018
-// Propósito: Testar todas as condições de retorno das funções de acesso do módulo ARVORE.C
+// Script:    		TesteArvore.script
+// Autor:    		Guilherme Dantas
+// Data de criação:	30/08/2018
+// Data de modificação:	04/09/2018
+// Propósito:		Testar todas as condições de retorno das funções de acesso do módulo ARVORE.C
 //
 
 == Definição de Condições de Retorno

@@ -10,9 +10,11 @@
 *  Projeto: Disciplinas INF 1628 / 1301
 *  Gestor:  DI/PUC-Rio
 *  Autores: avs - Arndt von Staa
+*           gui - Guilherme Dantas de Oliveira
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
+*       4.00   gui   04/09/2018 Adicionado ModoVisita
 *       3.00   avs   28/02/2003 Uniformização da interface das funções e
 *                               de todas as condições de retorno.
 *       2.00   avs   03/08/2002 Eliminação de código duplicado, reestruturação
@@ -91,8 +93,6 @@
 
    } tpArvore ;
 
-/*****  Dados encapsulados no módulo  *****/
-
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static tpNoArvore * CriarNo( char ValorParm ) ;
@@ -106,6 +106,8 @@
    static ARV_tpCondRet MarcarVisitado( tpArvore * pArvore , ARV_tpModoVisita Modo ) ;
 
    static void LimpaModo( tpArvore * pArvore , ARV_tpModoVisita ModoAtual , ARV_tpModoVisita ModoNovo ) ;
+
+   static ARV_tpCondRet ConcatNo( char *Str, char *StrNo, char valor );
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
