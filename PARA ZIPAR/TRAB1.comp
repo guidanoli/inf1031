@@ -1,0 +1,22 @@
+# Composicao do programa exemplo de teste automatizado
+# Este exemplo utiliza o arcabouço completo 
+
+[Diretorios]
+
+Nome        =  TRAB1
+PathDefault =  .
+err         =  .
+
+[Modulos]
+TestArv
+Arvore
+
+[BuildInicio]
+/OUT:TRAB1.exe
+/INCREMENTAL:NO
+/MACHINE:IX86
+
+[BuildFim]
+ArcaboucoTeste.lib
+
+[Fim]

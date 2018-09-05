@@ -37,3 +37,8 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 01/09	15min			redigir script de teste		Script para testar a exibição da árvore "TesteArvoreExibe.script". Rodou sem erros.
 03/09	1h30min			redigir script de teste		Toques finais no script para testar a função de acesso "exibirArvore", com mudanças
 								sutis no código para árvores elementares e complexas.
+04/09	15min			redigir script de teste		Redigir script de teste para buffer da string de exibição
+04/09	30min			codificar módulo		Alterar a função exibeArvore para testar se a string não ultrapassou o buffer
+04/09	1h			diagnosticar e corrigir os	A string estava sempre truncada, mas nunca retornava a condição de retorno
+				problemas encontrados		esperada. Tratava-se de simplesmente limpar a string obtida caso ultrapasse o limite.
+04/09	15min			realizar os testes		Rodados todos os scripts. Sem erros.

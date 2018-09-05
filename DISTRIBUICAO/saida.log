@@ -1,0 +1,64 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: TRAB1.exe
+
+      Arquivo de teste:    TesteArvore.script
+
+
+!!!    0  Linha:     1  // Script:    TesteArvore.script 
+!!!    0  Linha:     2  // Autor:     Guilherme Dantas 
+!!!    0  Linha:     3  // Data:      30/08/2018 
+!!!    0  Linha:     4  // Propósito: Testar todas as condições de retorno das funções de acesso do módulo ARVORE.C 
+!!!    0  Linha:     5  // 
+    7  == Definição de Condições de Retorno
+   19  == Cria árvore
+   22  == Destrói árvore
+   25  == Cria e destrói 10 árvores
+   47  == Cria uma árvore numa cabeça onde já há uma árvore
+   52  == Inserir um nó à direita quando é possível
+   57  == Inserir um nó à esquerda quando é possível
+   64  == Inserir um nó à direita numa árvore inexistente
+   69  == Inserir um nó à esquerda numa árvore inexistente
+   74  == Inserir um nó à direita numa árvore cujo nó corrente já tem um filho à direita
+   84  == Inserir um nó à esquerda numa árvore cujo nó corrente já tem um filho à esquerda
+   94  == Ir para pai numa árvore inexistente
+   99  == Ir para pai numa árvore vazia
+  106  == Ir para pai numa árvore existente quando o nó corrente é o nó raiz
+  114  == Ir para pai quando é possível
+  123  == Ir para nó à esquerda numa árvore inexistente
+  128  == Ir para nó à direita numa árvore inexistente
+  133  == Ir para nó à esquerda numa árvore vazia
+  140  == Ir para nó à direita numa árvore vazia
+  147  == Ir para nó à esquerda em árvore quando o nó corrente não tem filho à esquerda
+  155  == Ir para nó à direita em árvore quando o nó corrente não tem filho à direita
+  163  == Ir para nó à esquerda quando é possível
+  173  == Ir para nó à direita quando é possível
+  183  == Obter valor do nó corrente de uma árvore inexistente
+  188  == Obter valor do nó corrente de uma árvore vazia
+  195  == Obter valor do nó corrente quando é possível
+  203  == Exibir uma árvore inexistente
+  208  == Exibir uma árvore vazia
+  215  == Exibir uma árvore com um elemento apenas, ou seja, ( a )
+  223  == Exibir a árvore ( a ( b ) )
+  232  == Exibir a árvore ( a  b )
+  241  == Exibir a árvore ( a ( b ) c )
+  252  == Exibir a árvore ( a b ( c ( d e ( g ) f ) h ( j ) i ) )
+  274  == Exibir a árvore ( a ( b ) c ) três vezes
+  287  == Exibe as árvore ( a ( b ) c ), e, em seguida, a árvore ( a b ( c ( d e ( g ) f ) h ( j ) i ) ) em outro espaço
+  316  == Exibe a árvore elementar ( a ) três vezes
+  326  == Exibir árvore com tantos nós quanto forem necessários para ultrapassar o buffer (padrão de 500)
+!!!    0  Linha:   794  // Fim 
+
+!!! Número de linhas lidas:         794
+!!! Número de casos de teste:        37
+!!! Número comandos corretos:       652
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

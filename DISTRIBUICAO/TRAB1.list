@@ -1,0 +1,145 @@
+GERADOR DE SCRIPT DE DIRETIVAS PARA MAKE
+   LES / Informática / PUC-Rio    Versão 6.00 (c) 2005
+
+Composição do construto: TRAB1.comp
+
+   Nome do Construto:           TRAB1
+   Diretório base:              C:\Users\Escritório\Documents\Visual Studio 2010\Projects\Grupo7Arv1\Debug\progmod\DISTRIBUICAO
+
+   Arquivo composição:          TRAB1.comp
+   Arquivo plataforma:          gmake.parm
+
+   Arquivo diretivas MAKE:      TRAB1.make
+   Arquivo diretivas LINK:      TRAB1.build
+   Arquivo listagem:            TRAB1.list
+
+Módulos do construto: TRAB1.comp
+
+   TestArv.c
+   Arvore.c
+
+Estatísticas do construto
+
+   Estatísticas do arquivo: ARVORE.H
+      Total linhas:             278
+      Linhas de código:          38
+      Linhas de comentário:     189
+      Linhas em branco:          51
+   Arquivos em que é incluído
+      Arvore.c
+
+   Estatísticas do arquivo: Arvore.c
+      Total linhas:            1136
+      Linhas de código:         613
+      Linhas de comentário:     345
+      Linhas em branco:         230
+   Arquivos de inclusão de que necessita
+      ARVORE.H
+
+   Estatísticas do arquivo: TST_ESPC.H
+      Total linhas:             228
+      Linhas de código:          23
+      Linhas de comentário:     185
+      Linhas em branco:          20
+   Arquivos em que é incluído
+      TestArv.c
+
+   Estatísticas do arquivo: TST_Espc.h
+      Total linhas:             228
+      Linhas de código:          23
+      Linhas de comentário:     185
+      Linhas em branco:          20
+   Arquivos em que é incluído
+      TestArv.c
+      generico.h
+
+   Estatísticas do arquivo: TestArv.c
+      Total linhas:             311
+      Linhas de código:         156
+      Linhas de comentário:      84
+      Linhas em branco:          81
+   Arquivos de inclusão de que necessita
+      TST_ESPC.H
+      TST_Espc.h
+      arvore.h
+      generico.h
+      lerparm.h
+
+   Estatísticas do arquivo: arvore.h
+      Total linhas:             278
+      Linhas de código:          38
+      Linhas de comentário:     189
+      Linhas em branco:          51
+   Arquivos em que é incluído
+      TestArv.c
+
+   Estatísticas do arquivo: generico.h
+      Total linhas:             713
+      Linhas de código:          59
+      Linhas de comentário:     572
+      Linhas em branco:          82
+   Arquivos de inclusão de que necessita
+      TST_Espc.h
+   Arquivos em que é incluído
+      TestArv.c
+
+   Estatísticas do arquivo: lerparm.h
+      Total linhas:             291
+      Linhas de código:          36
+      Linhas de comentário:     188
+      Linhas em branco:          67
+   Arquivos em que é incluído
+      TestArv.c
+
+Totais por tipo de arquivo
+
+  Tipo: obj      Path: .
+         Total linhas do tipo:         0
+         Linhas de código:             0
+         Linhas de comentário:         0
+         Linhas em branco:             0
+         Arquivos deste tipo:          0
+
+  Tipo: err      Path: .
+         Total linhas do tipo:         0
+         Linhas de código:             0
+         Linhas de comentário:         0
+         Linhas em branco:             0
+         Arquivos deste tipo:          0
+
+  Tipo: DEFAULT  Path: .
+         Total linhas do tipo:      2016
+         Linhas de código:           217
+         Linhas de comentário:      1508
+         Linhas em branco:           291
+         Arquivos deste tipo:          6
+
+  Tipo: espstr   Path: .
+         Total linhas do tipo:         0
+         Linhas de código:             0
+         Linhas de comentário:         0
+         Linhas em branco:             0
+         Arquivos deste tipo:          0
+
+  Tipo: lista    Path: .
+         Total linhas do tipo:         0
+         Linhas de código:             0
+         Linhas de comentário:         0
+         Linhas em branco:             0
+         Arquivos deste tipo:          0
+
+  Tipo: c        Path: .
+         Total linhas do tipo:      1447
+         Linhas de código:           769
+         Linhas de comentário:       429
+         Linhas em branco:           311
+         Arquivos deste tipo:          2
+
+Totais para todo o construto TRAB1
+
+   Total linhas:              3463
+   Linhas de código:           986
+   Linhas de comentário:      1937
+   Linhas em branco:           602
+   Arquivos processados:         8
+

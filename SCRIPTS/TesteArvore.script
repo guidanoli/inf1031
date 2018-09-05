@@ -22,7 +22,7 @@
 == Destrói árvore
 =destruir 0 OK
 
-== Cria e destói 10 árvores
+== Cria e destrói 10 árvores
 =criar 0 OK
 =criar 1 OK
 =criar 2 OK
@@ -44,7 +44,7 @@
 =destruir 8 OK
 =destruir 9 OK
 
-== Cria uma árvore numa cabeça onde já há uma ávore
+== Cria uma árvore numa cabeça onde já há uma árvore
 =criar 0 OK
 =criar 0 OK
 =destruir 0 OK
@@ -71,7 +71,7 @@
 =insesq 0 'a' NaoArvore
 
 
-== Inserir um nó à direita numa árvore cujo nó corrente já tem um filha à direita
+== Inserir um nó à direita numa árvore cujo nó corrente já tem um filho à direita
 
 =criar 0 OK
 =insdir 0 'a' OK
@@ -81,7 +81,7 @@
 =destruir 0 OK
 
 
-== Inserir um nó à esquerda numa árvore cujo nó corrente já tem um filha à esquerda
+== Inserir um nó à esquerda numa árvore cujo nó corrente já tem um filho à esquerda
 
 =criar 0 OK
 =insesq 0 'a' OK
@@ -284,7 +284,7 @@
 =destruir 0 OK
 
 
-== Exibe as árvore ( a ( b ) c ) e ( a b ( c ( d e ( g ) f ) h ( j ) i ) ) em seguida
+== Exibe as árvore ( a ( b ) c ), e, em seguida, a árvore ( a b ( c ( d e ( g ) f ) h ( j ) i ) ) em outro espaço
 
 =criar 1 OK
 =insdir 1 'a' OK
@@ -789,5 +789,6 @@
 =insesq 0 'x' OK
 =insesq 0 'x' OK
 =exibir 0 "" Buffer
+=destruir 0 OK
 
 // Fim

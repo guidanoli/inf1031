@@ -22,8 +22,8 @@ if not exist %var% (
 	goto read-script-path
 )
 
-%exec% /s%var% >saida.txt
+%exec% /s%var% >saida.log
 
-start notepad "saida.txt"
+start notepad "saida.log"
 
 :fim
