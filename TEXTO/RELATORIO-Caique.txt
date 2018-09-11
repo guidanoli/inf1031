@@ -1,7 +1,2 @@
-Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
+﻿Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
-29/08	1h			estudar				Estudamos o código no labgrad e configuramos o github para uso coletivo
-03/09 2h      redigir script de teste   Redigi o script de teste junto com guilherme e nagib no labgrad testando todos os casos de condicao de retorno
-04/09 1h      revisar script de teste   Revisamos o script de teste para ter certeza que funcionaria com casos extremos
-04/09 1h      realizar testes           Realizei testes para verificar tudo antes da entrega
-04/09 1h      revisar codigo do modulo  Revisei o codigo do modulo para ver se esta tudo no padrao para entrega
