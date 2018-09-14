@@ -3,3 +3,6 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 11/09	1h			estudar				Ler o PDF e preparar o repositório no Github
 								para o Trabalho 2, sem os arquivos referentes ao
 								ao Trabalho 1 somente.
+14/09	1h			estudar				Estudar o módulo Lista
+14/09	1h			especificar os módulos		Condições de retorno de Grafo, struct GRF_tpGrafo,
+								e funções de acesso básicas
