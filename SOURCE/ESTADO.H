@@ -1,5 +1,5 @@
-#if ! defined( VERTICE_ )
-#define VERTICE_
+#if ! defined( ESTADO_ )
+#define ESTADO_
 /***************************************************************************
 *
 *  $MCD Módulo de implementação: VER Vértice
@@ -24,17 +24,19 @@
 *
 ***************************************************************************/
 
-#if defined( VERTICE_OWN )
-   #define VERTICE_EXT
+#if defined( ESTADO_OWN )
+   #define ESTADO_EXT
 #else
-   #define VERTICE_EXT extern
+   #define ESTADO_EXT extern
 #endif
+
+#include "VERTICE.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um grafo */
 
-typedef VER_tpVertice * VER_tppVertice;
+typedef EST_tpEstado * EST_tppEstado;
 
 /***********************************************************************
 *
@@ -48,23 +50,23 @@ typedef VER_tpVertice * VER_tppVertice;
 
    typedef enum {
 
-         VER_CondRetOK ,
+         EST_CondRetOK ,
                /* Concluiu corretamente */
 
-         VER_CondRetErroEstrutura ,
-               /* Erro na estrutura do vértice */    
+         EST_CondRetErroEstrutura ,
+               /* Erro na estrutura do estado */    
 
-         VER_CondRetFaltouMemoria
-               /* Faltou memória ao tentar criar um vértice */
+         EST_CondRetFaltouMemoria
+               /* Faltou memória ao tentar criar um estado */
 
-   } VER_tpCondRet ;
+   } EST_tpCondRet ;
 
 /***********************************************************************
 *
-*  $FC Função: VER  &Criar vértice
+*  $FC Função: EST  &Criar estado
 *
 *  $ED Descrição da função
-*     Cria a estrutura de um vértice.
+*     Cria a estrutura de um estado.
 *     O tipo do valor armazenados não é espeficiado.
 *
 *  $EP Parâmetros
@@ -84,9 +86,10 @@ typedef VER_tpVertice * VER_tppVertice;
 *
 ***********************************************************************/
 
-   VER_tppVertice VER_CriarVertice(
+   EST_tppEstado EST_CriarEstado(
              void   ( * ExcluirValor ) ( void * pDado ),
-             void * Valor ) ;
+             void * Valor,
+             char tipo ) ;
 
 /***********************************************************************
 *

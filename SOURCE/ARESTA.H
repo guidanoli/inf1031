@@ -1,11 +1,11 @@
-#if ! defined( ALEX_ )
-#define ALEX_
+#if ! defined( ARESTA_ )
+#define ARESTA_
 /***************************************************************************
 *
-*  $MCD Módulo de implementação: ALX Analizador Léxico
+*  $MCD Módulo de implementação: ARE  Aresta
 *
-*  Arquivo gerado:              ALEX.h
-*  Letras identificadoras:      ALX
+*  Arquivo gerado:              ARESTA.h
+*  Letras identificadoras:      ARE
 *
 *  Curso: INF 1301 Programação Modular
 *  Orientador: Flavio Bevilacqua
@@ -23,17 +23,19 @@
 *
 ***************************************************************************/
 
-#if defined( ALEX_OWN )
-   #define ALEX_EXT
+#if defined( ARESTA_OWN )
+   #define ARESTA_EXT
 #else
-   #define ALEX_EXT extern
+   #define ARESTA_EXT extern
 #endif
 
 /***** Declarações exportadas pelo módulo *****/
 
-#undef ALEX_EXT
+/* Tipo referência para uma aresta */
 
-/********** Fim do módulo de definição: GRF  Grafo **********/
+#undef ARESTA_EXT
+
+/********** Fim do módulo de definição: ARE  Aresta **********/
 
 #else
 #endif
