@@ -1,0 +1,6 @@
+ARESTA.C
+
+	implementar as funções:
+		VER_CriarVertice
+		VER_DestruirVertice
+		VER_ObterValor

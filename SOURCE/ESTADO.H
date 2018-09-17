@@ -1,5 +1,3 @@
-#if ! defined( ESTADO_ )
-#define ESTADO_
 /***************************************************************************
 *
 *  $MCD Módulo de implementação: VER Vértice
@@ -23,12 +21,6 @@
 *     WIP
 *
 ***************************************************************************/
-
-#if defined( ESTADO_OWN )
-   #define ESTADO_EXT
-#else
-   #define ESTADO_EXT extern
-#endif
 
 #include "VERTICE.H"
 
@@ -71,14 +63,13 @@ typedef EST_tpEstado * EST_tppEstado;
 *
 *  $EP Parâmetros
 *     ExcluirValor  - ponteiro para a função que processa a
-*                     exclusão do valor referenciado pelo elemento
-*                     a ser excluído.
+*                     exclusão do valor referenciado pelo estado
 *                     Ver descrição do módulo.
-*     pValor        - ponteiro genérico para o valor do vértice procurado
+*     pValor        - ponteiro genérico para o valor do estado procurado
 *
 *  $FV Valor retornado
-*     Se executou corretamente retorna o ponteiro para o vértice.
-*     Este ponteiro será utilizado pelas funções que manipulem este vértice.
+*     Se executou corretamente retorna o ponteiro para o estado.
+*     Este ponteiro será utilizado pelas funções que manipulem este estado.
 *
 *     Se ocorreu algum erro, por exemplo falta de memória ou dados errados,
 *     a função retornará NULL.
@@ -93,25 +84,25 @@ typedef EST_tpEstado * EST_tppEstado;
 
 /***********************************************************************
 *
-*  $FC Função: VER  &Destruir vértice
+*  $FC Função: EST  &Destruir estado
 *
 *  $ED Descrição da função
-*     Destrói o vértice fornecido.
-*     O parâmetro ponteiro para o vértice não é modificado.
-*     Se ocorrer algum erro durante a destruição, o vértice resultará
+*     Destrói o estado fornecido.
+*     O parâmetro ponteiro para o estado não é modificado.
+*     Se ocorrer algum erro durante a destruição, o estado resultará
 *     estruturalmente incorreto.
 *     OBS. não existe previsão para possíveis falhas de execução.
 *
 *  $EP Parâmetros
-*     pVertice - ponteiro para o vértice
+*     pEstado - ponteiro para o estado
 *
 ***********************************************************************/
 
-   void VER_DestruirVertice( VER_tppVertice pVertice ) ;
+   void EST_DestruirEstado( EST_tppEstado pEstado ) ;
 
 /***********************************************************************
 *
-*  $FC Função: VER  &Obter referência para o valor contido no vértice
+*  $FC Função: EST  &Obter referência para o valor contido no vértice
 *
 *  $ED Descrição da função
 *     Obtem a referência para o valor contido no vértice
@@ -128,9 +119,4 @@ typedef EST_tpEstado * EST_tppEstado;
 
    void * VER_ObterValor( VER_tppVertice pVertice ) ;
 
-#undef VERTICE_EXT
-
 /********** Fim do módulo de definição: VER  Vértice **********/
-
-#else
-#endif

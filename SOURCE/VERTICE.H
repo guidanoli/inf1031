@@ -1,5 +1,3 @@
-#if ! defined( VERTICE_ )
-#define VERTICE_
 /***************************************************************************
 *
 *  $MCD Módulo de implementação: VER Vértice
@@ -24,17 +22,13 @@
 *
 ***************************************************************************/
 
-#if defined( VERTICE_OWN )
-   #define VERTICE_EXT
-#else
-   #define VERTICE_EXT extern
-#endif
+#include "LISTA.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um grafo */
 
-typedef VER_tpVertice * VER_tppVertice;
+typedef struct VER_tagVertice * VER_tppVertice;
 
 /***********************************************************************
 *
@@ -50,6 +44,12 @@ typedef VER_tpVertice * VER_tppVertice;
 
          VER_CondRetOK ,
                /* Concluiu corretamente */
+
+         VER_CondRetVerticeNaoExiste ,
+               /* O ponteiro para vértice é nulo */
+
+         VER_CondRetArestaExiste ,
+               /* Uma aresta com mesmo valor já existe */
 
          VER_CondRetErroEstrutura ,
                /* Erro na estrutura do vértice */    
@@ -125,9 +125,28 @@ typedef VER_tpVertice * VER_tppVertice;
 
    void * VER_ObterValor( VER_tppVertice pVertice ) ;
 
-#undef VERTICE_EXT
+/***********************************************************************
+*
+*  $FC Função: VER  &Inserir aresta
+*
+*  $ED Descrição da função
+*
+*     WIP
+*
+*  $EP Parâmetros
+*     pVertice - ponteiro para vértice
+*     pAresta  - ponteiro para aresta
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - inseriu sem problemas
+*     VER_CondRetVerticeNaoExiste   - ponteiro para grafo é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
+*     VER_CondRetArestaExiste       - aresta já existe com o mesmo valor
+*     VER_CondRetFaltouMemoria      - não foi possível alocar novas arestas
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_InserirAresta( VER_tppVertice pVertice ,
+                                    void * pAresta ) ;
 
 /********** Fim do módulo de definição: VER  Vértice **********/
-
-#else
-#endif

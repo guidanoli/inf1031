@@ -22,9 +22,7 @@
 #include   <malloc.h>
 #include   <assert.h>
 
-#define ALEX_OWN
 #include "ALEX.h"
-#undef ALEX_OWN
 
 /***** Protótipos das funções encapuladas no módulo *****/
 

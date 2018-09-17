@@ -22,9 +22,7 @@
 #include   <malloc.h>
 #include   <assert.h>
 
-#define ESTADO_OWN
 #include "ESTADO.h"
-#undef ESTADO_OWN
 
 /***********************************************************************
 *

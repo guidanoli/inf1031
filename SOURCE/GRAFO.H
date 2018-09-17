@@ -1,5 +1,3 @@
-#if ! defined( GRAFO_ )
-#define GRAFO_
 /***************************************************************************
 *
 *  $MCD Módulo de definição: GRF  Grafo
@@ -24,13 +22,9 @@
 *
 ***************************************************************************/
 
-#if defined( GRAFO_OWN )
-   #define GRAFO_EXT
-#else
-   #define GRAFO_EXT extern
-#endif
-
 #include "LISTA.H"
+#include "VERTICE.H"
+#include "ARESTA.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -102,8 +96,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $FC Função: GRF  &Destruir grafo
 *
 *  $ED Descrição da função
-*     Destrói o grafo fornecida.
-*     O parâmetro ponteiro para a grafo não é modificado.
+*     Destrói o grafo fornecido.
 *     Se ocorrer algum erro durante a destruição, a grafo resultará
 *     estruturalmente incorreto.
 *     OBS. não existe previsão para possíveis falhas de execução.
@@ -125,6 +118,10 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Considera que não haverá mais de um vértice com o mesmo
 *     valor no mesmo grafo.
 *
+*  $EP Parâmetros
+*     pGrafo - ponteiro para o grafo
+*     pValor - valores do novo vértice
+*
 *  $FV Valor retornado
 *     GRF_CondRetOK              - inseriu sem problemas
 *     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo é nulo
@@ -135,7 +132,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 ***********************************************************************/
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
-                                     int Index );
+                                     void * pValor );
    
 /***********************************************************************
 *
@@ -147,7 +144,8 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
-*     pValorA e pValorB - valores das arestas
+*     pValorA e pValorB - valores dos vértices
+*     ValorAresta - valor da arestas
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
@@ -160,13 +158,8 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 ***********************************************************************/
 
    GRF_tpCondRet GRF_InserirAresta( GRF_tppGrafo pGrafo ,
-                                    int IndexA,
-                                    int IndexB,
-                                    char *IndexAresta);
-
-#undef GRAFO_EXT
+                                    void * pValorA,
+                                    void * pValorB,
+                                    void * ValorAresta);
 
 /********** Fim do módulo de definição: GRF  Grafo **********/
-
-#else
-#endif

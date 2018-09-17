@@ -23,9 +23,7 @@
 #include   <malloc.h>
 #include   <assert.h>
 
-#define GRAFO_OWN
 #include "GRAFO.h"
-#undef GRAFO_OWN
 
 #define TAM_INDEX_ARESTA 3
 
@@ -49,46 +47,12 @@
 
    } GRF_tpGrafo ;
 
-/***********************************************************************
-*
-*  $TC Tipo de dados: GRF Vértice
-*
-*
-***********************************************************************/
-
-   typedef struct GRF_tagVertice {
-
-      int Index ;
-            /* Número que indentifica um vértice */
-
-      LIS_tppLista pArestas;
-            /* Ponteiro para a cabeça da lista de arestas do vértice */
-
-   } GRF_tpVertice ;
-
-/***********************************************************************
-*
-*  $TC Tipo de dados: GRF Aresta
-*
-*
-***********************************************************************/
-
-   typedef struct GRF_tagAresta {
-
-      char Index[TAM_INDEX_ARESTA] ;
-            /* String que indentifica uma aresta */
-
-      LIS_tppLista pVertice;
-            /* Ponteiro para a cabeça da lista do vértice ao qual se conecta */
-
-   } GRF_tpAresta ;
-
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static void DestruirListaGrafo( void * pLista );
 
-   static GRF_tpCondRet ProcurarVertice( GRF_tppGrafo pGrafo ,
-                                         int Index );
+   GRF_tpCondRet ProcurarVertice( GRF_tppGrafo pGrafo ,
+                                  void *pValor );
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -114,20 +78,23 @@
 
       /* Origem e Vértices são LISTAS, portanto recebem a função DestruirListaGrafo */
       pListaOrigem = LIS_CriarLista(DestruirListaGrafo);
+
+      if(pListaOrigem == NULL)
+      {
+         return NULL;
+      } /* if */
+
       pListaVertices = LIS_CriarLista(DestruirListaGrafo);
+
+      if(pListaVertices == NULL)
+      {
+         return NULL;
+      } /* if */
 
       /* Contudo, o conteúdo do grafo não é espeficado, e deve ser tratado por ExcluirValor*/
       pNovoGrafo->ExcluirValor = ExcluirValor;
-
-      if(pListaOrigem == NULL || pListaVertices == NULL)
-      {
-         if(pListaOrigem)
-            free(pListaOrigem);
-         if(pListaVertices)
-            free(pListaVertices);
-         free(pNovoGrafo);
-         return NULL;
-      } /* if */
+      pNovoGrafo->pOrigensGrafo = pListaOrigem;
+      pNovoGrafo->pVerticesGrafo = pListaVertices;
 
       return pNovoGrafo;
 
@@ -159,15 +126,15 @@
 *  ****/
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
-                                     int Index )
+                                     void * pValor )
    {
 
       LIS_tpCondRet RetLis;
       GRF_tpCondRet RetGrf;
-      LIS_tppLista pNovoVertice;
+
+      VER_tppVertice pNovoVertice;
       LIS_tppLista pVertices;
-      LIS_tppLista pAresta;
-      GRF_tpVertice *pVerticeStruct;
+      LIS_tppLista pListaAresta;
 
       if( pGrafo == NULL )
       {
@@ -182,7 +149,7 @@
          return GRF_CondRetErroEstrutura;
       } /* if */
 
-      RetGrf = ProcurarVertice(pGrafo,Index);
+      RetGrf = ProcurarVertice(pGrafo,pValor);
       /* Verificar que não há outro vértice com mesmo indentificador */
 
       if( RetGrf != GRF_CondRetVerticeNaoExiste )
@@ -190,8 +157,8 @@
          return RetGrf;
       } /* if */
 
-      pNovoVertice = LIS_CriarLista(pGrafo->ExcluirValor);
-      /* Cria uma lista para o novo vértice com a regra de exclusão padrão do grafo */
+      pNovoVertice = VER_CriarVertice(pGrafo->ExcluirValor,pValor);
+      /* Cria uma novo vértice com a regra de exclusão padrão do grafo */
 
       if( pNovoVertice == NULL )
       {
@@ -199,33 +166,22 @@
       } /* if */
 
       RetLis = LIS_InserirElementoApos(pVertices,pNovoVertice);
-      /* Insere a cabeça da lista do novo vértice no final da lista dos vértices do grafo */
+      /* Insere a vértice no final da lista dos vértices do grafo */
 
       if( RetLis == LIS_CondRetFaltouMemoria )
       {
          return GRF_CondRetFaltouMemoria;
       } /* if */
 
-      pVerticeStruct = (GRF_tpVertice *) malloc(sizeof(GRF_tpVertice));
-      /* Cria um novo vértice (struct) */
-
-      if( pVerticeStruct == NULL )
-      {
-         return GRF_CondRetFaltouMemoria;
-      } /* if */
-
-      pVerticeStruct->Index = Index;
-      /* Altera o identificador do struct para o fornecido */
-
-      pAresta = (LIS_tppLista) malloc(sizeof(LIS_tppLista));
+      pListaAresta = (LIS_tppLista) malloc(sizeof(LIS_tppLista));
       /* Cria uma a lista para as arestas do novo vértice */
 
-      if( pAresta == NULL )
+      if( pListaAresta == NULL )
       {
          return GRF_CondRetFaltouMemoria;
       } /* if */
 
-      pVerticeStruct->pArestas = pAresta;
+      
       /* Associa a lista de arestas criado ao struct de vértice */
 
       return GRF_CondRetOK;
@@ -237,84 +193,7 @@
 *  Função: GRF  &Inserir aresta
 *  ****/
 
-   GRF_tpCondRet GRF_InserirAresta( GRF_tppGrafo pGrafo ,
-                                    int IndexA,
-                                    int IndexB,
-                                    char *IndexAresta)
-   {
-
-      LIS_tppLista pVertices ;
-      LIS_tppLista pA;
-      LIS_tppLista pB ;
-      GRF_tpCondRet RetGrf ;
-      GRF_tpVertice *vA ;
-      GRF_tpVertice *vB ;
-      GRF_tpAresta *rA ;
-      GRF_tpAresta *rB ;
-
-      if( pGrafo == NULL )
-      {
-         return GRF_CondRetGrafoNaoExiste;
-      } /* if */
-
-      pVertices = pGrafo->pVerticesGrafo;
-      /* Facilitar o acesso à lista de Vértices */
-
-      if( pVertices == NULL )
-      {
-         return GRF_CondRetErroEstrutura;
-      } /* if */
-
-      /* Obter lista e struct do vértice A */
-      RetGrf = ProcurarVertice(pGrafo,IndexA);
-      if( RetGrf != GRF_CondRetVerticeExiste )
-      {
-         return RetGrf;
-      } /* if */
-      pA = (LIS_tppLista) LIS_ObterValor(pVertices);
-      vA = (GRF_tpVertice *) LIS_ObterValor(pA);
-
-      /* Obter lista e struct do vértice B */
-      RetGrf = ProcurarVertice(pGrafo,IndexB);
-      if( RetGrf != GRF_CondRetVerticeExiste )
-      {
-         return RetGrf;
-      } /* if */
-      pB = (LIS_tppLista) LIS_ObterValor(pVertices);
-      vB = (GRF_tpVertice *) LIS_ObterValor(pB);
-      
-      /* Cria nova aresta entre A e B para a lista de arestas
-         do vértice A */
-      rA = (GRF_tpAresta *) malloc(sizeof(GRF_tpAresta));
-      if( rA == NULL )
-      {
-         return GRF_CondRetFaltouMemoria;
-      } /* if */
-
-      /* Cria nova aresta entre A e B para a lista de arestas
-         do vértice B */
-      rB = (GRF_tpAresta *) malloc(sizeof(GRF_tpAresta));
-      if( rB == NULL )
-      {
-         free(rA);   // free na aresta A para não haver inconsistência
-         return GRF_CondRetFaltouMemoria;
-      } /* if */
-
-      /* Copia o identificador de aresta para as structs de aresta */
-      strcpy_s(rA->Index,TAM_INDEX_ARESTA,IndexAresta);
-      strcpy_s(rB->Index,TAM_INDEX_ARESTA,IndexAresta);
-
-      /* Associa os vértices nas struct de aresta */
-      rA->pVertice = pB;
-      rB->pVertice = pA;
-
-      /* Insere as arestas nas respectivas listas de arestas */
-      LIS_InserirElementoApos(vA->pArestas,rA);
-      LIS_InserirElementoApos(vB->pArestas,rB);
-
-      return GRF_CondRetOK;
-
-   }
+   
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
@@ -362,10 +241,10 @@
 ***********************************************************************/
 
    GRF_tpCondRet ProcurarVertice( GRF_tppGrafo pGrafo ,
-                                  int Index )
+                                  void *pValor )
    {
 
-      LIS_tppLista pVertices;
+      VER_tppVertice pVertices;
 
       if( pGrafo == NULL )
       {

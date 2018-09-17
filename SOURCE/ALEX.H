@@ -1,5 +1,3 @@
-#if ! defined( ALEX_ )
-#define ALEX_
 /***************************************************************************
 *
 *  $MCD Módulo de implementação: ALX Analizador Léxico
@@ -23,17 +21,6 @@
 *
 ***************************************************************************/
 
-#if defined( ALEX_OWN )
-   #define ALEX_EXT
-#else
-   #define ALEX_EXT extern
-#endif
-
 /***** Declarações exportadas pelo módulo *****/
 
-#undef ALEX_EXT
-
 /********** Fim do módulo de definição: GRF  Grafo **********/
-
-#else
-#endif

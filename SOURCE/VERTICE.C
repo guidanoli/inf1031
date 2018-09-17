@@ -22,9 +22,7 @@
 #include   <malloc.h>
 #include   <assert.h>
 
-#define VERTICE_OWN
 #include "VERTICE.h"
-#undef VERTICE_OWN
 
 /***********************************************************************
 *
@@ -36,7 +34,10 @@
    typedef struct VER_tagVertice {
 
           void * Valor ;
-               /* Ponteiro genérico para o valor armazenado no Vértice */
+               /* Ponteiro genérico para o valor armazenado no vértice */
+
+          LIS_tppLista pArestaVertice;
+               /* Ponteiro para a cabeça da lista de arestas do vértice */
 
           void ( * ExcluirValor ) ( void * pDado ) ;
                /* Ponteiro para a função de destruição do valor contido em um elemento */

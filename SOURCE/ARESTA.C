@@ -22,9 +22,27 @@
 #include   <malloc.h>
 #include   <assert.h>
 
-#define ARESTA_OWN
 #include "ARESTA.h"
-#undef ARESTA_OWN
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: ARE Aresta
+*
+*
+***********************************************************************/
+
+   typedef struct ARE_tagAresta {
+
+          void * Valor;
+               /* Ponteiro genérico para o valor armazenado na aresta */
+
+          VER_tppVertice pVertice;
+               /* Ponteiro para o vértice para o qual a aresta aponta */
+
+          void ( * ExcluirValor ) ( void * pDado ) ;
+               /* Ponteiro para a função de destruição do valor contido em um elemento */
+
+   } ARE_tpAresta ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
