@@ -4,3 +4,4 @@ ARESTA.C
 		VER_CriarVertice
 		VER_DestruirVertice
 		VER_ObterValor
+

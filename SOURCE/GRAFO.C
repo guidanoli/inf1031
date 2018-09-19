@@ -134,7 +134,7 @@
 
       VER_tppVertice pNovoVertice;
       LIS_tppLista pVertices;
-      LIS_tppLista pListaAresta;
+      LIS_tppLista pAresta;
 
       if( pGrafo == NULL )
       {
@@ -173,7 +173,7 @@
          return GRF_CondRetFaltouMemoria;
       } /* if */
 
-      pListaAresta = (LIS_tppLista) malloc(sizeof(LIS_tppLista));
+      pAresta = ARE_CriarAresta(
       /* Cria uma a lista para as arestas do novo vértice */
 
       if( pListaAresta == NULL )
@@ -181,7 +181,7 @@
          return GRF_CondRetFaltouMemoria;
       } /* if */
 
-      
+      VER_InserirAresta(pNovoVertice,pListaAresta);
       /* Associa a lista de arestas criado ao struct de vértice */
 
       return GRF_CondRetOK;
