@@ -26,6 +26,25 @@
 
 /***********************************************************************
 *
+*  $TC Tipo de dados: VER Aresta
+*
+*
+***********************************************************************/
+
+	typedef struct VER_tagAresta{
+
+		void * Valor ;
+			/* Ponteiro genérico para o valor armazenado na aresta */
+
+		VER_tpVertice * pPart;
+			/* Ponteiro para vértice de origem da aresta */
+
+		VER_tpVertice * pDest;
+			/* Ponteiro para vértice de destino da aresta*/
+
+	} VER_tpAresta;
+/***********************************************************************
+*
 *  $TC Tipo de dados: VER Vértice
 *
 *
@@ -56,9 +75,18 @@
 *  Função: VER  &Criar vértice
 *  ****/
 
-   // a fazer ainda
+    VER_tppVertice VER_CriarVertice(
+             void   ( * ExcluirValor ) ( void * pDado ),
+             void * Valor ) {
+
+	void* ptListaSuc;
+	void* ptListaAnt;
+
+	}
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
+
+	void destroiAresta(VER_tpAresta*);
 
 /********** Fim do módulo de implementação: VER  Vértice **********/
