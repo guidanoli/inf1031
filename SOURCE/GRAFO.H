@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-*  $MCD Módulo de definição: GRF  Grafo
+*  $MCD Módulo de definição: GRF  Grafo Dirigido
 *
 *  Arquivo gerado:              GRAFO.h
 *  Letras identificadoras:      GRF
@@ -14,7 +14,7 @@
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
 *     1       gui   11/09/2018  início do desenvolvimento
-*     1.1     gui   14/09/2018  funções de acesso básicas
+*     1.1     gui   21/09/2018  novo modelo de grafo dirigido
 *
 *  $ED Descrição do módulo
 *     

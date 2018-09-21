@@ -14,7 +14,7 @@
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
 *     1       gui   17/09/2018  início do desenvolvimento
-*     2       gui   17/09/2018  funções básicas do módulo
+*     1.1     gui   21/09/2018  definição das funções básicas
 *
 *  $ED Descrição do módulo
 *     
@@ -29,6 +29,7 @@
 /* Tipo referência para um grafo */
 
 typedef struct VER_tagVertice * VER_tppVertice;
+typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
@@ -50,6 +51,9 @@ typedef struct VER_tagVertice * VER_tppVertice;
 
          VER_CondRetArestaExiste ,
                /* Uma aresta com mesmo valor já existe */
+
+         VER_CondRetArestaNaoExiste ,
+               /* O ponteiro para a aresta é nulo */
 
          VER_CondRetErroEstrutura ,
                /* Erro na estrutura do vértice */    
@@ -94,17 +98,18 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *
 *  $ED Descrição da função
 *     Destrói o vértice fornecido.
-*     O parâmetro ponteiro para o vértice não é modificado.
-*     Se ocorrer algum erro durante a destruição, o vértice resultará
-*     estruturalmente incorreto.
-*     OBS. não existe previsão para possíveis falhas de execução.
 *
 *  $EP Parâmetros
 *     pVertice - ponteiro para o vértice
 *
+*  $FV Valor retornado
+*     VER_CondRetOK                 - destruiu sem problemas
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*
 ***********************************************************************/
 
-   void VER_DestruirVertice( VER_tppVertice pVertice ) ;
+   VER_tpCondRet VER_DestruirVertice( VER_tppVertice pVertice ) ;
 
 /***********************************************************************
 *
@@ -117,9 +122,10 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *     pVertice - ponteiro para o vértice cujo valor deseja-se obter
 *
 *  $FV Valor retornado
-*     VER_CondRetOK                 - inseriu sem problemas
+*     VER_CondRetOK                 - obteve sem problemas
 *     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
-*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*     VER_CondRetErroEstrutura      - caso o valor seja nulo
+                                      (Assertiva Estrutural)
 *
 ***********************************************************************/
 
@@ -149,6 +155,26 @@ typedef struct VER_tagVertice * VER_tppVertice;
 
    VER_tpCondRet VER_InserirAresta( VER_tppVertice pVertice ,
                                     void * pAresta ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Destruir aresta
+*
+*  $ED Descrição da função
+*     Destrói uma aresta
+*
+*  $EP Parâmetros
+*     pAresta  - ponteiro para aresta
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - destruiu sem problemas
+*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_DestruirAresta( VER_tppAresta pAresta ) ;
 
    // a implementar
 

@@ -12,3 +12,9 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								seu struct para o módulo VÉRTICE.
 21/09	2h			revisar projetos		Editamos o modelo e as assertivas estruturais do
 								grafo dirigido junto com Nagib no LABGRAD
+21/09   4h			codificar módulo		Implementamos funções básicas do módulo VERTICE
+								e do módulo GRAFO, como VER_DestruirVertice,
+								VER_CriarVertice, VER_DestruirAresta,
+								VER_DestruirAresta. Também aproveitamos as funções
+								baseadas no antigo modelo de grafo dirigido:
+								GRF_InserirVertice e ProcurarVertice.
