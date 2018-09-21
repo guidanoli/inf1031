@@ -1,3 +1,5 @@
 ﻿Data	Horas Trabalhadas              Tipo de Tarefa			             Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
 17/9   2.5h                           Projetar                       Fazendo o modelo dos modulos grafo e vertice
+19/9   2h                             Revisar Projetos               Desenhamos o modelo e exemplo do projeto grafo
+21/9   2h                             Revisar Projetos          Fizemos algumas modificação no modelo e nas assertivas estruturais
