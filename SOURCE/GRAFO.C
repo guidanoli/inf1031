@@ -36,20 +36,20 @@
 
    typedef struct GRF_tagGrafo {
 
+         VER_tppVertice pVertCorr;
+               /* Ponteiro para vértice corrente */
+
          LIS_tppLista pOrigensGrafo ;
                /* Ponteiro para cabeça da lista das origens */
 
          LIS_tppLista pVerticesGrafo ;
                /* Ponteiro para cabeça da lista dos vértices */
 
-          void ( * ExcluirValor ) ( void * pDado ) ;
-               /* Ponteiro para a função de destruição do valor contido em um elemento */
-
    } GRF_tpGrafo ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static void DestruirListaGrafo( void * pLista );
+   void DestruirVertice ( void * pVertice );
 
    GRF_tpCondRet ProcurarVertice( GRF_tppGrafo pGrafo ,
                                   void *pValor );
@@ -61,8 +61,7 @@
 *  Função: GRF  &Criar grafo
 *  ****/
 
-   GRF_tppGrafo GRF_CriarGrafo(
-             void   ( * ExcluirValor ) ( void * pDado ) )
+   GRF_tppGrafo GRF_CriarGrafo()
    {
 
       GRF_tppGrafo pNovoGrafo;
@@ -76,23 +75,21 @@
          return NULL;
       } /* if */
 
-      /* Origem e Vértices são LISTAS, portanto recebem a função DestruirListaGrafo */
-      pListaOrigem = LIS_CriarLista(DestruirListaGrafo);
+      pListaOrigem = LIS_CriarLista(NULL);
 
       if(pListaOrigem == NULL)
       {
          return NULL;
       } /* if */
 
-      pListaVertices = LIS_CriarLista(DestruirListaGrafo);
+      pListaVertices = LIS_CriarLista(&DestruirVertice);
 
       if(pListaVertices == NULL)
       {
          return NULL;
       } /* if */
 
-      /* Contudo, o conteúdo do grafo não é espeficado, e deve ser tratado por ExcluirValor*/
-      pNovoGrafo->ExcluirValor = ExcluirValor;
+      pNovoGrafo->pVertCorr = NULL;
       pNovoGrafo->pOrigensGrafo = pListaOrigem;
       pNovoGrafo->pVerticesGrafo = pListaVertices;
 
@@ -105,18 +102,20 @@
 *  Função: GRF  &Destruir grafo
 *  ****/
 
-   void GRF_DestruirGrafo( GRF_tppGrafo pGrafo )
+   GRF_tpCondRet GRF_DestruirGrafo( GRF_tppGrafo pGrafo )
    {
 
       if(pGrafo == NULL)
       {
-         return;
+         return GRF_CondRetGrafoNaoExiste;
       } /* if */
 
       LIS_DestruirLista(pGrafo->pOrigensGrafo);
       LIS_DestruirLista(pGrafo->pVerticesGrafo);
 
       free(pGrafo);
+
+      return GRF_CondRetOK;
 
    } /* Fim função: GRF  &Destruir grafo */
 
@@ -126,7 +125,8 @@
 *  ****/
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
-                                     void * pValor )
+                                     void * pValor ,
+                                     void (* ExcluirValor) ( void * pDado ) )
    {
 
       LIS_tpCondRet RetLis;
@@ -157,8 +157,8 @@
          return RetGrf;
       } /* if */
 
-      pNovoVertice = VER_CriarVertice(pGrafo->ExcluirValor,pValor);
-      /* Cria uma novo vértice com a regra de exclusão padrão do grafo */
+      pNovoVertice = VER_CriarVertice(ExcluirValor,pValor);
+      /* Cria uma novo vértice com a regra de exclusão padrão do grafo e o valor fornecido */
 
       if( pNovoVertice == NULL )
       {
@@ -170,19 +170,9 @@
 
       if( RetLis == LIS_CondRetFaltouMemoria )
       {
+         free(pNovoVertice);
          return GRF_CondRetFaltouMemoria;
       } /* if */
-
-      pAresta = ARE_CriarAresta(
-      /* Cria uma a lista para as arestas do novo vértice */
-
-      if( pListaAresta == NULL )
-      {
-         return GRF_CondRetFaltouMemoria;
-      } /* if */
-
-      VER_InserirAresta(pNovoVertice,pListaAresta);
-      /* Associa a lista de arestas criado ao struct de vértice */
 
       return GRF_CondRetOK;
 
@@ -193,32 +183,26 @@
 *  Função: GRF  &Inserir aresta
 *  ****/
 
-   
+   // a implementar
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
 /***********************************************************************
 *
-*  $FC Função: GRF  -Destruir lista do grafo
+*  $FC Função: GRF  -Destruir Vértice
 *
 *  $ED Descrição da função
-*     Destrói a lista interna de uma estrutura de grafo, seja de
-*     Origem, Aresta, Vértices ou Vértice. É a função padrão a ser
-*     chamada para destruir uma lista interna de um grafo.
+*     Destrói um vértice
 *
 *  $EP Parâmetros
-*     pLista  - ponteiro genérico, mas que deve ser do tipo LIS_tppLista
-*               para que a função LIS_DestruirLista seja devidamente
-*               chamada.
+*     pVertice - ponteiro para vértice
 *
 ***********************************************************************/
 
-   void DestruirListaGrafo( void * pLista )
+   void DestruirVertice ( void * pVertice )
    {
-
-      LIS_DestruirLista( (LIS_tppLista) pLista );
-
-   } /* Fim função: GRF  -Destruir lista do grafo */
+      VER_DestruirVertice( (VER_tppVertice) pVertice );
+   }
 
 /***********************************************************************
 *
@@ -244,7 +228,7 @@
                                   void *pValor )
    {
 
-      VER_tppVertice pVertices;
+      LIS_tppLista pVertices;
 
       if( pGrafo == NULL )
       {
@@ -261,25 +245,21 @@
       IrInicioLista(pVertices);
       while(LIS_AvancarElementoCorrente(pVertices,1) != LIS_CondRetFimLista)
       {
-         /* Verifica se algum dos vértices possui o indentificador Index */
-         LIS_tppLista vert;
-         GRF_tpVertice *elem;
-         vert = (LIS_tppLista) LIS_ObterValor(pVertices);
+         /* Verifica se algum dos vértices possui o indentificador pValor */
 
-         if( vert == NULL )
-         {
-            return GRF_CondRetErroEstrutura;
-         } /* if */
+         VER_tppVertice elem;
+         void * pValorRecebido;
 
-         IrInicioLista(vert);
-         elem = (GRF_tpVertice *) LIS_ObterValor(vert);
+         elem = (VER_tppVertice) LIS_ObterValor(pVertices);
 
          if( elem == NULL )
          {
             return GRF_CondRetErroEstrutura;
          } /* if */
 
-         if( elem->Index == Index )
+         VER_ObterValor(elem,pValorRecebido);
+
+         if( pValorRecebido == pValor )
          {
             return GRF_CondRetVerticeExiste;
          }

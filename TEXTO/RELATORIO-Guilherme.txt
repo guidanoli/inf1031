@@ -6,3 +6,9 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 14/09	1h			estudar				Estudar o módulo Lista
 14/09	4h			especificar os módulos		Condições de retorno de Grafo, struct GRF_tpGrafo,
 								e funções de acesso básicas
+19/09	2h			revisar projetos		Repensamos o modelo e questionamos a necessidade
+								de certos módulos, e quais structs estariam em
+								quais módulos. Excluímos o módulo ARESTA e passamos
+								seu struct para o módulo VÉRTICE.
+21/09	2h			revisar projetos		Editamos o modelo e as assertivas estruturais do
+								grafo dirigido junto com Nagib no LABGRAD

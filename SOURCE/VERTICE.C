@@ -36,11 +36,14 @@
           void * Valor ;
                /* Ponteiro genérico para o valor armazenado no vértice */
 
-          LIS_tppLista pArestaVertice;
-               /* Ponteiro para a cabeça da lista de arestas do vértice */
+          LIS_tppLista pAnt;
+               /* Ponteiro para a cabeça da lista de arestas que apontam para o vértice (antecessores) */
+
+          LIS_tppLista pSuc;
+               /* Ponteiro para a cabeça da lista de arestas que partem do vértice (sucessores) */
 
           void ( * ExcluirValor ) ( void * pDado ) ;
-               /* Ponteiro para a função de destruição do valor contido em um elemento */
+               /* Ponteiro para a função de destruição do valor */
 
    } VER_tpVertice ;
 

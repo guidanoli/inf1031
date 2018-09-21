@@ -24,7 +24,6 @@
 
 #include "LISTA.H"
 #include "VERTICE.H"
-#include "ARESTA.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -72,12 +71,6 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Cria a estrutura de um grafo sem vértices ou arestas.
 *     O tipo dos valores armazenados não é espeficiado.
 *
-*  $EP Parâmetros
-*     ExcluirValor  - ponteiro para a função que processa a
-*                     exclusão do valor referenciado pelo elemento
-*                     a ser excluído.
-*                     Ver descrição do módulo.
-*
 *  $FV Valor retornado
 *     Se executou corretamente retorna o ponteiro para o grafo.
 *     Este ponteiro será utilizado pelas funções que manipulem este grafo.
@@ -88,8 +81,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRF_tppGrafo GRF_CriarGrafo(
-             void   ( * ExcluirValor ) ( void * pDado ) ) ;
+   GRF_tppGrafo GRF_CriarGrafo() ;
 
 /***********************************************************************
 *
@@ -104,9 +96,13 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
 *
+*  $FV Valor retornado
+*     GRF_CondRetOK              - destruiu sem problemas
+*     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo é nulo
+*
 ***********************************************************************/
 
-   void GRF_DestruirGrafo( GRF_tppGrafo pGrafo ) ;
+   GRF_tpCondRet GRF_DestruirGrafo( GRF_tppGrafo pGrafo ) ;
 
 
 /***********************************************************************
@@ -121,6 +117,10 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
 *     pValor - valores do novo vértice
+*     ExcluirValor  - ponteiro para a função que processa a
+*                     exclusão do valor referenciado pelo vértice
+*                     a ser excluído.
+*                     Ver descrição do módulo.  
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - inseriu sem problemas
@@ -132,7 +132,8 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 ***********************************************************************/
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
-                                     void * pValor );
+                                     void * pValor ,
+                                     void (* ExcluirValor) ( void * pDado ) )
    
 /***********************************************************************
 *

@@ -117,13 +117,14 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *     pVertice - ponteiro para o vértice cujo valor deseja-se obter
 *
 *  $FV Valor retornado
-*     não NULL - se o vértice existe
-*     NULL     - se o ponteiro para o vértice for nulo
-*                Pode retornar NULL se o valor inserido no vértice for NULL.
+*     VER_CondRetOK                 - inseriu sem problemas
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
 *
 ***********************************************************************/
 
-   void * VER_ObterValor( VER_tppVertice pVertice ) ;
+   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice ,
+                                 void * pValor ) ;
 
 /***********************************************************************
 *
@@ -139,8 +140,8 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - inseriu sem problemas
-*     VER_CondRetVerticeNaoExiste   - ponteiro para grafo é nulo
-*     VER_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
 *     VER_CondRetArestaExiste       - aresta já existe com o mesmo valor
 *     VER_CondRetFaltouMemoria      - não foi possível alocar novas arestas
 *
@@ -148,5 +149,7 @@ typedef struct VER_tagVertice * VER_tppVertice;
 
    VER_tpCondRet VER_InserirAresta( VER_tppVertice pVertice ,
                                     void * pAresta ) ;
+
+   // a implementar
 
 /********** Fim do módulo de definição: VER  Vértice **********/
