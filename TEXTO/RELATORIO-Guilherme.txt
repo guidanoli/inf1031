@@ -18,3 +18,5 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								VER_DestruirAresta. Também aproveitamos as funções
 								baseadas no antigo modelo de grafo dirigido:
 								GRF_InserirVertice e ProcurarVertice.
+25/09	2h			codificar módulo		Implementei as funções InserirAresta tanto nos
+								módulos Grafo quanto no Vértice.
