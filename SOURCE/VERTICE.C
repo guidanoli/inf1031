@@ -13,7 +13,8 @@
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
 *     1       gui   17/09/2018  início do desenvolvimento
-*     1.1     gui   21/09/2018  implementação das funções básicas
+*     1.1     gui   21/09/2018  implementação das funções básicas de vértices
+*     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *
 ***************************************************************************/
 
@@ -275,9 +276,9 @@
          return VER_CondRetVerticeNaoExiste;
       } /* if */
 
-      (*pValor) = pVertice->Valor;
+      pValor = pVertice->Valor;
 
-      if( *pValor == NULL )
+      if( pValor == NULL )
       {
          return VER_CondRetErroEstrutura;
       } /* if */
@@ -285,6 +286,81 @@
       return VER_CondRetOK;
 
    } /* Fim função: VER  &Obter valor do vértice */
+
+/***************************************************************************
+*
+*  Função: VER  &Inserir aresta
+*  ****/
+
+   VER_tpCondRet VER_InserirAresta( VER_tppVertice pPartida ,
+                                    VER_tppVertice pDestino ,
+                                    void * pValorAresta )
+   {
+
+      LIS_tpCondRet RetLis;
+
+      VER_tppAresta pNovaAresta;
+
+      if( pPartida == NULL || pDestino == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( pValorAresta == NULL   || pPartida->pSuc == NULL || pDestino->pAnt == NULL ||
+          pPartida->pAnt == NULL || pDestino->pSuc == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      IrInicioLista(pPartida->pSuc);
+      while( LIS_AvancarElementoCorrente(pPartida->pSuc,1) != LIS_CondRetOK )
+      {
+         VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pPartida->pSuc);
+
+         if( pArestaTemp == NULL )
+         {
+            return VER_CondRetErroEstrutura;
+         } /* if */
+
+         if( pArestaTemp->Valor == pValorAresta &&
+             pArestaTemp->pDest == pDestino )
+         {
+            return VER_CondRetArestaExiste;
+         } /* if */
+
+      } /* while */
+
+      pNovaAresta = (VER_tppAresta) malloc(sizeof(VER_tpAresta));
+
+      if( pNovaAresta == NULL )
+      {
+         return VER_CondRetFaltouMemoria;
+      } /* if */
+
+      pNovaAresta->pDest = pDestino;
+      pNovaAresta->pPart = pPartida;
+      pNovaAresta->Valor = pValorAresta;
+
+      RetLis = LIS_InserirElementoApos(pDestino->pAnt,pNovaAresta);
+
+      if( RetLis == LIS_CondRetFaltouMemoria )
+      {
+         free(pNovaAresta);
+         return VER_CondRetFaltouMemoria;
+      } /* if */
+
+      RetLis = LIS_InserirElementoApos(pPartida->pSuc,pNovaAresta);
+
+      if( RetLis == LIS_CondRetFaltouMemoria )
+      {
+         LIS_ExcluirElemento(pDestino->pAnt);
+         free(pNovaAresta);
+         return VER_CondRetFaltouMemoria;
+      } /* if */
+
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Inserir Aresta */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

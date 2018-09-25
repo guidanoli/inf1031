@@ -298,7 +298,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     numElem - o número de elementos a andar
 *
 *  $FV Valor retornado
-*     CondRetOK         - se numElem elementos tiverem sido andados
+*     LIS_CondRetOK         - se numElem elementos tiverem sido andados
 *     LIS_CondRetFimLista   - se encontrou o fim da lista antes de andar numElem
 *                         elementos
 *     CondRetListaVazia - se a lista está vazia

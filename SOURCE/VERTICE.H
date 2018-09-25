@@ -15,6 +15,7 @@
 *     Versão  Autor    Data     Observações
 *     1       gui   17/09/2018  início do desenvolvimento
 *     1.1     gui   21/09/2018  definição das funções básicas
+*     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *
 *  $ED Descrição do módulo
 *     
@@ -116,7 +117,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *  $FC Função: VER  &Obter referência para o valor contido no vértice
 *
 *  $ED Descrição da função
-*     Obtem a referência para o valor contido no vértice
+*     Faz o ponteiro pValor apontar para o valor armazenado no vértice
 *
 *  $EP Parâmetros
 *     pVertice - ponteiro para o vértice cujo valor deseja-se obter
@@ -141,20 +142,23 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     WIP
 *
 *  $EP Parâmetros
-*     pVertice - ponteiro para vértice
-*     pAresta  - ponteiro para aresta
+*     pPartida - ponteiro para vértice de partida da aresta
+*     pDestino - ponteiro para vértice de destino da aresta
+*     pAresta  - ponteiro para valor da aresta
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - inseriu sem problemas
 *     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaExiste       - há uma aresta com mesmo valor saindo de
+*                                      pPartida e indo para pDestino
 *     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
-*     VER_CondRetArestaExiste       - aresta já existe com o mesmo valor
 *     VER_CondRetFaltouMemoria      - não foi possível alocar novas arestas
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_InserirAresta( VER_tppVertice pVertice ,
-                                    void * pAresta ) ;
+   VER_tpCondRet VER_InserirAresta( VER_tppVertice pPartida ,
+                                    VER_tppVertice pDestino ,
+                                    void * pValorAresta ) ;
 
 
 /***********************************************************************

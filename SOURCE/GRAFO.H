@@ -15,6 +15,7 @@
 *     Versão  Autor    Data     Observações
 *     1       gui   11/09/2018  início do desenvolvimento
 *     1.1     gui   21/09/2018  novo modelo de grafo dirigido
+*     1.2     gui   25/09/2018  implementação das funções básicas de vértices e arestas
 *
 *  $ED Descrição do módulo
 *     
@@ -133,34 +134,39 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
                                      void * pValor ,
-                                     void (* ExcluirValor) ( void * pDado ) )
+                                     void (* ExcluirValor) ( void * pDado ) ) ;
    
 /***********************************************************************
 *
 *  $FC Função: GRF  &Inserir aresta
 *
 *  $ED Descrição da função
-*
-*     WIP
+*     Insere uma aresta com valor fornecido ValorAresta que sai do
+*     vértice A e vai para o vértice B.
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
 *     pValorA e pValorB - valores dos vértices
 *     ValorAresta - valor da arestas
+*     ComparaValor - ponteiro para função que compara valores do
+*                    tipo de pValorA e pValorB.
+*                    Retorno da função:
+*                    >>> 0 caso pValorA == pValorB
+*                    >>> diferente de 0 caso contrário
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
 *     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo é nulo
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
-*     GRF_CondRetVerticeNaoExiste   - algum dos valores fornecidos não pertence
-*                                     a nenhum dos vértices esperados
-*     GRF_CondRetFaltouMemoria      - não foi possível alocar novas arestas
+*     GRF_CondRetVerticeNaoExiste   - um dos valores fornecidos não existem
+*     GRF_CondRetFaltouMemoria      - não foi possível alocar espaço na memória
 *
 ***********************************************************************/
 
    GRF_tpCondRet GRF_InserirAresta( GRF_tppGrafo pGrafo ,
                                     void * pValorA,
                                     void * pValorB,
-                                    void * ValorAresta);
+                                    void * ValorAresta,
+                                    int (* ComparaValor) ( void * pA, void * pB) ) ;
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

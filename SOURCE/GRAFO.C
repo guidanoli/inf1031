@@ -14,6 +14,7 @@
 *     Versão  Autor    Data     Observações
 *     1       gui   11/09/2018  início do desenvolvimento
 *     1.1     gui   21/09/2018  novo modelo de grafo dirigido
+*     1.2     gui   25/09/2018  implementação das funções básicas de vértices e arestas
 *
 ***************************************************************************/
 
@@ -77,6 +78,7 @@
 
       if(pListaOrigem == NULL)
       {
+         free(pNovoGrafo);
          return NULL;
       } /* if */
 
@@ -84,6 +86,8 @@
 
       if(pListaVertices == NULL)
       {
+         LIS_DestruirLista(pListaOrigem);
+         free(pNovoGrafo);
          return NULL;
       } /* if */
 
@@ -132,7 +136,6 @@
 
       VER_tppVertice pNovoVertice;
       LIS_tppLista pVertices;
-      LIS_tppLista pAresta;
 
       if( pGrafo == NULL )
       {
@@ -181,7 +184,83 @@
 *  Função: GRF  &Inserir aresta
 *  ****/
 
-   // a implementar
+   GRF_tpCondRet GRF_InserirAresta( GRF_tppGrafo pGrafo ,
+                                    void * pValorA,
+                                    void * pValorB,
+                                    void * ValorAresta,
+                                    int (* ComparaValor) ( void * pA, void * pB) )
+   {
+      
+      VER_tppVertice vA = NULL, vB = NULL;
+      LIS_tppLista pVertices;
+      VER_tpCondRet RetVer;
+
+      if( pGrafo == NULL )
+      {
+         return GRF_CondRetGrafoNaoExiste;
+      } /* if */
+
+      pVertices = pGrafo->pVerticesGrafo;
+
+      if( pVertices == NULL || ValorAresta == NULL )
+      {
+         return GRF_CondRetErroEstrutura;
+      } /* if */
+
+      IrInicioLista(pVertices);
+      while( LIS_AvancarElementoCorrente(pVertices,1) != LIS_CondRetOK )
+      {
+         VER_tppVertice pVertCorr = (VER_tppVertice) LIS_ObterValor(pVertices);
+         void *pValorCorr;
+
+         RetVer = VER_ObterValor(pVertCorr,pValorCorr);
+         switch(RetVer)
+         {
+         case VER_CondRetVerticeNaoExiste:
+            return GRF_CondRetVerticeNaoExiste;
+
+         case VER_CondRetErroEstrutura:
+            return GRF_CondRetErroEstrutura;
+         } /* switch */
+
+         if( pValorCorr == NULL )
+         {
+            return GRF_CondRetErroEstrutura;
+         } /* if */
+
+         if( ComparaValor(pValorCorr,pValorA) == 0 )
+         {
+            vA = pVertCorr;
+         } /* if */
+         else if( ComparaValor(pValorCorr,pValorB) == 0 )
+         {
+            vB = pVertCorr;
+         } /* else if */
+
+      } /* while */
+
+      if( vB == NULL || vA == NULL )
+      {
+         return GRF_CondRetVerticeNaoExiste;
+      } /* if */
+
+      RetVer = VER_InserirAresta(vA,vB,ValorAresta);
+      
+      switch( RetVer )
+      {
+      case VER_CondRetVerticeNaoExiste:
+         return GRF_CondRetVerticeNaoExiste;
+
+      case VER_CondRetErroEstrutura:
+         return GRF_CondRetErroEstrutura;
+
+      case VER_CondRetFaltouMemoria:
+         return GRF_CondRetFaltouMemoria;
+      } /* switch */
+
+      return GRF_CondRetOK;
+
+   } /* Fim da função: GRF  Inserir aresta */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
@@ -200,7 +279,7 @@
    void DestruirVertice ( void * pVertice )
    {
       VER_DestruirVertice( (VER_tppVertice) pVertice );
-   }
+   } /* Fim da função: GRF  -Destruir Vértice */
 
 /***********************************************************************
 *
@@ -260,7 +339,7 @@
          if( pValorRecebido == pValor )
          {
             return GRF_CondRetVerticeExiste;
-         }
+         } /* if */
 
       } /* while */
 
