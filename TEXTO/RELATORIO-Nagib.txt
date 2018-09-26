@@ -4,3 +4,4 @@
 19/9   2h                             Revisar Projetos               Desenhamos o modelo e exemplo do projeto grafo
 21/9   2h                             Revisar Projetos          Fizemos algumas modificação no modelo e nas assertivas estruturais
 21/9   4h                             Codificar módulo          Implementamos funções do módulo VERTICE e do módulo GRAFO
+26/9   2h                             Codificar módulo                 Codificar parte módulo de teste TESTVER.C
