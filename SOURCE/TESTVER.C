@@ -1,21 +1,23 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: TVER Teste Vértice
+*  $MCI MÃ³dulo de implementaÃ§Ã£o: TVER Teste VÃ©rtice
 *
 *  Arquivo gerado:              TESTVER.c
 *  Letras identificadoras:      TVER
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    ArcabouÃ§o para a automaÃ§Ã£o de testes de programas redigidos em C
 *  Arquivo da base de software: ???
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 AutomatizaÃ§Ã£o dos testes de mÃ³dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores:   gui   Guilherme Dantas
 *             cai   Caique Molina
 *             nag   Nagib Suaid
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       nag    29/09/18   Criar e Destruir
+*  $HA HistÃ³rico de evoluÃ§Ã£o:
+*     VersÃ£o  Autor    Data     ObservaÃ§Ãµes
+*     1       nag    29/09/18   Teste de todas menos 
+*                               destruiraresta e percorreraresta
+*  
 *
 ***************************************************************************/
 
@@ -45,24 +47,24 @@ static const char DESTRUIR_ARESTA_CMD       [ ] = "=destruiraresta"   ;
 
 VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** ProtÃ³tipos das funÃ§Ãµes encapuladas no mÃ³dulo *****/
 
    static int ValidarInxVertice( int inxVERTICE , int Modo ) ;
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes exportadas pelo mÃ³dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC Função: TVER &Testar vértice
+*  $FC FunÃ§Ã£o: TVER &Testar vÃ©rtice
 *
-*  $ED Descrição da função
-*     Podem ser criadas até 10 vértices, identificadas pelos índices 0 a 9 (inclusive)
+*  $ED DescriÃ§Ã£o da funÃ§Ã£o
+*     Podem ser criadas atÃ© 10 vÃ©rtices, identificadas pelos Ã­ndices 0 a 9 (inclusive)
 *
-*     Comandos disponíveis:
+*     Comandos disponÃ­veis:
 *
-*     =criarvertice                   inxVERTICE, stringdado
-*	  =destruirvertice				  inxVERTICE, CondRetEsp
+*    =criarvertice              inxVERTICE, stringdado
+*	  =destruirvertice			  inxVERTICE, CondRetEsp
 *	  =obtervalor					  inxVERTICE, ValorEsp, CondRetEsp
 *	  =inseriraresta				  inxVERTICEPart, inxVERTICEDest, stringdado, CondRetEsp
 *	  =destruiraresta				  inxVERTICE, stringdadoAre, CondRetEsp
@@ -72,13 +74,16 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
    {
 
       int inxVERTICE  = -1 ,
+          inxVERTICE2  = -1 ,
           numLidos   = -1 ,
           CondRetEsp = -1  ;
 
-      TST_tpCondRet CondRet ;
+      TST_tpCondRet CondRetTST ;
+      VER_tpCondRet CondRetVER;
 
       char * pDado ;
-	  char   StringDado[  DIM_VALOR_VERTICE ] ;
+	   char   StringDado     [  DIM_VALOR_VERTICE ] ;
+      char   StringEsperado [  DIM_VALOR_VERTICE ] ;
 
       int ValEsp = -1 ;
 
@@ -92,7 +97,7 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
          if ( strcmp( ComandoTeste , CRIAR_VERTICE_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "ic" ,
+            numLidos = LER_LerParametros( "is" ,
                        &inxVERTICE, StringDado ) ;
 
             if ( ( numLidos != 2 )
@@ -129,25 +134,108 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
 				  return TST_CondRetParm ;
 			 }/* if */
 			 
-			 CondRet = VER_DestruirVertice(vtVertices[ inxVERTICE ]);
+			 CondRetVER = VER_DestruirVertice(vtVertices[ inxVERTICE ]);
 
 			  vtVertices[ inxVERTICE ] = NULL ;
 
-			 return TST_CompararInt( CondRetEsp , CondRet ,
+			 return TST_CompararInt( CondRetEsp , CondRetVER ,
                      "Condicao de retorno errada ao destruir vertice.") ;
 
 		 }/*fim ativa: Testar destruirvertice*/
      
 
-   } /* Fim função: TVER &Testar VERTICE */
+       /* Testar obtervalor*/
+        if (strcmp( ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0){
+
+           numLidos = LER_LerParametros("isi",
+                      &inxVERTICE, StringEsperado, &CondRetEsp);
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxVERTICE( inxVERTICE ))){
+				  return TST_CondRetParm ;
+			   }/* if */
+
+         pDado = ( char * ) malloc( strlen( StringDado ) + 1) ;
+         if ( pDado == NULL )
+         {
+            return TST_CondRetMemoria ;
+         } /* if */
+
+			strcpy(pDado, StringEsperado); 
+
+         CondRetVER = VER_ObterValor( vtVertices[inxVERTICE], StringDado );
+
+         if ( (CondRetVER != CondRetEsp) || (strcmp( pDado, StringDado )!=0) ){
+             return TST_CondRetErro;
+         }/* if */
+
+          return TST_CondRetOK;
+
+        }/* fim ativa: Testar obtervalor */
+
+       /* Testar inseriraresta*/
+        if (strcmp( ComandoTeste, INSERIR_ARESTA_CMD) == 0){
+
+            numLidos = LER_LerParametros( "iisi" ,
+                       &inxVERTICE, &inxVERTICE2, StringDado, &CondRetEsp) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxVERTICE( inxVERTICE ))
+              || ( ! ValidarInxVERTICE( inxVERTICE2 ))){
+				  return TST_CondRetParm ;
+			   }/* if */
+
+            pDado = ( char * ) malloc( strlen( StringDado )) ;
+               if ( pDado == NULL )
+            {
+               return TST_CondRetMemoria ;
+            } /* if */
+
+            strcpy(pDado, StringEsperado); 
+
+            CondRetVER= VER_InserirAresta(vtVertices[inxVERTICE],
+                                          vtVertices[inxVERTICE2],
+                                          pDado);
+
+            if (CondRetVER != CondRetEsp)
+               return TST_CondRetErro;
+
+             return TST_CondRetOK;
+
+        }/* fim ativa: Testar inseriraresta*/
+
+       /* Testar destruiraresta*/
+        if (strcmp( ComandoTeste, DESTRUIR_ARESTA_CMD) == 0){
+		      numLidos = LER_LerParametros("isi",
+						      &inxVERTICE, StringDado , &CondRetEsp);
+
+			 if ( ( numLidos != 3 )
+              || ( ! ValidarInxVERTICE( inxVERTICE ))){
+				  return TST_CondRetParm ;
+			 }/* if */
+
+          pDado = ( char * ) malloc( strlen( StringDado )) ;
+               if ( pDado == NULL )
+            {
+               return TST_CondRetMemoria ;
+            } /* if */
+
+            strcpy(pDado, StringEsperado);
+
+            CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], 
+                                             );
+
+        }/* fim ativa: Testar destruiraresta*/
+
+   } /* Fim funÃ§Ã£o: TVER &Testar VERTICE */
 
 
-/*****  Código das funções encapsuladas no módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes encapsuladas no mÃ³dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC Função: TVER -Validar indice de VERTICE
+*  $FC FunÃ§Ã£o: TVER -Validar indice de VERTICE
 *
 ***********************************************************************/
 
@@ -162,7 +250,7 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
          
       return TST_VER_TRUE ;
 
-   } /* Fim função: TVER -Validar indice de VERTICE */
+   } /* Fim funÃ§Ã£o: TVER -Validar indice de VERTICE */
 
-/********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
+/********** Fim do mÃ³dulo de implementaÃ§Ã£o: TVER Teste VERTICE de sÃ­mbolos **********/
 
