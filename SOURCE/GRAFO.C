@@ -48,10 +48,10 @@
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   void DestruirVertice ( void * pVertice );
+   static void DestruirVertice ( void * pVertice );
 
-   GRF_tpCondRet ProcurarVertice( GRF_tppGrafo pGrafo ,
-                                  void *pValor );
+   static GRF_tpCondRet ProcurarVertice( GRF_tppGrafo pGrafo ,
+										           void *pValor );
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
