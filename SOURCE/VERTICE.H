@@ -56,6 +56,9 @@ typedef struct VER_tagAresta * VER_tppAresta;
          VER_CondRetArestaNaoExiste ,
                /* O ponteiro para a aresta é nulo */
 
+         VER_CondRetValorFornecidoNulo ,
+               /* O valor fornecido é nulo */
+
          VER_CondRetErroEstrutura ,
                /* Erro na estrutura do vértice */    
 
@@ -169,7 +172,13 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     Destrói uma aresta
 *
 *  $EP Parâmetros
-*     pAresta  - ponteiro para aresta
+*     pVertice  - ponteiro para vértice
+*     pValor    - ponteiro para valor armazenado na aresta
+*     ComparaValor - ponteiro para função que compara valores do
+*                    tipo de pValorA e pValorB.
+*                    Retorno da função:
+*                    >>> 0 caso pValorA == pValorB
+*                    >>> diferente de 0 caso contrário
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
@@ -178,8 +187,43 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_DestruirAresta( VER_tppAresta pAresta ) ;
+   VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVertice,
+                                     void * pValor,
+                                     int (* ComparaValor) ( void * pA, void * pB)) ;
 
-   // a implementar
+/***********************************************************************
+*
+*  $FC Função: VER  &Percorrer aresta
+*
+*  $ED Descrição da função
+*     Percorre uma aresta partindo do vértice de partida fornecido
+*     segundo um valor também fornecido, e armazena no ponteiro pDestino
+*     o endereço do vértice de destino
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     pValor       - valor da aresta que deseja-se percorrer
+*     pVerDestino  - ponteiro para o vértice de destino
+*     ComparaValor - ponteiro para função que compara valores do
+*                    tipo de pValorA e pValorB.
+*                    Retorno da função:
+*                    >>> 0 caso pValorA == pValorB
+*                    >>> diferente de 0 caso contrário
+*     Sentido      - 0 pra trás, 1 para frente
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - destruiu sem problemas
+*     VER_CondRetValorFornecidoNulo - foi fornecido um valor nulo
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida,
+                                      void * pValor,
+                                      VER_tppVertice pVerDestino,
+                                      int (* ComparaValor) ( void * pA, void * pB),
+                                      int Sentido ) ;
 
 /********** Fim do módulo de definição: VER  Vértice **********/

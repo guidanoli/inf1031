@@ -44,6 +44,9 @@
          LIS_tppLista pVerticesGrafo ;
                /* Ponteiro para cabeça da lista dos vértices */
 
+         int (* ComparaValor) ( void * pA, void * pB);
+               /* Ponteiro para função de comparação de valores de aresta */
+
    } GRF_tpGrafo ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -175,6 +178,9 @@
          return GRF_CondRetFaltouMemoria;
       } /* if */
 
+      pGrafo->pVertCorr = pNovoVertice;
+      /* Ponteiro para vértice corrente aponta para o novo vértice */
+
       return GRF_CondRetOK;
 
    } /* Fim função: GRF  &Inserir vértice */
@@ -261,6 +267,72 @@
       return GRF_CondRetOK;
 
    } /* Fim da função: GRF  Inserir aresta */
+
+/***************************************************************************
+*
+*  Função: GRF  &Caminhar
+*  ****/
+
+   GRF_tpCondRet GRF_Caminhar( GRF_tppGrafo pGrafo ,
+                               void * pValor,
+                               int Sentido )
+   {
+
+      VER_tpCondRet RetVer;
+      VER_tppVertice pVerticeDestino;
+
+      if( pGrafo == NULL )
+      {
+         return GRF_CondRetGrafoNaoExiste;
+      } /* if */
+
+      if( pGrafo->pOrigensGrafo == NULL || pGrafo->pVerticesGrafo == NULL )
+      {
+         return GRF_CondRetErroEstrutura;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente(pGrafo->pVerticesGrafo,0)
+          == LIS_CondRetListaVazia )
+      {
+         return GRF_CondRetGrafoVazio;
+      } /* if */
+
+      if( pGrafo->pVertCorr == NULL )
+      {
+         return GRF_CondRetErroEstrutura;
+      } /* if */
+
+      RetVer = VER_PercorrerAresta( pGrafo->pVertCorr,
+                                    pValor,
+                                    pVerticeDestino,
+                                    pGrafo->ComparaValor,
+                                    1 );
+
+      if( RetVer == VER_CondRetErroEstrutura )
+      {
+         return GRF_CondRetErroEstrutura;
+      } /* if */
+      else if( RetVer == VER_CondRetOK )
+      {
+         pGrafo->pVertCorr = pVerticeDestino;
+         return GRF_CondRetOK;
+      } /* else if */
+      else
+      {
+         switch( RetVer )
+         {
+         case VER_CondRetValorFornecidoNulo:
+            return GRF_CondRetValorFornecidoNulo;
+
+         case VER_CondRetArestaNaoExiste:
+            return GRF_CondRetArestaNaoExiste;
+
+         default:
+            return GRF_CondRetErroEstrutura;
+         } /* switch */
+      } /* if */
+
+   } /* Fim da função: GRF  Caminhar */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

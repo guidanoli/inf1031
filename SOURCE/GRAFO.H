@@ -50,11 +50,20 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
          GRF_CondRetGrafoNaoExiste ,
                /* Grafo inexistente */
 
+         GRF_CondRetGrafoVazio ,
+               /* Grafo vazio */
+
          GRF_CondRetVerticeExiste ,
                /* Vértice com dado valor existente */
 
          GRF_CondRetVerticeNaoExiste ,
                /* Vértice com dado valor não existe*/
+
+         GRF_CondRetValorFornecidoNulo ,
+               /* Valor fornecido é nulo */
+
+         GRF_CondRetArestaNaoExiste ,
+               /* Aresta inexistente */
 
          GRF_CondRetErroEstrutura ,
                /* Erro na estrutura do grafo */
@@ -168,5 +177,31 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
                                     void * pValorB,
                                     void * ValorAresta,
                                     int (* ComparaValor) ( void * pA, void * pB) ) ;
+
+/***********************************************************************
+*
+*  $FC Função: GRF  &Caminhar
+*
+*  $ED Descrição da função
+*     Caminha por um grafo em um determinado sentido
+*
+*  $EP Parâmetros
+*     pGrafo - ponteiro para o grafo
+*     pValor - valor da aresta que deseja-se caminhar
+*
+*  $FV Valor retornado
+*     GRF_CondRetOK                 - caminhou sem problemas
+*     GRF_CondRetGrafoNaoExiste
+*     GRF_CondRetErroEstrutura
+*     GRF_CondRetGrafoVazio         - não há vertices no grafo
+*     GRF_CondRetValorFornecidoNulo - pValor é nulo
+*     GRF_CondRetArestaNaoExiste    - não foi encontrada a aresta com
+*                                     o valor pValor
+*
+***********************************************************************/
+
+   GRF_tpCondRet GRF_Caminhar( GRF_tppGrafo pGrafo ,
+                               void * pValor,
+                               int Sentido ) ;
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

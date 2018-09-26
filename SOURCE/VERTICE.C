@@ -196,18 +196,39 @@
 *  Função: VER  &Destruir aresta
 *  ****/
 
-   VER_tpCondRet VER_DestruirAresta( VER_tppAresta pAresta )
+   VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVertice,
+                                     void * pValor,
+                                     int (* ComparaValor) ( void * pA, void * pB))
    {
 
       LIS_tpCondRet RetLis;
-
+      VER_tppAresta pAresta;
       LIS_tppLista pListaDestino, pListaPartida;
       VER_tppVertice pDestino, pPartida;
 
-      if( pAresta == NULL )
+      IrInicioLista(pVertice->pSuc);
+      while( LIS_AvancarElementoCorrente(pVertice->pSuc,1) != LIS_CondRetOK )
       {
-         return VER_CondRetArestaNaoExiste;
-      } /* if */
+         VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pVertice->pSuc);
+
+         if( pArestaTemp == NULL )
+         {
+            return VER_CondRetArestaNaoExiste;
+         } /* if */
+
+         if( (* ComparaValor)(pArestaTemp->Valor,pValor) == 0 )
+         {
+            if( pArestaTemp->pPart != pVertice )
+            {
+               return VER_CondRetErroEstrutura;
+            }
+
+            pAresta = pArestaTemp;
+
+            break;
+         } /* if */
+
+      } /* while */
 
       pDestino = pAresta->pDest;
       pPartida = pAresta->pPart;
@@ -361,6 +382,71 @@
       return VER_CondRetOK;
 
    } /* Fim função: VER  &Inserir Aresta */
+
+/***************************************************************************
+*
+*  Função: VER  &Percorrer Aresta
+*  ****/
+
+   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida,
+                                      void * pValor,
+                                      VER_tppVertice pVerDestino,
+                                      int (* ComparaValor) ( void * pA, void * pB),
+                                      int Sentido )
+   {
+    
+      LIS_tppLista listaAresta;
+
+      if( pVerPartida == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( pValor == NULL || ComparaValor == NULL )
+      {
+         return VER_CondRetValorFornecidoNulo;
+      } /* if */
+
+      if( pVerPartida->pSuc == NULL || pVerPartida->pAnt == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      if( Sentido == 1 )
+      {
+         listaAresta = pVerPartida->pSuc;
+      } /* if */
+      else
+      {
+         listaAresta = pVerPartida->pAnt;
+      } /* else */
+
+      IrInicioLista( listaAresta );
+
+      while( LIS_AvancarElementoCorrente(listaAresta,1) != LIS_CondRetOK )
+      {
+         VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(listaAresta);
+         int retorno = (* ComparaValor) (pArestaTemp->Valor,pValor);
+
+         if( retorno == 0 )
+         {
+            if( Sentido == 1 )
+            {
+               pVerDestino = pArestaTemp->pDest;
+            } /* if */
+            else
+            {
+               pVerDestino = pArestaTemp->pPart;
+            } /* else */
+
+            return VER_CondRetOK;
+         } /* if */
+
+      } /* while */
+
+      return VER_CondRetArestaNaoExiste;
+
+   } /* Fim função: VER  &Percorrer Aresta */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
