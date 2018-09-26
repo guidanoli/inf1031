@@ -15,7 +15,7 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     0.5	  nag    29/09/18   INCOMPLETO
+*     1       nag    29/09/18   Criar e Destruir
 *
 ***************************************************************************/
 
