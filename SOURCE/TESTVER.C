@@ -45,14 +45,13 @@ static const char DESTRUIR_ARESTA_CMD       [ ] = "=destruiraresta"   ;
 #define DIM_VT_VERTICE 10
 #define DIM_VALOR_VERTICE 10
 
-VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
+VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static int ValidarInxVertice( int inxVERTICE , int Modo ) ;
+   static int ValidarIndexVertice( int indexVertice ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
-
 
 /***********************************************************************
 *
@@ -70,162 +69,149 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
 *	  =destruiraresta				  inxVERTICE, stringdadoAre, CondRetEsp
 ***********************************************************************/
 
-   TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
-   {
+   TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
 
-      int inxVERTICE  = -1 ,
-          inxVERTICE2  = -1 ,
-          numLidos   = -1 ,
-          CondRetEsp = -1  ;
+      int inxVERTICE = -1,
+         inxVERTICE2 = -1,
+         numLidos = -1,
+         CondRetEsp = -1;
 
-      TST_tpCondRet CondRetTST ;
-      VER_tpCondRet CondRetVER;
+      TST_tpCondRet CondRetTST = TST_CondRetOK;
+      VER_tpCondRet CondRetVER = VER_CondRetOK;
 
-      char * pDado ;
-	   char   StringDado     [  DIM_VALOR_VERTICE ] ;
-      char   StringEsperado [  DIM_VALOR_VERTICE ] ;
+      char * pDado;
+      char StringDado[DIM_VALOR_VERTICE];
+      char StringEsperado[DIM_VALOR_VERTICE];
 
-      int ValEsp = -1 ;
-
-      int i ;
-
-      int numElem = -1 ;
-
+      int ValEsp = -1;
+      int numElem = -1;
 
       /* Testar criarvertice */
 
-         if ( strcmp( ComandoTeste , CRIAR_VERTICE_CMD ) == 0 )
-         {
+      if (strcmp(ComandoTeste, CRIAR_VERTICE_CMD) == 0) {
 
-            numLidos = LER_LerParametros( "is" ,
-                       &inxVERTICE, StringDado ) ;
+         numLidos = LER_LerParametros("is", &
+            inxVERTICE, StringDado);
 
-            if ( ( numLidos != 2 )
-              || ( ! ValidarInxVERTICE( inxVERTICE )))
-            {
-               return TST_CondRetParm ;
-            } /* if */
+         if ((numLidos != 2) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
 
-			pDado = ( char * ) malloc( strlen( StringDado ) + 1 ) ;
-            if ( pDado == NULL )
-            {
-               return TST_CondRetMemoria ;
-            } /* if */
+         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
+         if (pDado == NULL) {
+            return TST_CondRetMemoria;
+         } /* if */
 
-			 strcpy( pDado , StringDado ) ;
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
 
-            vtVertices[ inxVERTICE ] =
-                 VER_CriarVertice( NULL, pDado ) ;
+         vtVertices[inxVERTICE] = VER_CriarVertice(NULL, pDado);
 
-            return TST_CompararPonteiroNulo( 1 , vtVertices[ inxVERTICE ] ,
-               "Erro em ponteiro de novo VERTICE."  ) ;
+         return TST_CompararPonteiroNulo(1, vtVertices[inxVERTICE],
+            "Erro em ponteiro de novo VERTICE.");
 
-         } /* fim ativa: Testar criarvertice */
+      } /* fim ativa: Testar criarvertice */
 
       /* Testar destruirvertice */
 
-		 if (strcmp( ComandoTeste, DESTRUIR_VERTICE_CMD) == 0)
-		 {
-			 numLidos = LER_LerParametros("ii",
-						&inxVERTICE, &CondRetEsp);
+      if (strcmp(ComandoTeste, DESTRUIR_VERTICE_CMD) == 0) {
+         numLidos = LER_LerParametros("ii", &
+            inxVERTICE, & CondRetEsp);
 
-			 if ( ( numLidos != 2 )
-              || ( ! ValidarInxVERTICE( inxVERTICE ))){
-				  return TST_CondRetParm ;
-			 }/* if */
-			 
-			 CondRetVER = VER_DestruirVertice(vtVertices[ inxVERTICE ]);
-
-			  vtVertices[ inxVERTICE ] = NULL ;
-
-			 return TST_CompararInt( CondRetEsp , CondRetVER ,
-                     "Condicao de retorno errada ao destruir vertice.") ;
-
-		 }/*fim ativa: Testar destruirvertice*/
-     
-
-       /* Testar obtervalor*/
-        if (strcmp( ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0){
-
-           numLidos = LER_LerParametros("isi",
-                      &inxVERTICE, StringEsperado, &CondRetEsp);
-
-            if ( ( numLidos != 3 )
-              || ( ! ValidarInxVERTICE( inxVERTICE ))){
-				  return TST_CondRetParm ;
-			   }/* if */
-
-         pDado = ( char * ) malloc( strlen( StringDado ) + 1) ;
-         if ( pDado == NULL )
-         {
-            return TST_CondRetMemoria ;
+         if ((numLidos != 2) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
          } /* if */
 
-			strcpy(pDado, StringEsperado); 
+         CondRetVER = VER_DestruirVertice(vtVertices[inxVERTICE]);
 
-         CondRetVER = VER_ObterValor( vtVertices[inxVERTICE], StringDado );
+         vtVertices[inxVERTICE] = NULL;
 
-         if ( (CondRetVER != CondRetEsp) || (strcmp( pDado, StringDado )!=0) ){
-             return TST_CondRetErro;
-         }/* if */
+         return TST_CompararInt(CondRetEsp, CondRetVER,
+            "Condicao de retorno errada ao destruir vertice.");
 
-          return TST_CondRetOK;
+      } /*fim ativa: Testar destruirvertice*/
 
-        }/* fim ativa: Testar obtervalor */
+      /* Testar obtervalor*/
+      if (strcmp(ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0) {
 
-       /* Testar inseriraresta*/
-        if (strcmp( ComandoTeste, INSERIR_ARESTA_CMD) == 0){
+         numLidos = LER_LerParametros("isi", &
+            inxVERTICE, StringEsperado, & CondRetEsp);
 
-            numLidos = LER_LerParametros( "iisi" ,
-                       &inxVERTICE, &inxVERTICE2, StringDado, &CondRetEsp) ;
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
 
-            if ( ( numLidos != 3 )
-              || ( ! ValidarInxVERTICE( inxVERTICE ))
-              || ( ! ValidarInxVERTICE( inxVERTICE2 ))){
-				  return TST_CondRetParm ;
-			   }/* if */
+         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
+         if (pDado == NULL) {
+            return TST_CondRetMemoria;
+         } /* if */
 
-            pDado = ( char * ) malloc( strlen( StringDado )) ;
-               if ( pDado == NULL )
-            {
-               return TST_CondRetMemoria ;
-            } /* if */
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-            strcpy(pDado, StringEsperado); 
+         CondRetVER = VER_ObterValor(vtVertices[inxVERTICE], StringDado);
 
-            CondRetVER= VER_InserirAresta(vtVertices[inxVERTICE],
-                                          vtVertices[inxVERTICE2],
-                                          pDado);
+         if ((CondRetVER != CondRetEsp) || (strcmp(pDado, StringDado) != 0)) {
+            return TST_CondRetErro;
+         } /* if */
 
-            if (CondRetVER != CondRetEsp)
-               return TST_CondRetErro;
+         return TST_CondRetOK;
 
-             return TST_CondRetOK;
+      } /* fim ativa: Testar obtervalor */
 
-        }/* fim ativa: Testar inseriraresta*/
+      /* Testar inseriraresta*/
+      if (strcmp(ComandoTeste, INSERIR_ARESTA_CMD) == 0) {
 
-       /* Testar destruiraresta*/
-        if (strcmp( ComandoTeste, DESTRUIR_ARESTA_CMD) == 0){
-		      numLidos = LER_LerParametros("isi",
-						      &inxVERTICE, StringDado , &CondRetEsp);
+         numLidos = LER_LerParametros("iisi", &
+            inxVERTICE, & inxVERTICE2, StringDado, & CondRetEsp);
 
-			 if ( ( numLidos != 3 )
-              || ( ! ValidarInxVERTICE( inxVERTICE ))){
-				  return TST_CondRetParm ;
-			 }/* if */
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (!ValidarIndexVertice(inxVERTICE2))) {
+            return TST_CondRetParm;
+         } /* if */
 
-          pDado = ( char * ) malloc( strlen( StringDado )) ;
-               if ( pDado == NULL )
-            {
-               return TST_CondRetMemoria ;
-            } /* if */
+         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
+         if (pDado == NULL) {
+            return TST_CondRetMemoria;
+         } /* if */
 
-            strcpy(pDado, StringEsperado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-            CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], 
-                                             );
+         CondRetVER = VER_InserirAresta(vtVertices[inxVERTICE],
+            vtVertices[inxVERTICE2],
+            pDado);
 
-        }/* fim ativa: Testar destruiraresta*/
+         if (CondRetVER != CondRetEsp)
+            return TST_CondRetErro;
+
+         return TST_CondRetOK;
+
+      } /* fim ativa: Testar inseriraresta*/
+
+      /* Testar destruiraresta*/
+      if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
+         numLidos = LER_LerParametros("isi", &
+            inxVERTICE, StringDado, & CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
+         if (pDado == NULL) {
+            return TST_CondRetMemoria;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+
+         //CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE],);
+
+      } /* fim ativa: Testar destruiraresta*/
+
+      return TST_CondRetNaoConhec;
 
    } /* Fim função: TVER &Testar VERTICE */
 
@@ -239,11 +225,11 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
 *
 ***********************************************************************/
 
-   int ValidarInxVERTICE( int inxVERTICE )
+   int ValidarIndexVertice( int indexVertice )
    {
 
-      if ( ( inxVERTICE <  0 )
-        || ( inxVERTICE >= DIM_VT_VERTICE ))
+      if ( ( indexVertice <  0 )
+        || ( indexVertice >= DIM_VT_VERTICE ))
       {
          return TST_VER_FALSE ;
       } /* if */

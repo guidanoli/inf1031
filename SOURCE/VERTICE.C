@@ -71,6 +71,9 @@
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
+   static VER_tpCondRet DestruirArestaPorPonteiro(  VER_tppAresta pAresta );
+   /* função prática para uso interno na rotina VER_DestruirVertice */
+
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
@@ -156,7 +159,7 @@
        while( LIS_AvancarElementoCorrente(pListaAnt,0) != LIS_CondRetListaVazia )
        {
           pArestaTemp = ( VER_tppAresta ) LIS_ObterValor( pListaAnt );
-          RetVer = VER_DestruirAresta( pArestaTemp );
+          RetVer = DestruirArestaPorPonteiro( pArestaTemp );
 
           if( RetVer != VER_CondRetOK )
           {
@@ -169,7 +172,7 @@
        while( LIS_AvancarElementoCorrente(pListaSuc,0) != LIS_CondRetListaVazia )
        {
           pArestaTemp = ( VER_tppAresta ) LIS_ObterValor( pListaSuc );
-          RetVer = VER_DestruirAresta( pArestaTemp );
+          RetVer = DestruirArestaPorPonteiro( pArestaTemp );
 
           if( RetVer != VER_CondRetOK )
           {
@@ -449,5 +452,74 @@
    } /* Fim função: VER  &Percorrer Aresta */
 
 /*****  Código das funções encapsuladas no módulo  *****/
+
+   VER_tpCondRet DestruirArestaPorPonteiro(  VER_tppAresta pAresta )
+   {
+
+      LIS_tpCondRet RetLis;
+      LIS_tppLista pListaDestino, pListaPartida;
+      VER_tppVertice pDestino, pPartida;
+
+      if( pAresta == NULL )
+      {
+         return VER_CondRetValorFornecidoNulo;
+      }
+
+      pDestino = pAresta->pDest;
+      pPartida = pAresta->pPart;
+
+      if( pDestino == NULL || pPartida == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      pListaDestino = pDestino->pAnt;
+      pListaPartida = pPartida->pSuc;
+
+      if( pListaDestino == NULL || pListaPartida == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      /*
+      -----------------------------------
+         Tratando do vértice de destino
+      -----------------------------------
+      */
+   
+      RetLis = LIS_ProcurarValor(pListaDestino,pAresta);
+
+      if( RetLis != LIS_CondRetOK )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      LIS_ExcluirElemento(pListaDestino);
+
+      /*
+      -----------------------------------
+         Tratando do vértice de partida
+      -----------------------------------
+      */
+
+      RetLis = LIS_ProcurarValor(pListaPartida,pAresta);
+
+      if( RetLis != LIS_CondRetOK )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      LIS_ExcluirElemento(pListaPartida);
+
+      /*
+      ----------------------
+         Libera a aresta
+      ----------------------
+      */
+
+      free(pAresta);
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Destruir Aresta */
 
 /********** Fim do módulo de implementação: VER  Vértice **********/

@@ -20,3 +20,6 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								GRF_InserirVertice e ProcurarVertice.
 25/09	2h			codificar módulo		Implementei as funções InserirAresta tanto nos
 								módulos Grafo quanto no Vértice.
+26/09	2h			codificar módulo		Implementei as funções Caminhar, percorrer aresta
+								e destruir aresta.
+27/09	1h			revisar código do módulo	Ajustado TESTVER.C
