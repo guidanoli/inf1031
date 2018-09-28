@@ -250,7 +250,7 @@
          return GRF_CondRetVerticeNaoExiste;
       } /* if */
 
-      RetVer = VER_InserirAresta(vA,vB,ValorAresta);
+      RetVer = VER_CriarAresta(vA,vB,ValorAresta);
       
       switch( RetVer )
       {

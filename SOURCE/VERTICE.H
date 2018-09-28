@@ -159,7 +159,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_InserirAresta( VER_tppVertice pPartida ,
+   VER_tpCondRet VER_CriarAresta( VER_tppVertice pPartida ,
                                     VER_tppVertice pDestino ,
                                     void * pValorAresta ) ;
 
