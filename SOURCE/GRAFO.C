@@ -305,7 +305,7 @@
 
       RetVer = VER_PercorrerAresta( pGrafo->pVertCorr,
                                     pValor,
-                                    pVerticeDestino,
+                                    &pVerticeDestino,
                                     pGrafo->ComparaValor,
                                     Sentido );
 
@@ -351,7 +351,7 @@
 
    void DestruirVertice ( void * pVertice )
    {
-      VER_DestruirVertice( (VER_tppVertice) pVertice );
+      VER_DestruirVertice( (VER_tppVertice *) pVertice );
    } /* Fim da função: GRF  -Destruir Vértice */
 
 /***********************************************************************

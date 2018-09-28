@@ -91,7 +91,7 @@
 
       if( *ppVerticeParm != NULL )
       {
-         VER_DestruirVertice(*ppVerticeParm);
+         VER_DestruirVertice(ppVerticeParm);
       } /* if */
 
       pNovoVertice = ( VER_tppVertice ) malloc( sizeof( VER_tpVertice ) );
@@ -134,7 +134,7 @@
 *  Função: VER  &Destuir vértice
 *  ****/
 
-    VER_tpCondRet VER_DestruirVertice( VER_tppVertice pVertice )
+    VER_tpCondRet VER_DestruirVertice( VER_tppVertice * pVertice )
     {
 
        LIS_tppLista pListaSuc;
@@ -143,60 +143,69 @@
        VER_tpCondRet RetVer;
        VER_tppAresta pArestaTemp;
 
-       if( pVertice == NULL )
+       if( *pVertice == NULL )
        {
           return VER_CondRetVerticeNaoExiste;
        } /* if */
 
-       pListaSuc = pVertice->pSuc;
+       pListaSuc = (*pVertice)->pSuc;
 
        if( pListaSuc == NULL )
        {
           return VER_CondRetErroEstrutura;
        } /* if */
 
-       pListaAnt = pVertice->pAnt;
+       pListaAnt = (*pVertice)->pAnt;
 
        if( pListaAnt == NULL )
        {
           return VER_CondRetErroEstrutura;
        } /* if */
 
-       IrFinalLista( pListaAnt );
-
-       while( LIS_AvancarElementoCorrente(pListaAnt,0) != LIS_CondRetListaVazia )
+       if( LIS_AvancarElementoCorrente(pListaAnt,0) != LIS_CondRetListaVazia )
        {
-          pArestaTemp = ( VER_tppAresta ) LIS_ObterValor( pListaAnt );
-          RetVer = DestruirArestaPorPonteiro( pArestaTemp );
+          IrFinalLista( pListaAnt );
 
-          if( RetVer != VER_CondRetOK )
+          while( LIS_AvancarElementoCorrente(pListaAnt,0) != LIS_CondRetListaVazia )
           {
-             return VER_CondRetErroEstrutura;
-          } /* if */
-       } /* while */
+             pArestaTemp = ( VER_tppAresta ) LIS_ObterValor( pListaAnt );
+             RetVer = DestruirArestaPorPonteiro( pArestaTemp );
 
-       IrFinalLista( pListaSuc );
+             if( RetVer != VER_CondRetOK )
+             {
+                return VER_CondRetErroEstrutura;
+             } /* if */
+          } /* while */
 
-       while( LIS_AvancarElementoCorrente(pListaSuc,0) != LIS_CondRetListaVazia )
+       } /* if */
+
+       if( LIS_AvancarElementoCorrente(pListaSuc,0) != LIS_CondRetListaVazia )
        {
-          pArestaTemp = ( VER_tppAresta ) LIS_ObterValor( pListaSuc );
-          RetVer = DestruirArestaPorPonteiro( pArestaTemp );
+          IrFinalLista( pListaSuc );
 
-          if( RetVer != VER_CondRetOK )
+          while( LIS_AvancarElementoCorrente(pListaSuc,0) != LIS_CondRetListaVazia )
           {
-             return VER_CondRetErroEstrutura;
-          } /* if */
-       } /* while */
+             pArestaTemp = ( VER_tppAresta ) LIS_ObterValor( pListaSuc );
+             RetVer = DestruirArestaPorPonteiro( pArestaTemp );
+
+             if( RetVer != VER_CondRetOK )
+             {
+                return VER_CondRetErroEstrutura;
+             } /* if */
+          } /* while */
+
+       } /* if */
 
        LIS_DestruirLista( pListaAnt );
        LIS_DestruirLista( pListaSuc );
 
-       if( pVertice->ExcluirValor != NULL )
+       if( (*pVertice)->ExcluirValor != NULL )
        {
-         pVertice->ExcluirValor(pVertice->Valor);
+         (*pVertice)->ExcluirValor((*pVertice)->Valor);
        } /* if */
 
-       free(pVertice);
+       free(*pVertice);
+       (*pVertice) = NULL;
 
        return VER_CondRetOK;
 
@@ -217,11 +226,15 @@
       LIS_tppLista pListaDestino, pListaPartida;
       VER_tppVertice pDestino, pPartida;
 
-      IrInicioLista(pVertice->pSuc);
+      if( pVertice == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      }
 
       if( LIS_AvancarElementoCorrente(pVertice->pSuc,0) != LIS_CondRetListaVazia )
       {
 
+         IrInicioLista(pVertice->pSuc);
          RetLis = LIS_CondRetOK;
 
          while( RetLis == LIS_CondRetOK )

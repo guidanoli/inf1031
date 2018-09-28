@@ -121,7 +121,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
             return TST_CondRetParm;
          } /* if */
 
-         CondRetVER = VER_DestruirVertice(vtVertices[inxVERTICE]);
+         CondRetVER = VER_DestruirVertice(&vtVertices[inxVERTICE]);
 
          vtVertices[inxVERTICE] = NULL;
 

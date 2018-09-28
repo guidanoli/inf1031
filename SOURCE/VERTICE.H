@@ -109,7 +109,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_DestruirVertice( VER_tppVertice pVertice ) ;
+   VER_tpCondRet VER_DestruirVertice( VER_tppVertice *  pVertice ) ;
 
 /***********************************************************************
 *
@@ -180,6 +180,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     VER_CondRetOK                 - destruiu sem problemas
 *     VER_CondRetArestaNaoExiste    - o ponteiro para aresta é nulo
 *     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*     VER_CondRetVerticeNaoExiste   - o vértice de partida da aresta não existe
 *
 ***********************************************************************/
 
