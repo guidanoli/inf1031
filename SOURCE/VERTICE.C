@@ -81,43 +81,49 @@
 *  Função: VER  &Criar vértice
 *  ****/
 
-    VER_tppVertice VER_CriarVertice(  void   ( * ExcluirValor ) ( void * pDado ),
-                                      void * pValor ) {
-
-	VER_tppVertice pNovoVertice;
-   LIS_tppLista pListaSuc;
-	LIS_tppLista pListaAnt;
-
-   pNovoVertice = ( VER_tppVertice ) malloc( sizeof( VER_tpVertice ) );
-
-   if( pNovoVertice == NULL )
+   VER_tpCondRet VER_CriarVertice(  void   ( * ExcluirValor ) ( void * pDado ),
+                                    void * pValor, VER_tppVertice *ppVerticeParm )
    {
-      return NULL;
-   } /* if */
 
-   pListaSuc = LIS_CriarLista(NULL);
+	   VER_tppVertice pNovoVertice;
+      LIS_tppLista pListaSuc;
+	   LIS_tppLista pListaAnt;
 
-   if( pListaSuc == NULL )
-   {
-      free(pNovoVertice);
-      return NULL;
-   } /* if */
+      if( *ppVerticeParm != NULL )
+      {
+         VER_DestruirVertice(*ppVerticeParm);
+      } /* if */
 
-   pListaAnt = LIS_CriarLista(NULL);
+      pNovoVertice = ( VER_tppVertice ) malloc( sizeof( VER_tpVertice ) );
 
-   if( pListaAnt == NULL )
-   {
-      free(pNovoVertice);
-      LIS_DestruirLista(pListaAnt);
-      return NULL;
-   } /* if */
+      if( pNovoVertice == NULL )
+      {
+         return VER_CondRetFaltouMemoria;
+      } /* if */
 
-   pNovoVertice->ExcluirValor = ExcluirValor;
-   pNovoVertice->pAnt = pListaAnt;
-   pNovoVertice->pSuc = pListaSuc;
-   pNovoVertice->Valor = pValor;
+      pListaSuc = LIS_CriarLista(NULL);
 
-   return pNovoVertice;
+      if( pListaSuc == NULL )
+      {
+         free(pNovoVertice);
+         return VER_CondRetFaltouMemoria;
+      } /* if */
+
+      pListaAnt = LIS_CriarLista(NULL);
+
+      if( pListaAnt == NULL )
+      {
+         free(pNovoVertice);
+         LIS_DestruirLista(pListaAnt);
+         return VER_CondRetFaltouMemoria;
+      } /* if */
+
+      pNovoVertice->ExcluirValor = ExcluirValor;
+      pNovoVertice->pAnt = pListaAnt;
+      pNovoVertice->pSuc = pListaSuc;
+      pNovoVertice->Valor = pValor;
+
+      return VER_CondRetOK;
 
 	} /* Fim função: VER  &Criar vértice */
 

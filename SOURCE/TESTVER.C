@@ -62,11 +62,11 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *
 *     Comandos disponíveis:
 *
-*    =criarvertice              inxVERTICE, stringdado
-*	  =destruirvertice			  inxVERTICE, CondRetEsp
-*	  =obtervalor					  inxVERTICE, ValorEsp, CondRetEsp
-*	  =inseriraresta				  inxVERTICEPart, inxVERTICEDest, stringdado, CondRetEsp
-*	  =destruiraresta				  inxVERTICE, stringdadoAre, CondRetEsp
+*    =criarvertice              inxVERTICE stringdado
+*	  =destruirvertice			  inxVERTICE CondRetEsp
+*	  =obtervalor					  inxVERTICE ValorEsp, CondRetEsp
+*	  =inseriraresta				  inxVERTICEPart inxVERTICEDest stringdado CondRetEsp
+*	  =destruiraresta				  inxVERTICE stringdadoAre CondRetEsp
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -179,7 +179,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-         CondRetVER = VER_InserirAresta(vtVertices[inxVERTICE],
+         CondRetVER = VER_CriarAresta(vtVertices[inxVERTICE],
             vtVertices[inxVERTICE2],
             pDado);
 

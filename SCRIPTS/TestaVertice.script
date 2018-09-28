@@ -1,7 +1,5 @@
 // Script:    TestaVertice.script
-// Autores:   Caique Molina
-//            Guilherme Dantas
-//	      Nagib Moura
+// Autor(es): Guilherme Dantas        
 // Data:      28/09/2018
 // Propósito: Testa a integridade das funções de acesso
 //            do módulo Vértice para com sua estrutura de dados,

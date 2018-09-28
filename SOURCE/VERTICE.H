@@ -81,20 +81,16 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                     a ser excluído.
 *                     Ver descrição do módulo.
 *     pValor        - ponteiro genérico para o valor do vértice procurado
+*     ppVerticeParm - endereço do ponteiro para vértice a ser criado
 *
 *  $FV Valor retornado
-*     Se executou corretamente retorna o ponteiro para o vértice.
-*     Este ponteiro será utilizado pelas funções que manipulem este vértice.
-*
-*     Se ocorreu algum erro, por exemplo falta de memória ou dados errados,
-*     a função retornará NULL.
-*     Não será dada mais informação quanto ao problema ocorrido.
+*     VER_CondRetOK
+*     VER_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
-   VER_tppVertice VER_CriarVertice(
-             void   ( * ExcluirValor ) ( void * pDado ),
-             void * Valor ) ;
+   VER_tpCondRet VER_CriarVertice(  void   ( * ExcluirValor ) ( void * pDado ),
+                                    void * pValor, VER_tppVertice *ppVerticeParm ) ;
 
 /***********************************************************************
 *
