@@ -306,7 +306,7 @@
                                     pValor,
                                     pVerticeDestino,
                                     pGrafo->ComparaValor,
-                                    1 );
+                                    Sentido );
 
       if( RetVer == VER_CondRetErroEstrutura )
       {

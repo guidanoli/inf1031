@@ -23,3 +23,5 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 26/09	2h			codificar módulo		Implementei as funções Caminhar, percorrer aresta
 								e destruir aresta.
 27/09	1h			revisar código do módulo	Ajustado TESTVER.C
+28/09	1h			revisar código do módulo	Ajustado GRF_Caminhar
+28/09	30min			redigir script de teste		Preparando o ambiente para teste de scripts
