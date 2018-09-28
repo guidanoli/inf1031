@@ -1,0 +1,30 @@
+// Script:    TestaVertice.script
+// Autor(es): Guilherme Dantas        
+// Data:      28/09/2018
+// Propósito: Testa a integridade das funções de acesso
+//            do módulo Vértice para com sua estrutura de dados,
+//            baseando-se no modelo arquitetado.
+//
+
+== Declarar as condicoes de retorno
+=declararparm  OK                    int 0
+=declararparm  VerticeNaoExiste      int 1 
+=declararparm  ArestaExiste          int 2
+=declararparm  ArestaNaoExiste       int 3
+=declararparm  ValorFornecidoNulo    int 4
+=declararparm  ErroEstrutura         int 5
+=declararparm  Memoria               int 6
+
+== Declarar os valores dos vértices
+=declararparm  StrErro     string  "!"
+=declararparm  StrA        string  "A"
+=declararparm  StrB        string  "B"
+=declararparm  StrC        string  "C"
+
+== Declarar os valores das arestas
+=declararparm  Stra        string  "a"
+=declararparm  Strb        string  "b"
+=declararparm  Strc        string  "c"
+
+== Criar vértice
+=criarvertice 0 StrA OK

@@ -136,6 +136,7 @@
 
       LIS_tpCondRet RetLis;
       GRF_tpCondRet RetGrf;
+      VER_tpCondRet RetVer;
 
       VER_tppVertice pNovoVertice;
       LIS_tppLista pVertices;
@@ -161,10 +162,10 @@
          return RetGrf;
       } /* if */
 
-      pNovoVertice = VER_CriarVertice(ExcluirValor,pValor);
+      RetVer = VER_CriarVertice(ExcluirValor,pValor,&pNovoVertice);
       /* Cria uma novo vértice com a regra de exclusão padrão do grafo e o valor fornecido */
 
-      if( pNovoVertice == NULL )
+      if( RetVer != VER_CondRetOK )
       {
          return GRF_CondRetFaltouMemoria;
       } /* if */
@@ -217,7 +218,7 @@
       while( LIS_AvancarElementoCorrente(pVertices,1) != LIS_CondRetOK )
       {
          VER_tppVertice pVertCorr = (VER_tppVertice) LIS_ObterValor(pVertices);
-         void *pValorCorr;
+         void *pValorCorr = NULL;
 
          RetVer = VER_ObterValor(pVertCorr,pValorCorr);
          switch(RetVer)
@@ -279,7 +280,7 @@
    {
 
       VER_tpCondRet RetVer;
-      VER_tppVertice pVerticeDestino;
+      VER_tppVertice pVerticeDestino = NULL;
 
       if( pGrafo == NULL )
       {
@@ -397,7 +398,7 @@
          /* Verifica se algum dos vértices possui o indentificador pValor */
 
          VER_tppVertice elem;
-         void * pValorRecebido;
+         void * pValorRecebido = NULL;
 
          elem = (VER_tppVertice) LIS_ObterValor(pVertices);
 

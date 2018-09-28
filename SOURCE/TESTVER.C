@@ -35,12 +35,12 @@
 #include    "VERTICE.H"
 
 
-static const char CRIAR_VERTICE_CMD         [ ] = "=criarvertice"     ;
-static const char DESTRUIR_VERTICE_CMD      [ ] = "=destruirvertice"  ;
-static const char OBTER_VALOR_VERTICE_CMD   [ ] = "=obtervalor"       ;
-static const char CRIAR_ARESTA_CMD        [ ] = "=criararesta"      ;
-static const char DESTRUIR_ARESTA_CMD       [ ] = "=destruiraresta"   ;
-static const char PERCORRER_ARESTA_CMD      [ ] = "=percorreraresta"  ;
+#define CRIAR_VERTICE_CMD        "=criarvertice"
+#define DESTRUIR_VERTICE_CMD     "=destruirvertice"
+#define OBTER_VALOR_VERTICE_CMD  "=obtervalor"
+#define CRIAR_ARESTA_CMD         "=criararesta"
+#define DESTRUIR_ARESTA_CMD      "=destruiraresta"
+#define PERCORRER_ARESTA_CMD     "=percorreraresta"
 
 #define TST_VER_TRUE  1
 #define TST_VER_FALSE 0
@@ -53,6 +53,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static int ValidarIndexVertice( int indexVertice ) ;
+   static int ComparaStrings (void* pa, void*pb) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -78,15 +79,15 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       int inxVERTICE = -1,
          inxVERTICE2 = -1,
          numLidos = -1,
-         sentido = -1,
-         CondRetEsp = -1;
+         sentido = -1;
 
+      VER_tpCondRet CondRetEsp = VER_CondRetFaltouMemoria;
       TST_tpCondRet CondRetTST = TST_CondRetOK;
       VER_tpCondRet CondRetVER = VER_CondRetOK;
 
-      char * pDado;
-      char StringDado[DIM_VALOR_VERTICE];
-      char StringEsperado[DIM_VALOR_VERTICE];
+      char pDado[DIM_VALOR_VERTICE] = "";
+      char StringDado[DIM_VALOR_VERTICE] = "";
+      char StringEsperado[DIM_VALOR_VERTICE] = "";
 
       int ValEsp = -1;
       int numElem = -1;
@@ -95,17 +96,11 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       if (strcmp(ComandoTeste, CRIAR_VERTICE_CMD) == 0) {
 
-         numLidos = LER_LerParametros("isi", &
-            inxVERTICE, StringDado, &CondRetEsp);
+         numLidos = LER_LerParametros("isi", &inxVERTICE, StringDado, &CondRetEsp);
 
          if ((numLidos != 3) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
-         } /* if */
-
-         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
-         if (pDado == NULL) {
-            return TST_CondRetMemoria;
          } /* if */
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
@@ -122,8 +117,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar destruirvertice */
 
       if (strcmp(ComandoTeste, DESTRUIR_VERTICE_CMD) == 0) {
-         numLidos = LER_LerParametros("ii", &
-            inxVERTICE, & CondRetEsp);
+         numLidos = LER_LerParametros("ii", &inxVERTICE, &CondRetEsp);
 
          if ((numLidos != 2) ||
             (!ValidarIndexVertice(inxVERTICE))) {
@@ -144,17 +138,11 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar obtervalor*/
       if (strcmp(ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0) {
 
-         numLidos = LER_LerParametros("isi", &
-            inxVERTICE, StringEsperado, & CondRetEsp);
+         numLidos = LER_LerParametros("isi", &inxVERTICE, StringEsperado, &CondRetEsp);
 
          if ((numLidos != 3) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
-         } /* if */
-
-         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
-         if (pDado == NULL) {
-            return TST_CondRetMemoria;
          } /* if */
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
@@ -172,21 +160,15 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar criararesta*/
       if (strcmp(ComandoTeste, CRIAR_ARESTA_CMD) == 0) {
 
-         numLidos = LER_LerParametros("iisi", &
-            inxVERTICE, & inxVERTICE2, StringDado, & CondRetEsp);
+         numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringDado, &CondRetEsp);
 
-         if ((numLidos != 3) ||
+         if ((numLidos != 4) ||
             (!ValidarIndexVertice(inxVERTICE)) ||
             (!ValidarIndexVertice(inxVERTICE2))) {
             return TST_CondRetParm;
          } /* if */
 
-         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
-         if (pDado == NULL) {
-            return TST_CondRetMemoria;
-         } /* if */
-
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
 
          CondRetVER = VER_CriarAresta(vtVertices[inxVERTICE],
             vtVertices[inxVERTICE2],
@@ -201,20 +183,14 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       /* Testar destruiraresta*/
       if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
-         numLidos = LER_LerParametros("isi", &
-            inxVERTICE, StringDado, & CondRetEsp);
+         numLidos = LER_LerParametros("isi", &inxVERTICE, StringDado, &CondRetEsp);
 
          if ((numLidos != 3) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
          } /* if */
 
-         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
-         if (pDado == NULL) {
-            return TST_CondRetMemoria;
-         } /* if */
-
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
 
          CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], pDado, ComparaStrings);
 
@@ -228,19 +204,13 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar percorreraresta*/
       if (strcmp(ComandoTeste, PERCORRER_ARESTA_CMD) == 0) {
 
-          numLidos = LER_LerParametros("isiii", &
-            inxVERTICE, StringDado, inxVERTICE2, &sentido, & CondRetEsp);
+          numLidos = LER_LerParametros("isiii", &inxVERTICE, StringDado, inxVERTICE2, &sentido, &CondRetEsp);
 
            if ((numLidos != 5) ||
             (!ValidarIndexVertice(inxVERTICE))||
             (!ValidarIndexVertice(inxVERTICE2))||
             (sentido!=0 && sentido!=1)) {
             return TST_CondRetParm;
-         } /* if */
-
-         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
-         if (pDado == NULL) {
-            return TST_CondRetMemoria;
          } /* if */
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);

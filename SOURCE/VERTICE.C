@@ -123,7 +123,7 @@
       pNovoVertice->pSuc = pListaSuc;
       pNovoVertice->Valor = pValor;
 
-      return VER_CondRetOK;
+      return VER_CondRetFaltouMemoria;
 
 	} /* Fim função: VER  &Criar vértice */
 
