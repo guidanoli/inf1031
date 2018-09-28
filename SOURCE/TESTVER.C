@@ -95,10 +95,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       if (strcmp(ComandoTeste, CRIAR_VERTICE_CMD) == 0) {
 
-         numLidos = LER_LerParametros("is", &
-            inxVERTICE, StringDado);
+         numLidos = LER_LerParametros("isi", &
+            inxVERTICE, StringDado, &CondRetEsp);
 
-         if ((numLidos != 2) ||
+         if ((numLidos != 3) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
          } /* if */
@@ -110,10 +110,12 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
 
-         vtVertices[inxVERTICE] = VER_CriarVertice(NULL, pDado);
+         CondRetVER = VER_CriarVertice(NULL, pDado, &vtVertices[inxVERTICE]);
 
-         return TST_CompararPonteiroNulo(1, vtVertices[inxVERTICE],
-            "Erro em ponteiro de novo VERTICE.");
+          if (CondRetVER != CondRetEsp)
+            return TST_CondRetErro;
+
+         return TST_CondRetOK;
 
       } /* fim ativa: Testar criarvertice */
 
@@ -132,8 +134,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          vtVertices[inxVERTICE] = NULL;
 
-         return TST_CompararInt(CondRetEsp, CondRetVER,
-            "Condicao de retorno errada ao destruir vertice.");
+        if (CondRetVER != CondRetEsp)
+            return TST_CondRetErro;
+
+         return TST_CondRetOK;
 
       } /*fim ativa: Testar destruirvertice*/
 
