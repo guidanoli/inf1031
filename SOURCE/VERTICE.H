@@ -168,7 +168,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     Destrói uma aresta
 *
 *  $EP Parâmetros
-*     pVertice  - ponteiro para vértice
+*     pVertice  - ponteiro para vértice de partida da aresta
 *     pValor    - ponteiro para valor armazenado na aresta
 *     ComparaValor - ponteiro para função que compara valores do
 *                    tipo de pValorA e pValorB.

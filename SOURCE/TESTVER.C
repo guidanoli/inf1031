@@ -8,15 +8,18 @@
 *
 *  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
 *  Gestor:  LES/DI/PUC-Rio
-*  Autores:   gui   Guilherme Dantas
+*  Autores:   avs   Arndt Von Staa
+*             gui   Guilherme Dantas
 *             cai   Caique Molina
 *             nag   Nagib Suaid
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     1       nag    26/09/18   Teste de todas menos 
-*                               destruiraresta e percorreraresta
-*     2       nag    28/09/18   
+*     0       avs    26/09/18   Modificamos a implementação de TESTLIS.C
+*                               de Arndt Von Staa.
+*     1       nag    26/09/18   Teste de todas funções menos 
+*                               destruiraresta e percorreraresta.
+*     2       nag    28/09/18   Implementação de todas as funções de acesso.
 *
 ***************************************************************************/
 
@@ -35,8 +38,9 @@
 static const char CRIAR_VERTICE_CMD         [ ] = "=criarvertice"     ;
 static const char DESTRUIR_VERTICE_CMD      [ ] = "=destruirvertice"  ;
 static const char OBTER_VALOR_VERTICE_CMD   [ ] = "=obtervalor"       ;
-static const char INSERIR_ARESTA_CMD        [ ] = "=criararesta"    ;
+static const char CRIAR_ARESTA_CMD        [ ] = "=criararesta"      ;
 static const char DESTRUIR_ARESTA_CMD       [ ] = "=destruiraresta"   ;
+static const char PERCORRER_ARESTA_CMD      [ ] = "=percorreraresta"  ;
 
 #define TST_VER_TRUE  1
 #define TST_VER_FALSE 0
@@ -61,12 +65,12 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *
 *     Comandos disponíveis:
 *
-*    =criarvertice              inxVERTICE, stringdado
+*    =criarvertice              inxVERTICE, stringdado, CondRetEsp
 *	  =destruirvertice			  inxVERTICE, CondRetEsp
 *	  =obtervalor					  inxVERTICE, ValorEsp, CondRetEsp
 *	  =criararesta				     inxVERTICEPart, inxVERTICEDest, stringdado, CondRetEsp
 *	  =destruiraresta				  inxVERTICE, stringdadoAre, CondRetEsp
-*    =percorreraresta           inxVERTIVEPart, stringdado, inxVERTICEDest, FuncComp, sentido
+*    =percorreraresta           inxVERTIVEPart, stringdado, inxVERTICEDest, Sentido, ConsRetEsp
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -74,6 +78,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       int inxVERTICE = -1,
          inxVERTICE2 = -1,
          numLidos = -1,
+         sentido = -1,
          CondRetEsp = -1;
 
       TST_tpCondRet CondRetTST = TST_CondRetOK;
@@ -161,7 +166,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       } /* fim ativa: Testar obtervalor */
 
       /* Testar criararesta*/
-      if (strcmp(ComandoTeste, INSERIR_ARESTA_CMD) == 0) {
+      if (strcmp(ComandoTeste, CRIAR_ARESTA_CMD) == 0) {
 
          numLidos = LER_LerParametros("iisi", &
             inxVERTICE, & inxVERTICE2, StringDado, & CondRetEsp);
@@ -209,10 +214,39 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], pDado, ComparaStrings);
 
+         if (CondRetVER != CondRetEsp)
+            return TST_CondRetErro;
+
+         return TST_CondRetOK;
+
       } /* fim ativa: Testar destruiraresta*/
 
       /* Testar percorreraresta*/
-      if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
+      if (strcmp(ComandoTeste, PERCORRER_ARESTA_CMD) == 0) {
+
+          numLidos = LER_LerParametros("isiii", &
+            inxVERTICE, StringDado, inxVERTICE2, &sentido, & CondRetEsp);
+
+           if ((numLidos != 5) ||
+            (!ValidarIndexVertice(inxVERTICE))||
+            (!ValidarIndexVertice(inxVERTICE2))||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         pDado = (char * ) malloc(DIM_VALOR_VERTICE);
+         if (pDado == NULL) {
+            return TST_CondRetMemoria;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
+
+         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, vtVertices[inxVERTICE2], ComparaStrings, sentido);
+
+         if (CondRetVER != CondRetEsp)
+            return TST_CondRetErro;
+
+         return TST_CondRetOK;
 
       }/* fim ative: Testar percorreraresta*/
 
