@@ -391,7 +391,7 @@
                 pArestaTemp->pDest == pDestino &&
                 pArestaTemp->pPart == pPartida )
             {
-               return VER_CondRetArestaExiste;
+               return (VER_tpCondRet)((*ComparaValor)(pArestaTemp->Valor,pValorAresta) == 0 + 10);
             } /* if */
 
             RetLis = LIS_AvancarElementoCorrente(pPartida->pSuc,1);
