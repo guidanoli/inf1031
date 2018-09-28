@@ -25,3 +25,125 @@
 =declararparm  Stra        string  "a"
 =declararparm  Strb        string  "b"
 =declararparm  Strc        string  "c"
+
+== Criar vértice
+=criarvertice 0 StrA OK
+
+== Destruir vértice existente (sem arestas)
+=destruirvertice 0 OK
+
+== Destruir vértice inexistente
+=destruirvertice 0 VerticeNaoExiste
+
+== Criar 10 vértices em paralelo
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=criarvertice 3 StrA OK
+=criarvertice 4 StrA OK
+=criarvertice 5 StrC OK
+=criarvertice 6 StrA OK
+=criarvertice 7 StrC OK
+=criarvertice 8 StrC OK
+=criarvertice 9 StrB OK
+
+== Destruir 10 vértices em paralelo
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+=destruirvertice 2 OK
+=destruirvertice 3 OK
+=destruirvertice 4 OK
+=destruirvertice 5 OK
+=destruirvertice 6 OK
+=destruirvertice 7 OK
+=destruirvertice 8 OK
+=destruirvertice 9 OK
+
+== Criar vértice em cima de outro vértice (overwrite)
+=criarvertice 0 StrA OK
+=criarvertice 0 StrB OK
+=destruirvertice 0 OK
+
+== Criar aresta entre dois vértices existentes
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+
+== Destruir aresta entre dois vértice existentes
+=destruiraresta 0 Stra OK
+
+== Destruir vértices após destruição da aresta que os conecta
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Criar aresta partindo de um vértice existente e indo para vértice inexistente
+=criarvertice 0 StrA OK
+=criararesta 0 1 Stra VerticeNaoExiste
+
+== Destruir aresta inexistente
+=destruiraresta 0 1 ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Criar aresta partindo de um vértice inexistente e indo para vértice existente
+=criarvertice 1 StrA OK
+=criararesta 0 1 Stra VerticeNaoExiste
+=destruirvertice 1 OK
+
+== Criar aresta partindo de um vértice inexistente e indo para vértic inexistente
+=criararesta 0 1 Stra VerticeNaoExiste
+
+== Testar a destruição automática das arestas de um vértice sendo destruído
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=criararesta 1 0 Strb OK
+=destruirvertice 1 OK
+=destruiraresta 0 Stra ArestaNaoExiste
+=destruiraresta 1 Strb ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Criar duas arestas com mesmo valor, origem e destino, origem != destino
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaExiste
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Criar uma aresta com mesma origem e destino
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=destruirvertice 0 OK
+
+== Criar uma aresta com mesma origem e destino, não existentes
+=criararesta 0 0 Stra VerticeNaoExiste
+
+== Criar duas arestas com mesmo valor com origem e destinos trocados
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=criararesta 1 0 Stra OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Criar duas arestas com mesmo valor, origem e destino, origem == destino
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaExiste
+=destruirvertice 0 OK
+
+== Criar três arestas com valores distintos, mas com mesma origem e destino, origem != destino
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=criararesta 0 1 Strb OK
+=criararesta 0 1 Strc OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Criar três arestas com valores distintos, mas com mesma origem e destino, origem == destino
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=criararesta 0 0 Strb OK
+=criararesta 0 0 Strc OK
+=destruirvertice 0 OK
