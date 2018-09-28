@@ -5,7 +5,6 @@
 *  Letras identificadoras:      TVER
 *
 *  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
-*  Arquivo da base de software: ???
 *
 *  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
 *  Gestor:  LES/DI/PUC-Rio
@@ -15,9 +14,9 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     1       nag    29/09/18   Teste de todas menos 
+*     1       nag    26/09/18   Teste de todas menos 
 *                               destruiraresta e percorreraresta
-*  
+*     2       nag    28/09/18   
 *
 ***************************************************************************/
 
@@ -36,7 +35,7 @@
 static const char CRIAR_VERTICE_CMD         [ ] = "=criarvertice"     ;
 static const char DESTRUIR_VERTICE_CMD      [ ] = "=destruirvertice"  ;
 static const char OBTER_VALOR_VERTICE_CMD   [ ] = "=obtervalor"       ;
-static const char INSERIR_ARESTA_CMD        [ ] = "=inseriraresta"    ;
+static const char INSERIR_ARESTA_CMD        [ ] = "=criararesta"    ;
 static const char DESTRUIR_ARESTA_CMD       [ ] = "=destruiraresta"   ;
 
 #define TST_VER_TRUE  1
@@ -62,11 +61,12 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *
 *     Comandos disponíveis:
 *
-*    =criarvertice              inxVERTICE stringdado
-*	  =destruirvertice			  inxVERTICE CondRetEsp
-*	  =obtervalor					  inxVERTICE ValorEsp, CondRetEsp
-*	  =inseriraresta				  inxVERTICEPart inxVERTICEDest stringdado CondRetEsp
-*	  =destruiraresta				  inxVERTICE stringdadoAre CondRetEsp
+*    =criarvertice              inxVERTICE, stringdado
+*	  =destruirvertice			  inxVERTICE, CondRetEsp
+*	  =obtervalor					  inxVERTICE, ValorEsp, CondRetEsp
+*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, stringdado, CondRetEsp
+*	  =destruiraresta				  inxVERTICE, stringdadoAre, CondRetEsp
+*    =percorreraresta           inxVERTIVEPart, stringdado, inxVERTICEDest, FuncComp, sentido
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -160,7 +160,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       } /* fim ativa: Testar obtervalor */
 
-      /* Testar inseriraresta*/
+      /* Testar criararesta*/
       if (strcmp(ComandoTeste, INSERIR_ARESTA_CMD) == 0) {
 
          numLidos = LER_LerParametros("iisi", &
@@ -188,7 +188,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          return TST_CondRetOK;
 
-      } /* fim ativa: Testar inseriraresta*/
+      } /* fim ativa: Testar criararesta*/
 
       /* Testar destruiraresta*/
       if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
@@ -207,9 +207,15 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-         //CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE],);
+         CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], pDado, ComparaStrings);
 
       } /* fim ativa: Testar destruiraresta*/
+
+      /* Testar percorreraresta*/
+      if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
+
+      }/* fim ative: Testar percorreraresta*/
+
 
       return TST_CondRetNaoConhec;
 
@@ -237,6 +243,20 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       return TST_VER_TRUE ;
 
    } /* Fim função: TVER -Validar indice de VERTICE */
+
+
+ /***********************************************************************
+*
+*  $FC Função: TVER -Compara Strings
+*
+***********************************************************************/
+
+   int ComparaStrings (void* pa, void*pb)
+   {
+
+      return strcmp((char*)pa, (char*)pb);
+
+   } /* Fim função: TVER -Compara Strings */
 
 /********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
 
