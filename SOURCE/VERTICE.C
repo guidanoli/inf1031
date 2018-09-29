@@ -353,7 +353,8 @@
    VER_tpCondRet VER_CriarAresta(   VER_tppVertice pPartida ,
                                     VER_tppVertice pDestino ,
                                     void * pValorAresta ,
-                                    int (* ComparaValor) ( void * pA, void * pB))
+                                    int (* ComparaValor) ( void * pA, void * pB),
+                                    void (* CopiaValor ) ( void ** pA, void * pB))
    {
 
       LIS_tpCondRet RetLis;
@@ -371,11 +372,15 @@
          return VER_CondRetErroEstrutura;
       } /* if */
 
-      IrInicioLista(pPartida->pSuc);
+      if( pValorAresta == NULL )
+      {
+         return VER_CondRetValorFornecidoNulo;
+      } /* if */
 
       if( LIS_AvancarElementoCorrente(pPartida->pSuc,0) != LIS_CondRetListaVazia )
       {
 
+         IrInicioLista(pPartida->pSuc);
          RetLis = LIS_CondRetOK;
 
          while( RetLis == LIS_CondRetOK )
@@ -383,6 +388,11 @@
             VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pPartida->pSuc);
 
             if( pArestaTemp == NULL )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
+
+            if( pArestaTemp->Valor == NULL )
             {
                return VER_CondRetErroEstrutura;
             } /* if */
@@ -409,7 +419,12 @@
 
       pNovaAresta->pDest = pDestino;
       pNovaAresta->pPart = pPartida;
-      pNovaAresta->Valor = pValorAresta;
+
+      /* Torna Valor de pAresta nulo por precaução */
+      pNovaAresta->Valor = NULL;
+
+      /* Copia o valor de pValorAresta para pValor da aresta pNovaAresta */
+      (*CopiaValor)(&(pNovaAresta->Valor),pValorAresta);
 
       RetLis = LIS_InserirElementoApos(pDestino->pAnt,pNovaAresta);
 

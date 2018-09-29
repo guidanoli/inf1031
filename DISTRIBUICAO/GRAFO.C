@@ -195,7 +195,8 @@
                                     void * pValorA,
                                     void * pValorB,
                                     void * ValorAresta,
-                                    int (* ComparaValor) ( void * pA, void * pB) )
+                                    int (* ComparaValor) ( void * pA, void * pB),
+                                    void (* CopiaValor) (void ** pA, void * pB))
    {
       
       VER_tppVertice vA = NULL, vB = NULL;
@@ -251,7 +252,7 @@
          return GRF_CondRetVerticeNaoExiste;
       } /* if */
 
-      RetVer = VER_CriarAresta(vA,vB,ValorAresta,ComparaValor);
+      RetVer = VER_CriarAresta(vA,vB,ValorAresta,ComparaValor,CopiaValor);
       
       switch( RetVer )
       {

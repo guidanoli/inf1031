@@ -149,6 +149,13 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                    Retorno da função:
 *                    >>> 0 caso pValorA == pValorB
 *                    >>> diferente de 0 caso contrário
+*     CopiaValor   - ponteiro para função que copia o valor de
+*                    pB para *pA. Essencial para estruturas de dados
+*                    que trabalham com ponteiros, como string e structs.
+*                    O espaço referenciado por pA é inicialmente nulo
+*                    e deve ser inicalmente alocado dinamicamente
+*                    com o tipo de estrutura de dados apropriado.
+*                    >>> void
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - inseriu sem problemas
@@ -160,10 +167,11 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_CriarAresta( VER_tppVertice pPartida ,
+   VER_tpCondRet VER_CriarAresta(   VER_tppVertice pPartida ,
                                     VER_tppVertice pDestino ,
-                                    void * pValorAresta,
-                                    int (* ComparaValor) ( void * pA, void * pB)) ;
+                                    void * pValorAresta ,
+                                    int (* ComparaValor) ( void * pA, void * pB),
+                                    void (* CopiaValor ) ( void ** pA, void * pB)) ;
 
 
 /***********************************************************************

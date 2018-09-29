@@ -4,7 +4,7 @@ LES - Laboratório de Engenharia de Software DI/PUC-Rio
       Arcabouço de teste de módulos C  (c) 2006
 
 ---------------------------------------------
-      Construto sob teste: PROGMOD.exe
+      Construto sob teste: Grupo7Arv1.exe
 
       Arquivo de teste:    TestaVertice.script
 
@@ -34,24 +34,19 @@ LES - Laboratório de Engenharia de Software DI/PUC-Rio
    92  == Criar aresta partindo de um vértice inexistente e indo para vértic inexistente
    95  == Testar a destruição automática das arestas de um vértice sendo destruído
   105  == Criar duas arestas com mesmo valor, origem e destino, origem != destino
->>>    1  Linha:   109  Retorno errado ao criar aresta Deveria ser: 2  É: 0
->>>    2  Linha:   110  Não é comando recuperar:  =destruirvertice 0 OK
->>>    3  Linha:   111  Comando de teste ignorado:  =destruirvertice 1 OK
   113  == Criar uma aresta com mesma origem e destino
   118  == Criar uma aresta com mesma origem e destino, não existentes
   121  == Criar duas arestas com mesmo valor com origem e destinos trocados
   129  == Criar duas arestas com mesmo valor, origem e destino, origem == destino
->>>    4  Linha:   132  Retorno errado ao criar aresta Deveria ser: 2  É: 0
->>>    5  Linha:   133  Não é comando recuperar:  =destruirvertice 0 OK
   135  == Criar três arestas com valores distintos, mas com mesma origem e destino, origem != destino
   144  == Criar três arestas com valores distintos, mas com mesma origem e destino, origem == destino
 
 !!! Número de linhas lidas:         149
 !!! Número de casos de teste:        24
-!!! Número comandos corretos:        89
-!!! Número de falhas encontradas:     5
+!!! Número comandos corretos:        94
+!!! Número de falhas encontradas:     0
 
-!!! Foram encontrados problemas
+!!! Não foram encontrados problemas
 
 
 !!! Numero de espacos ainda alocados: 0

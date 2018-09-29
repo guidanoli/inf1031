@@ -46,5 +46,15 @@ Primeiramente, certifique-se que esta pasta esteja na pasta do seu projeto do Vi
 
 A localização do repositório na sua máquina é fundamental para que o arquivo batch consiga copiar o executável automaticamente. Para gerar o diretório de distribuição, rode o batch _**Distribui.bat**_ para copiar apenas os arquivos importantes para a pasta **_DISTRIBUICAO_**.
 
+## Debugger do Visual Studio
+
+Caso acho necessário debugar algum erro com o Visual Studio, é simples:
+
+* crie um novo projeto no Visual Studio para debugar
+* copie os arquivos-fonte para a pasta do seu projeto
+* crie um arquivo .c para sua função main
+* importe o(s) módulo(s) que deseja debugar
+* pronto! agora você poderá livremente colocar assertivas nos módulos e achar o bug!
+
 _Att,
 Guilherme_

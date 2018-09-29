@@ -54,6 +54,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
    static int ValidarIndexVertice( int indexVertice ) ;
    static int ComparaStrings (void* pa, void*pb) ;
+   static void CopiaStrings (void *pa, void *pb) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -167,9 +168,11 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
 
-         CondRetVER = VER_CriarAresta(vtVertices[inxVERTICE],
-            vtVertices[inxVERTICE2],
-            pDado,ComparaStrings);
+         CondRetVER = VER_CriarAresta( vtVertices[inxVERTICE] ,
+                                       vtVertices[inxVERTICE2] ,
+                                       pDado ,
+                                       ComparaStrings ,
+                                       CopiaStrings ) ;
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar aresta");
 
@@ -253,6 +256,20 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       return strcmp( (char*)pa, (char*)pb );
 
    } /* Fim função: TVER -Compara Strings */
+
+ /***********************************************************************
+*
+*  $FC Função: TVER -Copia Strings
+*
+***********************************************************************/
+
+   void CopiaStrings (void **pa, void *pb)
+   {
+
+      *pa = (char *) malloc(sizeof(char)*DIM_VALOR_VERTICE);
+      strcpy_s( (char*)(*pa), DIM_VALOR_VERTICE, (char*)pb );
+
+   } /* Fim função: TVER -Copia Strings */
 
 /********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
 
