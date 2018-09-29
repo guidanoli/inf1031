@@ -1,0 +1,52 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: Grupo7Arv1.exe
+
+      Arquivo de teste:    TestaVertice.script
+
+
+!!!    0  Linha:     1  // Script:    TestaVertice.script 
+!!!    0  Linha:     2  // Autor(es): Guilherme Dantas 
+!!!    0  Linha:     3  // Data:      28/09/2018 
+!!!    0  Linha:     4  // Propósito: Testa a integridade das funções de acesso 
+!!!    0  Linha:     5  //            do módulo Vértice para com sua estrutura de dados, 
+!!!    0  Linha:     6  //            baseando-se no modelo arquitetado. 
+!!!    0  Linha:     7  // 
+    9  == Declarar as condicoes de retorno
+   19  == Declarar os valores dos vértices
+   25  == Declarar os valores das arestas
+   30  == Criar vértice
+   33  == Destruir vértice existente (sem arestas)
+   36  == Destruir vértice inexistente
+   39  == Criar 10 vértices em paralelo
+   51  == Destruir 10 vértices em paralelo
+   63  == Criar vértice em cima de outro vértice (overwrite)
+   68  == Criar aresta entre dois vértices existentes
+   73  == Destruir aresta entre dois vértice existentes
+   76  == Destruir vértices após destruição da aresta que os conecta
+   80  == Criar aresta partindo de um vértice existente e indo para vértice inexistente
+   84  == Destruir aresta inexistente
+   88  == Criar aresta partindo de um vértice inexistente e indo para vértice existente
+   93  == Criar aresta partindo de um vértice inexistente e indo para vértic inexistente
+   96  == Testar a destruição automática das arestas de um vértice sendo destruído
+  106  == Criar duas arestas com mesmo valor, origem e destino, origem != destino
+  114  == Criar uma aresta com mesma origem e destino
+  119  == Criar uma aresta com mesma origem e destino, não existentes
+  122  == Criar duas arestas com mesmo valor com origem e destinos trocados
+  130  == Criar duas arestas com mesmo valor, origem e destino, origem == destino
+  136  == Criar três arestas com valores distintos, mas com mesma origem e destino, origem != destino
+  145  == Criar três arestas com valores distintos, mas com mesma origem e destino, origem == destino
+
+!!! Número de linhas lidas:         150
+!!! Número de casos de teste:        24
+!!! Número comandos corretos:        95
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

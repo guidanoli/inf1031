@@ -1,0 +1,32 @@
+// Script:    TestaGrafo.script
+// Autores:   Caique Molina
+//            Guilherme Dantas
+//	      Nagib Moura
+// Data:      28/09/2018
+// Propósito: Testa a integridade das funções de acesso
+//            do módulo Grafo para com sua estrutura de dados,
+//            baseando-se no modelo arquitetado.
+//
+
+== Declarar as condicoes de retorno
+=declararparm  OK                    int 0
+=declararparm  GrafoNaoExiste        int 1 
+=declararparm  GrafoVazio            int 2
+=declararparm  VerticeExiste         int 3
+=declararparm  VerticeNaoExiste      int 4
+=declararparm  ValorFornecidoNulo    int 5
+=declararparm  ArestaNaoExiste       int 6
+=declararparm  ErroEstrutura         int 7
+=declararparm  Memoria               int 8
+
+== Declarar os valores dos vértices
+=declararparm  StrErro     string  "!"
+=declararparm  StrA        string  "A"
+=declararparm  StrB        string  "B"
+=declararparm  StrC        string  "C"
+
+== Declarar os valores das arestas
+=declararparm  Stra        string  "a"
+=declararparm  Strb        string  "b"
+=declararparm  Strc        string  "c"
+
