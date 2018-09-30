@@ -53,8 +53,8 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static int ValidarIndexVertice( int indexVertice ) ;
-   static int ComparaStrings (void* pa, void*pb) ;
-   static void CopiaStrings (void *pa, void *pb) ;
+   static int ComparaStrings (void *pa, void*pb) ;
+   static void CopiaStrings (void **pa, void *pb) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -67,12 +67,12 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *
 *     Comandos disponíveis:
 *
-*    =criarvertice              inxVERTICE, stringdado, CondRetEsp
+*    =criarvertice              inxVERTICE, StringEsperado, CondRetEsp
 *	  =destruirvertice			  inxVERTICE, CondRetEsp
-*	  =obtervalor					  inxVERTICE, ValorEsp, CondRetEsp
-*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, stringdado, CondRetEsp
-*	  =destruiraresta				  inxVERTICE, stringdadoAre, CondRetEsp
-*    =percorreraresta           inxVERTIVEPart, stringdado, inxVERTICEDest, Sentido, ConsRetEsp
+*	  =obtervalor					  inxVERTICE, ValorEsp
+*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, CondRetEsp
+*	  =destruiraresta				  inxVERTICE, StringEsperadoAre, CondRetEsp
+*    =percorreraresta           inxVERTIVEPart, StringEsperado, inxVERTICEDest, Sentido, ConsRetEsp
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -87,8 +87,9 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       VER_tpCondRet CondRetVER = VER_CondRetOK;
 
       char pDado[DIM_VALOR_VERTICE] = "";
+      char *pRecebido;
       char StringDado[DIM_VALOR_VERTICE] = "";
-      char StringEsperado[DIM_VALOR_VERTICE] = "";
+      char StringEsperado[DIM_VALOR_VERTICE] = "!";
 
       int ValEsp = -1;
       int numElem = -1;
@@ -97,14 +98,14 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       if (strcmp(ComandoTeste, CRIAR_VERTICE_CMD) == 0) {
 
-         numLidos = LER_LerParametros("isi", &inxVERTICE, StringDado, &CondRetEsp);
+         numLidos = LER_LerParametros("isi", &inxVERTICE, StringEsperado, &CondRetEsp);
 
          if ((numLidos != 3) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
          CondRetVER = VER_CriarVertice(NULL, pDado, CopiaStrings, &vtVertices[inxVERTICE]);
 
@@ -133,32 +134,30 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar obtervalor*/
       if (strcmp(ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0) {
 
-         numLidos = LER_LerParametros("isi", &inxVERTICE, StringEsperado, &CondRetEsp);
+         numLidos = LER_LerParametros("is", &inxVERTICE, StringDado);
 
-         if ((numLidos != 3) ||
+         if ((numLidos != 2) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
 
-         CondRetVER = VER_ObterValor(vtVertices[inxVERTICE],(void **) &StringDado,CopiaStrings);
+         pRecebido = (char *) VER_ObterValor(vtVertices[inxVERTICE]);
 
-         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao obter valor de vertice");
-
-         if(CondRetTST != TST_CondRetOK)
+         if(pRecebido != NULL)
          {
-            return CondRetTST;
+            strcpy(StringEsperado,pRecebido);
          }
 
-         return TST_CompararString(pDado,StringDado,"Valor obtido nao corresponde ao esperado");
+         return TST_CompararString(pDado,StringEsperado,"Valor obtido nao corresponde ao esperado");
 
       } /* fim ativa: Testar obtervalor */
 
       /* Testar criararesta*/
       if (strcmp(ComandoTeste, CRIAR_ARESTA_CMD) == 0) {
 
-         numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringDado, &CondRetEsp);
+         numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringEsperado, &CondRetEsp);
 
          if ((numLidos != 4) ||
             (!ValidarIndexVertice(inxVERTICE)) ||
@@ -166,7 +165,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
          CondRetVER = VER_CriarAresta( vtVertices[inxVERTICE] ,
                                        vtVertices[inxVERTICE2] ,
@@ -180,14 +179,14 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       /* Testar destruiraresta*/
       if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
-         numLidos = LER_LerParametros("isi", &inxVERTICE, StringDado, &CondRetEsp);
+         numLidos = LER_LerParametros("isi", &inxVERTICE, StringEsperado, &CondRetEsp);
 
          if ((numLidos != 3) ||
             (!ValidarIndexVertice(inxVERTICE))) {
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
          CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], pDado, ComparaStrings);
 
@@ -198,7 +197,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar percorreraresta*/
       if (strcmp(ComandoTeste, PERCORRER_ARESTA_CMD) == 0) {
 
-          numLidos = LER_LerParametros("isiii", &inxVERTICE, StringDado, &inxVERTICE2, &sentido, &CondRetEsp);
+          numLidos = LER_LerParametros("isiii", &inxVERTICE, StringEsperado, &inxVERTICE2, &sentido, &CondRetEsp);
 
            if ((numLidos != 5) ||
             (!ValidarIndexVertice(inxVERTICE))||
@@ -207,7 +206,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
          CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &vtVertices[inxVERTICE2], ComparaStrings, sentido);
 

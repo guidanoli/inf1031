@@ -138,9 +138,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice ,
-                                 void ** pValor ,
-                                 void (* CopiaValor ) ( void ** pA, void * pB)) ;
+   void * VER_ObterValor( VER_tppVertice pVertice ) ;
 
 /***********************************************************************
 *

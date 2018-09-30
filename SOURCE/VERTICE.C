@@ -339,31 +339,15 @@
 *  Função: VER  &Obter valor do vértice
 *  ****/
 
-   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice ,
-                                 void ** pValor ,
-                                 void (* CopiaValor ) ( void ** pA, void * pB))
+   void * VER_ObterValor( VER_tppVertice pVertice )
    {
-
-      if( CopiaValor == NULL )
-      {
-         return VER_CondRetFuncaoNula;
-      } /* if */
-
-      *pValor = NULL;
 
       if( pVertice == NULL )
       {
-         return VER_CondRetVerticeNaoExiste;
+         return NULL;
       } /* if */
 
-      if( pVertice->Valor == NULL )
-      {
-         return VER_CondRetErroEstrutura;
-      } /* if */
-      
-      (*CopiaValor)(pValor,pVertice->Valor);
-
-      return VER_CondRetOK;
+      return pVertice->Valor;
 
    } /* Fim função: VER  &Obter valor do vértice */
 
@@ -517,28 +501,36 @@
          listaAresta = pVerPartida->pAnt;
       } /* else */
 
-      IrInicioLista( listaAresta );
-
-      while( LIS_AvancarElementoCorrente(listaAresta,1) != LIS_CondRetOK )
+      if( LIS_AvancarElementoCorrente(listaAresta,0) != LIS_CondRetListaVazia )
       {
-         VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(listaAresta);
-         int retorno = (* ComparaValor) (pArestaTemp->Valor,pValor);
 
-         if( retorno == 0 )
+         LIS_tpCondRet Ret = LIS_CondRetOK;
+         IrInicioLista( listaAresta );
+
+         while( Ret == LIS_CondRetOK )
          {
-            if( Sentido == 1 )
+            VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(listaAresta);
+            int retorno = (* ComparaValor) (pArestaTemp->Valor,pValor);
+
+            if( retorno == 0 )
             {
-               *pVerDestino = pArestaTemp->pDest;
+               if( Sentido == 1 )
+               {
+                  *pVerDestino = pArestaTemp->pDest;
+               } /* if */
+               else
+               {
+                  *pVerDestino = pArestaTemp->pPart;
+               } /* else */
+
+               return VER_CondRetOK;
             } /* if */
-            else
-            {
-               *pVerDestino = pArestaTemp->pPart;
-            } /* else */
 
-            return VER_CondRetOK;
-         } /* if */
+            Ret = LIS_AvancarElementoCorrente(listaAresta,1);
 
-      } /* while */
+         } /* while */
+
+      }
 
       return VER_CondRetArestaNaoExiste;
 

@@ -223,7 +223,7 @@
          VER_tppVertice pVertCorr = (VER_tppVertice) LIS_ObterValor(pVertices);
          void *pValorCorr = NULL;
 
-         RetVer = VER_ObterValor(pVertCorr,&pValorCorr,CopiaValor);
+//         RetVer = VER_ObterValor(pVertCorr,&pValorCorr,CopiaValor);
          switch(RetVer)
          {
          case VER_CondRetVerticeNaoExiste:

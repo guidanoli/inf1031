@@ -148,3 +148,11 @@
 =criararesta 0 0 Strb OK
 =criararesta 0 0 Strc OK
 =destruirvertice 0 OK
+
+== Obter valor de vértice inexistente
+=obtervalor 0 StrErro
+
+== Obter valor de vértice existente
+=criarvertice 0 StrA OK
+=obtervalor 0 StrA
+=destruirvertice 0 OK
