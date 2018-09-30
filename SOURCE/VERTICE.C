@@ -302,6 +302,9 @@
          Tratando do vértice de destino
       -----------------------------------
       */
+
+      if( LIS_AvancarElementoCorrente(pListaDestino,0) != LIS_CondRetListaVazia )
+         IrInicioLista(pListaDestino);
    
       RetLis = LIS_ProcurarValor(pListaDestino,pAresta);
 
@@ -317,6 +320,9 @@
          Tratando do vértice de partida
       -----------------------------------
       */
+
+      if( LIS_AvancarElementoCorrente(pListaPartida,0) != LIS_CondRetListaVazia )
+         IrInicioLista(pListaPartida);
 
       RetLis = LIS_ProcurarValor(pListaPartida,pAresta);
 
@@ -572,6 +578,9 @@
       -----------------------------------
       */
    
+      if( LIS_AvancarElementoCorrente(pListaDestino,0) != LIS_CondRetListaVazia )
+         IrInicioLista(pListaDestino);
+
       RetLis = LIS_ProcurarValor(pListaDestino,pAresta);
 
       if( RetLis != LIS_CondRetOK )
@@ -586,6 +595,9 @@
          Tratando do vértice de partida
       -----------------------------------
       */
+
+      if( LIS_AvancarElementoCorrente(pListaPartida,0) != LIS_CondRetListaVazia )
+         IrInicioLista(pListaPartida);
 
       RetLis = LIS_ProcurarValor(pListaPartida,pAresta);
 

@@ -72,7 +72,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *	  =obtervalor					  inxVERTICE, ValorEsp
 *	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, CondRetEsp
 *	  =destruiraresta				  inxVERTICE, StringEsperadoAre, CondRetEsp
-*    =percorreraresta           inxVERTIVEPart, StringEsperado, inxVERTICEDest, Sentido, ConsRetEsp
+*    =percorreraresta           inxVERTIVEPart, StringEsperadoAre, Sentido, StringEsperadoVerDestino, ConsRetEsp
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -88,11 +88,9 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       char pDado[DIM_VALOR_VERTICE] = "";
       char *pRecebido;
-      char StringDado[DIM_VALOR_VERTICE] = "";
+      char StringDado[DIM_VALOR_VERTICE] = "!";
       char StringEsperado[DIM_VALOR_VERTICE] = "!";
-
-      int ValEsp = -1;
-      int numElem = -1;
+      char StringEsperado2[DIM_VALOR_VERTICE] = "!";
 
       /* Testar criarvertice */
 
@@ -147,7 +145,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          if(pRecebido != NULL)
          {
-            strcpy(StringEsperado,pRecebido);
+            strcpy_s(StringEsperado, DIM_VALOR_VERTICE, pRecebido);
          }
 
          return TST_CompararString(pDado,StringEsperado,"Valor obtido nao corresponde ao esperado");
@@ -197,20 +195,36 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       /* Testar percorreraresta*/
       if (strcmp(ComandoTeste, PERCORRER_ARESTA_CMD) == 0) {
 
-          numLidos = LER_LerParametros("isiii", &inxVERTICE, StringEsperado, &inxVERTICE2, &sentido, &CondRetEsp);
+         char * pValorVerDestino = NULL;
+         VER_tppVertice VerticeDestino = NULL;
 
-           if ((numLidos != 5) ||
-            (!ValidarIndexVertice(inxVERTICE))||
-            (!ValidarIndexVertice(inxVERTICE2))||
+         numLidos = LER_LerParametros("isisi", &inxVERTICE, StringEsperado, &sentido, StringEsperado2, &CondRetEsp);
+
+         if ((numLidos != 5) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
             (sentido!=0 && sentido!=1)) {
             return TST_CondRetParm;
          } /* if */
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &vtVertices[inxVERTICE2], ComparaStrings, sentido);
+         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &VerticeDestino, ComparaStrings, sentido);
 
-         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao percorrer aresta");
+         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao percorrer aresta");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         }
+
+         pValorVerDestino = (char *) VER_ObterValor(VerticeDestino);
+
+         if( pValorVerDestino != NULL )
+         {
+            strcpy_s(StringEsperado,DIM_VALOR_VERTICE,pValorVerDestino);
+         }
+
+         return TST_CompararString(StringEsperado2,StringEsperado,"Valor obtido nao corresponde ao esperado");
 
       }/* fim ative: Testar percorreraresta*/
 

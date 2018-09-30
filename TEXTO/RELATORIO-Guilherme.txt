@@ -37,3 +37,8 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								constructo crashar antes de gerar o log de saída,
 								envolvendo os módulos VERTICE e TESTVER, referentes
 								à função CriarAresta
+29/09	10h			diagnosticar e corrigir		Erros quanto ao uso indevido de funções do módulo
+				os problemas encontrados	LISTA foram corrigidos. Além disso, a função
+								obterValor está testada. A função PercorreAresta
+								está devidamente pronta para ser testada e res-
+								ponde bem aos casos testes básicos até agora.
