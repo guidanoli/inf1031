@@ -62,10 +62,13 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
          GRF_CondRetValorFornecidoNulo ,
                /* Valor fornecido é nulo */
 
+         GRF_CondRetArestaExiste ,
+               /* Aresta com mesmo valor, origem e destino já existe */
+
          GRF_CondRetArestaNaoExiste ,
                /* Aresta inexistente */
 
-         GRF_CondRetFuncNula ,
+         GRF_CondRetFuncaoNula ,
                /* O ponteiro para função é nulo */
 
          GRF_CondRetErroEstrutura ,
@@ -98,7 +101,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - criou grafo sem problemas
-*     GRF_CondRetFuncNula        - ponteiro para alguma das funções é nulo
+*     GRF_CondRetFuncaoNula        - ponteiro para alguma das funções é nulo
 *     GRF_CondRetFaltouMemoria   - não foi possível alocar memória para grafo
 *
 ***********************************************************************/
@@ -107,6 +110,8 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
                                  int (* ComparaValorVer ) ( void * pA, void * pB) ,
                                  void (* CopiaValorAre ) ( void ** pA, void * pB) ,
                                  void (* CopiaValorVer ) ( void ** pA, void * pB) ,
+                                 void (* ExcluirValorVer ) ( void * pDado ) ,
+                                 void (* ExcluirValorAre ) ( void * pDado ) ,
                                  GRF_tppGrafo * ppGrafoParam ) ;
 
 /***********************************************************************
@@ -115,9 +120,6 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $ED Descrição da função
 *     Destrói o grafo fornecido.
-*     Se ocorrer algum erro durante a destruição, a grafo resultará
-*     estruturalmente incorreto.
-*     OBS. não existe previsão para possíveis falhas de execução.
 *
 *  $EP Parâmetros
 *     ppGrafoParam - endereço do ponteiro para o grafo a ser destruido
@@ -142,26 +144,20 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
-*     pValor - valores do novo vértice
-*     ExcluirValor  - ponteiro para a função que processa a
-*                     exclusão do valor referenciado pelo vértice
-*                     a ser excluído.
-*                     Ver descrição do módulo.  
+*     pValor - valores do novo vértice 
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - inseriu sem problemas
 *     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo é nulo
 *     GRF_CondRetVerticeExiste   - já existe um vértice no grafo tal valor
+*     GRF_CondRetFuncaoNula        - o ponteiro para função de cópia é nula
 *     GRF_CondRetErroEstrutura   - algum erro na estrutura do grafo ocorreu 
 *     GRF_CondRetFaltouMemoria   - não foi possível alocar um novo vértice
 *
 ***********************************************************************/
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
-                                     void * pValor ,
-                                     int (* ComparaValor) ( void * pA, void * pB) ,
-                                     void (* CopiaValor ) ( void ** pA, void * pB) ,
-                                     void (* ExcluirValor) ( void * pDado ) ) ;
+                                     void * pValor ) ;
    
 /***********************************************************************
 *
@@ -172,48 +168,41 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     vértice A e vai para o vértice B.
 *
 *  $EP Parâmetros
-*     pGrafo - ponteiro para o grafo
-*     pValorA e pValorB - valores dos vértices
-*     ValorAresta - valor da arestas
-*     ComparaValor - ponteiro para função que compara valores do
-*                    tipo de pValorA e pValorB.
-*                    Retorno da função:
-*                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contrário
-*     CopiaValor   - ponteiro para função que copia o valor de
-*                    pB para *pA. Essencial para estruturas de dados
-*                    que trabalham com ponteiros, como string e structs.
-*                    O espaço referenciado por pA é inicialmente nulo
-*                    e deve ser inicalmente alocado dinamicamente
-*                    com o tipo de estrutura de dados apropriado.
-*                    >>> void
+*     pGrafo            - ponteiro para o grafo
+*     pValorPartida     - valor do vértice de partida
+*     pValorDestino     - valor do vértice de destino
+*     ValorAresta       - valor da aresta a ser inserida
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
 *     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo é nulo
+*     GRF_CondRetValorFornecidoNulo - valor da aresta nulo
+*     GRF_CondRetArestaExiste       - já existe uma aresta com mesma origem,
+*                                     destino e valor no grafo
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
-*     GRF_CondRetVerticeNaoExiste   - um dos valores fornecidos não existem
+*     GRF_CondRetVerticeNaoExiste   - algum dos valores vértices fornecidos não existe
 *     GRF_CondRetFaltouMemoria      - não foi possível alocar espaço na memória
 *
 ***********************************************************************/
 
    GRF_tpCondRet GRF_InserirAresta( GRF_tppGrafo pGrafo ,
-                                    void * pValorA,
-                                    void * pValorB,
-                                    void * ValorAresta,
-                                    int (* ComparaValor) ( void * pA, void * pB),
-                                    void (* CopiaValor) (void ** pA, void * pB)) ;
+                                    void * pValorPartida,
+                                    void * pValorDestino,
+                                    void * ValorAresta ) ;
 
 /***********************************************************************
 *
-*  $FC Função: GRF  &Caminhar
+*  $FC Função: GRF  &Caminhar por grafo
 *
 *  $ED Descrição da função
 *     Caminha por um grafo em um determinado sentido
 *
 *  $EP Parâmetros
-*     pGrafo - ponteiro para o grafo
-*     pValor - valor da aresta que deseja-se caminhar
+*     pGrafo  - ponteiro para o grafo
+*     pValor  - valor da aresta que deseja-se caminhar
+*     Sentido - sentido do caminhamento
+*               >> 1 para frente
+*               >> 0 para trás
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - caminhou sem problemas
@@ -221,13 +210,14 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     GRF_CondRetErroEstrutura
 *     GRF_CondRetGrafoVazio         - não há vertices no grafo
 *     GRF_CondRetValorFornecidoNulo - pValor é nulo
+*     GRF_CondRetFuncaoNula         - função ComparaValorAre é nula
 *     GRF_CondRetArestaNaoExiste    - não foi encontrada a aresta com
 *                                     o valor pValor
 *
 ***********************************************************************/
 
-   GRF_tpCondRet GRF_Caminhar( GRF_tppGrafo pGrafo ,
-                               void * pValor,
-                               int Sentido ) ;
+   GRF_tpCondRet GRF_CaminharGrafo( GRF_tppGrafo pGrafo ,
+                                    void * pValor,
+                                    int Sentido ) ;
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

@@ -34,6 +34,9 @@
 
 #define CRIAR_GRAFO_CMD          "=criargrafo"
 #define DESTRUIR_GRAFO_CMD       "=destruirgrafo"
+#define INSERIR_VERTICE_CMD      "=inserirvertice"
+#define INSERIR_ARESTA_CMD       "=inseriraresta"
+#define CAMINHAR_GRAFO_CMD       "=caminhargrafo"
 
 #define TST_GRF_TRUE 1
 #define TST_GRF_FALSE 0
@@ -41,11 +44,10 @@
 #define DIM_VT_GRAFO 10
 #define DIM_STRINGS 10
 
-GRF_tppGrafo vtGrafos[ DIM_VT_GRAFO ] ;
+GRF_tppGrafo pGrafo = NULL ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static int ValidarIndexGrafo( int indexGrafo ) ;
    static int ComparaStrings (void *pa, void*pb) ;
    static void CopiaStrings (void **pa, void *pb) ;
 
@@ -60,97 +62,140 @@ GRF_tppGrafo vtGrafos[ DIM_VT_GRAFO ] ;
 *
 *     Comandos disponíveis:
 *
-*    =criargrafo                indexGrafo CondRetEsperada
-*    =destruirgrafo             indexGrafo CondRetEsperada
-
+*    =criargrafo                CondRetEsperada
+*    =destruirgrafo             CondRetEsperada
+*    =inserirvertice            ValorVertice CondRetEsperada
+*    =inseriraresta             ValorVerOrigem ValorVerDestino ValorAresta CondRetEsperada
+*    =caminhargrafo             ValorAresta Sentido CondRetEsperada
+*
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
 
-      int indexGrafo = -1,
-          numParamLidos = -1;
+      int numParamLidos = -1,
+          sentido = -1;
 
       GRF_tpCondRet CondRetEsperada = GRF_CondRetFaltouMemoria;
       GRF_tpCondRet CondRetObtida   = GRF_CondRetOK;
 
       TST_tpCondRet CondRetTST = TST_CondRetOK;
 
-      char pDado[DIM_STRINGS] = "";
-      char *pRecebido;
-      char StringDado[DIM_STRINGS] = "!";
-      char StringEsperado[DIM_STRINGS] = "!";
+      char ValorDado[DIM_STRINGS] = "";
+      char ValorDado2[DIM_STRINGS] = "";
+      char ValorDado3[DIM_STRINGS] = "";
 
       /* Testar criargrafo */
 
       if( strcmp(ComandoTeste,CRIAR_GRAFO_CMD) == 0 )
       {
 
-         numParamLidos = LER_LerParametros("ii",&indexGrafo,&CondRetEsperada);
+         numParamLidos = LER_LerParametros("i",&CondRetEsperada);
 
-         if( numParamLidos != 2 ||
-             !ValidarIndexGrafo(indexGrafo) )
+         if( numParamLidos != 1 )
          {
             return TST_CondRetParm;
          } /* if */
 
          CondRetObtida = GRF_CriarGrafo(  ComparaStrings ,
-                                          ComparaStrings,
-                                          CopiaStrings,
-                                          CopiaStrings,
-                                          &vtGrafos[indexGrafo] );
+                                          ComparaStrings ,
+                                          CopiaStrings ,
+                                          CopiaStrings ,
+                                          NULL ,
+                                          NULL ,
+                                          &pGrafo );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao criar grafo");
 
       } /* if */
 
+      /* Testar destruirgrafo */
+
       if( strcmp(ComandoTeste,DESTRUIR_GRAFO_CMD) == 0 )
       {
 
-         numParamLidos = LER_LerParametros("ii",&indexGrafo,&CondRetEsperada);
+         numParamLidos = LER_LerParametros("i",&CondRetEsperada);
 
-         if( numParamLidos != 2 ||
-             !ValidarIndexGrafo(indexGrafo) )
+         if( numParamLidos != 1 )
          {
             return TST_CondRetParm;
          } /* if */
 
-         CondRetObtida = GRF_DestruirGrafo( &vtGrafos[indexGrafo] );
+         CondRetObtida = GRF_DestruirGrafo( &pGrafo );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao destruir grafo");
 
       }
 
+      /* Testar inserirvertice */
+
+      if( strcmp(ComandoTeste,INSERIR_VERTICE_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("si",ValorDado,&CondRetEsperada);
+
+         if( numParamLidos != 2 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetObtida = GRF_InserirVertice( pGrafo , ValorDado );
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao inserir vertice");
+
+      } /* if */
+
+      /* Testar inseriraresta */
+
+      if( strcmp(ComandoTeste,INSERIR_ARESTA_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("sssi",ValorDado,ValorDado2,ValorDado3,&CondRetEsperada);
+
+         if( numParamLidos != 4 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetObtida = GRF_InserirAresta( pGrafo ,
+                                            ValorDado ,
+                                            ValorDado2 ,
+                                            ValorDado3 ) ;
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao inserir aresta");
+
+      } /* if */
+
+      /* Testar caminhargrafo */
+
+      if( strcmp(ComandoTeste,CAMINHAR_GRAFO_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("sii",ValorDado,&sentido,&CondRetEsperada);
+
+         if( numParamLidos != 3 ||
+             sentido < 0 || sentido > 1 )
+         {
+            return TST_CondRetParm;
+         }
+
+         CondRetObtida = GRF_CaminharGrafo( pGrafo ,
+                                            ValorDado ,
+                                            sentido ) ;
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao caminhar por grafo");
+
+      }
+
       return TST_CondRetNaoConhec;
 
-   } /* Fim função: TVER &Testar VERTICE */
+   } /* Fim função: TGRF &Testar Grafo */
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
-
-/***********************************************************************
-*
-*  $FC Função: TGRF -Validar indice de Grafo
-*
-***********************************************************************/
-
-   int ValidarIndexGrafo( int indexGrafo )
-   {
-
-      if ( ( indexGrafo <  0 )
-        || ( indexGrafo >= DIM_VT_GRAFO ))
-      {
-         return TST_GRF_FALSE ;
-      } /* if */
-         
-      return TST_GRF_TRUE ;
-
-   } /* Fim função: TGRF -Validar indice de Grafo */
-
-
  /***********************************************************************
 *
-*  $FC Função: TVER -Compara Strings
+*  $FC Função: TGRF -Compara Strings
 *
 ***********************************************************************/
 
@@ -163,7 +208,7 @@ GRF_tppGrafo vtGrafos[ DIM_VT_GRAFO ] ;
 
  /***********************************************************************
 *
-*  $FC Função: TVER -Copia Strings
+*  $FC Função: TGRF -Copia Strings
 *
 ***********************************************************************/
 
