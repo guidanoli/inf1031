@@ -42,3 +42,13 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								obterValor está testada. A função PercorreAresta
 								está devidamente pronta para ser testada e res-
 								ponde bem aos casos testes básicos até agora.
+30/09	2h			codificar módulo		Revisada o módulo GRAFO com as alterações feitas
+								no módulo VERTICE.
+30/09	1h			redigir script de teste		Testar a função GRAFO enquanto redige TESTGRF
+30/09	2h			diagnosticar e corrigir		Enquanto fazia as duas tarefas acima, debugava
+				os problemas encontrados	erros nas funções do módulo GRAFO no Debugger
+								do VS2010. O módulo VERTICE não precisou de
+								ajuste, pois operava como o esperado.
+01/10	30min			revisar código do módulo	Ajustar TESTGRF para trabalhar com três
+								grafos diferentes, como Flávio especificou
+								em resposta a e-mail.

@@ -35,143 +35,143 @@
 =declararparm  Frente  int 1
 
 == Criar grafo
-=criargrafo OK
+=criargrafo 0 OK
 
 == Destruir grafo existente
-=destruirgrafo OK
+=destruirgrafo 0 OK
 
 == Destruir grafo inexistente
-=destruirgrafo GrafoNaoExiste
+=destruirgrafo 0 GrafoNaoExiste
 
 == Inserir vértice em grafo inexistente
-=inserirvertice StrA GrafoNaoExiste
+=inserirvertice 0 StrA GrafoNaoExiste
 
 == Inserir um vértice em grafo existente
-=criargrafo OK
-=inserirvertice StrA OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=destruirgrafo 0 OK
 
 == Inserir múltiplos vértices em grafo existente
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inserirvertice StrC OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=destruirgrafo 0 OK
 
 == Testar inserir vértices com mesmo valor em grafo existente
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrA VerticeExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrA VerticeExiste
+=destruirgrafo 0 OK
 
 == Testar inserir aresta em grafo inexistente
-=inseriraresta StrA StrB Stra GrafoNaoExiste
+=inseriraresta 0 StrA StrB Stra GrafoNaoExiste
 
 == Testar inserir aresta entre vértices inexistentes
-=criargrafo OK
-=inseriraresta StrA StrB Stra VerticeNaoExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inseriraresta 0 StrA StrB Stra VerticeNaoExiste
+=destruirgrafo 0 OK
 
 == Testar inserir aresta entre vértice existente (1o parm.) e vértice inexistente (2o parm.)
-=criargrafo OK
-=inserirvertice StrA OK
-=inseriraresta StrA StrB Stra VerticeNaoExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inseriraresta 0 StrA StrB Stra VerticeNaoExiste
+=destruirgrafo 0 OK
 
 == Testar inserir aresta entre vértice existente (2o parm.) e vértice inexistente (1o parm.)
-=criargrafo OK
-=inserirvertice StrB OK
-=inseriraresta StrA StrB Stra VerticeNaoExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra VerticeNaoExiste
+=destruirgrafo 0 OK
 
 == Inserir aresta entre vértices existentes e diferentes
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inseriraresta StrA StrB Stra OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=destruirgrafo 0 OK
 
 == Inserir aresta que parte e aponta para o mesmo vértice existente
-=criargrafo OK
-=inserirvertice StrA OK
-=inseriraresta StrA StrA Stra OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inseriraresta 0 StrA StrA Stra OK
+=destruirgrafo 0 OK
 
 == Tentar inserir aresta com mesmo valor, destino e origem de outro existente (destino != origem)
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inseriraresta StrA StrB Stra OK
-=inseriraresta StrA StrB Stra ArestaExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrA StrB Stra ArestaExiste
+=destruirgrafo 0 OK
 
 == Tentar inserir aresta com mesmo valor, destino e origem de outro existente (destino == origem)
-=criargrafo OK
-=inserirvertice StrA OK
-=inseriraresta StrA StrA Stra OK
-=inseriraresta StrA StrA Stra ArestaExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inseriraresta 0 StrA StrA Stra OK
+=inseriraresta 0 StrA StrA Stra ArestaExiste
+=destruirgrafo 0 OK
 
 == Inserir diversas arestas com mesmo valor partindo do mesmo vértice e apontando para vértices diferentes
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inserirvertice StrC OK
-=inseriraresta StrA StrA Stra OK
-=inseriraresta StrA StrB Stra OK
-=inseriraresta StrA StrC Stra OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inseriraresta 0 StrA StrA Stra OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrA StrC Stra OK
+=destruirgrafo 0 OK
 
 == Testar caminhar por grafo inexistente
-=caminhargrafo Stra Frente GrafoNaoExiste
+=caminhargrafo 0 Stra Frente GrafoNaoExiste
 
 == Testar caminhar por grafo vazio
-=criargrafo OK
-=caminhargrafo Stra Frente GrafoVazio
-=destruirgrafo OK
+=criargrafo 0 OK
+=caminhargrafo 0 Stra Frente GrafoVazio
+=destruirgrafo 0 OK
 
 == Testar caminhar por grafo não-vazio mas por aresta inexistente
-=criargrafo OK
-=inserirvertice StrA OK
-=caminhargrafo Stra Frente ArestaNaoExiste
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=caminhargrafo 0 Stra Frente ArestaNaoExiste
+=destruirgrafo 0 OK
 
 == Testar caminhar por grafo com três vértices mas por aresta que não conecta vértice corrente
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inserirvertice StrC OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
 // OBS: vértice corrente é o último a ser inserido no grafo
-=inseriraresta StrA StrB Stra OK
-=caminhargrafo Stra Frente ArestaNaoExiste
-=destruirgrafo OK
+=inseriraresta 0 StrA StrB Stra OK
+=caminhargrafo 0 Stra Frente ArestaNaoExiste
+=destruirgrafo 0 OK
 
 == Caminhar por aresta que conecta vértices diferentes (por tras)
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inseriraresta StrA StrB Stra OK
-=caminhargrafo Stra Tras OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=caminhargrafo 0 Stra Tras OK
+=destruirgrafo 0 OK
 
 == Caminhar por aresta que conecta vértices diferentes (pela frente)
-=criargrafo OK
-=inserirvertice StrA OK
-=inserirvertice StrB OK
-=inseriraresta StrB StrA Stra OK
-=caminhargrafo Stra Frente OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrB StrA Stra OK
+=caminhargrafo 0 Stra Frente OK
+=destruirgrafo 0 OK
 
 == Caminhar por aresta que parte e aponta para o mesmo vértice (pela frente)
-=criargrafo OK
-=inserirvertice StrA OK
-=inseriraresta StrA StrA Stra OK
-=caminhargrafo Stra Frente OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inseriraresta 0 StrA StrA Stra OK
+=caminhargrafo 0 Stra Frente OK
+=destruirgrafo 0 OK
 
 == Caminhar por aresta que parte e aponta para o mesmo vértice (por trás)
-=criargrafo OK
-=inserirvertice StrA OK
-=inseriraresta StrA StrA Stra OK
-=caminhargrafo Stra Tras OK
-=destruirgrafo OK
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inseriraresta 0 StrA StrA Stra OK
+=caminhargrafo 0 Stra Tras OK
+=destruirgrafo 0 OK
