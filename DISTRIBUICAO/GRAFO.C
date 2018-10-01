@@ -551,65 +551,6 @@
 
    } /* Fim da função: GRF  Caminhar por grafo */
 
-   /***************************************************************************
-*
-*  Função: GRF  &Destruir aresta
-*  ****/
-
-   GRF_tpCondRet GRF_DestruirAresta(GRF_tppGrafo pGrafo,
-                                    void* pValorVerOrig,
-                                    void* pValorVerDest,
-                                    void* pValorAre)
-   {
-      VER_tppVertice pVertice;
-      VER_tpCondRet VER_CondRet;
-
-
-      if (pGrafo == NULL){
-         return GRF_CondRetGrafoNaoExiste;
-      } /* if */
-
-      pVertice = pGrafo->pVertCorr;
-
-      if ( LIS_AvancarElementoCorrente(pGrafo->pVerticesGrafo,0) == LIS_CondRetListaVazia ){
-
-         if (pVertice == NULL){
-            return GRF_CondRetGrafoVazio;
-         } /* if */
-
-         else{
-            return GRF_CondRetErroEstrutura;
-         } /* else */
-      } /* if */
-
-      if (pValorAre = NULL){
-         return GRF_CondRetValorFornecidoNulo;
-      } /* if */
-
-      VER_CondRet = VER_DestruirAresta(pVertice, pValorAre, pGrafo->ComparaValorAre);
-
-      if ( VER_CondRet == VER_CondRetArestaNaoExiste ){
-         return GRF_CondRetArestaNaoExiste;
-      }/* if */
-
-      if ( VER_CondRet == VER_CondRetErroEstrutura ){
-         return GRF_CondRetErroEstrutura;
-      }/* if */
-
-      if ( VER_CondRet == VER_CondRetVerticeNaoExiste ){
-         return GRF_CondRetVerticeNaoExiste;
-      }/* if */
-
-      if ( VER_CondRet == VER_CondRetFuncaoNula ){
-         return GRF_CondRetFuncaoNula;
-      }/* if */
-
-      if ( VER_CondRet == VER_CondRetOK){
-         return GRF_CondRetOK;
-      }/* if */
-
-   }/*Fim da função: GRF Destruir aresta*/
-
 /*****  Código das funções encapsuladas no módulo  *****/
 
 /***********************************************************************

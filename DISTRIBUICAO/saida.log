@@ -1,0 +1,64 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: PROGMOD.exe
+
+      Arquivo de teste:    TestaVertice.script
+
+
+!!!    0  Linha:     1  // Script:    			TestaVertice.script 
+!!!    0  Linha:     2  // Autor:     			Guilherme Dantas 
+!!!    0  Linha:     3  // Data de Criação:		28/09/2018 
+!!!    0  Linha:     4  // Data de Modificação:      	29/09/2018 
+!!!    0  Linha:     5  // Propósito: 			Testa a integridade das funções de acesso 
+!!!    0  Linha:     6  //            			do módulo Vértice para com sua estrutura de dados, 
+!!!    0  Linha:     7  //            			baseando-se no modelo arquitetado. 
+!!!    0  Linha:     8  // 
+   10  == Declarar as condicoes de retorno
+   20  == Declarar os valores dos vértices
+   26  == Declarar os valores das arestas
+   34  == Declarar os valores para sentido de caminhamento
+   38  == Criar vértice
+   41  == Destruir vértice existente (sem arestas)
+   44  == Destruir vértice inexistente
+   47  == Criar 10 vértices em paralelo
+   59  == Destruir 10 vértices em paralelo
+   71  == Criar vértice em cima de outro vértice (overwrite)
+   76  == Criar aresta entre dois vértices existentes
+   81  == Destruir aresta entre dois vértice existentes
+   84  == Destruir vértices após destruição da aresta que os conecta
+   88  == Criar aresta partindo de um vértice existente e indo para vértice inexistente
+   92  == Destruir aresta inexistente
+   98  == Criar aresta partindo de um vértice inexistente e indo para vértice existente
+  103  == Criar aresta partindo de um vértice inexistente e indo para vértic inexistente
+  106  == Criar duas arestas com mesmo valor, origem e destino, origem != destino
+  114  == Criar uma aresta com mesma origem e destino
+  119  == Criar uma aresta com mesma origem e destino, não existentes
+  122  == Criar duas arestas com mesmo valor com origem e destinos trocados
+  130  == Criar duas arestas com mesmo valor, origem e destino, origem == destino
+  136  == Criar três arestas com valores distintos, mas com mesma origem e destino, origem != destino
+  145  == Criar três arestas com valores distintos, mas com mesma origem e destino, origem == destino
+  152  == Obter valor de vértice inexistente
+  155  == Obter valor de vértice existente
+  160  == Tentar percorrer vértice inexistente
+  163  == Tentar percorrer vértice por aresta inexistente
+  168  == Percorrer vértice por aresta existente para si mesmo pela frente
+  174  == Percorrer vértice por aresta existente para si mesmo por trás
+  180  == Percorrer vértice por aresta existente para outro vértice pela frente
+  188  == Percorrer vértice por aresta existente para outro vértice por trás
+  196  == Percorrer vértice com mais de uma aresta
+  222  == Percorrer vértices com mesmo valor de aresta (mas sentidos opostos)
+  234  == Percorrer vértice com mais de uma aresta (com valores diferentes, que apontam pra si mesmo)
+
+!!! Número de linhas lidas:         245
+!!! Número de casos de teste:        35
+!!! Número comandos corretos:       167
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

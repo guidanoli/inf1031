@@ -17,6 +17,7 @@ Na pasta **_SCRIPTS_** se encontram todos os scripts de teste. Você pode editar
 ## Executável
 
 Como este repositório deve se encontrar na pasta Debug, é fácil acessar o executável gerado pelo Visual Basic. Lembre-se sempre que não basta salvar os módulos alterados, você há de compilar o projeto toda vez para atualizar o executável. Em seguida, limpe a pasta distribuição e repopule-a com os arquivos mais recentes.
+Vale lembrar que cada executável corresponde a um teste automatizado para um módulo de teste diferente. Portanto, quando for testar módulos diferentes, certifique-se que compilará um projeto do VS2010 apenas com o módulo de teste que deseja. Se ambos estiverem no seu projeto, o programa não compilará!
 
 ## Relatórios
 
