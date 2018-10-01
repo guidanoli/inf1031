@@ -44,6 +44,9 @@
 		VER_tppVertice pDest;
 			/* Ponteiro para vértice de destino da aresta*/
 
+      void ( * ExcluirValor ) ( void * pDado ) ;
+               /* Ponteiro para a função de destruição do valor */
+
 	} VER_tpAresta;
 
 /***********************************************************************
@@ -343,6 +346,10 @@
 
       /* Libera a aresta */
 
+      if ((pAresta->ExcluirValor) != NULL){
+         (pAresta->ExcluirValor)(pAresta->Valor);
+      }/* if */
+
       free(pAresta);
       return VER_CondRetOK;
 
@@ -374,7 +381,8 @@
                                     VER_tppVertice pDestino ,
                                     void * pValorAresta ,
                                     int (* ComparaValor) ( void * pA, void * pB),
-                                    void (* CopiaValor ) ( void ** pA, void * pB))
+                                    void (* CopiaValor ) ( void ** pA, void * pB),
+                                    void (* ExcluirValor) ( void * p))
    {
 
       LIS_tpCondRet RetLis;
@@ -444,6 +452,7 @@
 
       pNovaAresta->pDest = pDestino;
       pNovaAresta->pPart = pPartida;
+      pNovaAresta->ExcluirValor = ExcluirValor;
 
       /* Torna Valor de pAresta nulo por precaução */
       pNovaAresta->Valor = NULL;

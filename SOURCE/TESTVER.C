@@ -169,7 +169,8 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
                                        vtVertices[inxVERTICE2] ,
                                        pDado ,
                                        ComparaStrings ,
-                                       CopiaStrings ) ;
+                                       CopiaStrings,
+                                       NULL) ;
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar aresta");
 

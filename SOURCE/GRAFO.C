@@ -442,8 +442,9 @@
       RetVer = VER_CriarAresta( vA ,
                                 vB ,
                                 ValorAresta ,
-                                pGrafo->ComparaValorVer ,
-                                pGrafo->CopiaValorVer ) ;
+                                pGrafo->ComparaValorAre ,
+                                pGrafo->CopiaValorAre ,
+                                pGrafo->ExcluirValorAre) ;
       
       switch( RetVer )
       {

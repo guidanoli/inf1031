@@ -232,13 +232,12 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
 *     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo é nulo
-*     GRF_CondRetGrafoVazio
+*     GRF_CondRetGrafoVazio         -
 *     GRF_CondRetValorFornecidoNulo - valor da aresta ou de vértice nulo
 *     GRF_CondRetFuncaoNula         - função de comparação nula
 *     GRF_CondRetArestaNaoExiste    - não foi encontrada tal aresta
 *     GRF_CondRetVerticeNaoExiste   - algum dos valores vértices fornecidos não existe
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
-*     GRF_CondRetFaltouMemoria      - não foi possível alocar espaço na memória
 *
 ***********************************************************************/
 

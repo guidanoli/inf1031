@@ -183,7 +183,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
                                     VER_tppVertice pDestino ,
                                     void * pValorAresta ,
                                     int (* ComparaValor) ( void * pA, void * pB),
-                                    void (* CopiaValor ) ( void ** pA, void * pB)) ;
+                                    void (* CopiaValor ) ( void ** pA, void * pB),
+                                    void (* ExcluirValor) ( void* p)) ;
 
 
 /***********************************************************************
@@ -216,7 +217,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
    VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVerPartida,
                                      VER_tppVertice pVerDestino,
                                      void * pValor,
-                                     int (* ComparaValor) ( void * pA, void * pB)) ;
+                                     int (* ComparaValor) ( void * pA, void * pB) ) ;
 
 /***********************************************************************
 *
