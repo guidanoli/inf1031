@@ -561,32 +561,42 @@
                                     void* pValorVerDest,
                                     void* pValorAre)
    {
-      VER_tppVertice pVertice;
+      
+      VER_tppVertice pVerticeOrig;
+      VER_tppVertice pVerticeDest;
       VER_tpCondRet VER_CondRet;
-
+      GRF_tpCondRet GRF_CondRet;
 
       if (pGrafo == NULL){
          return GRF_CondRetGrafoNaoExiste;
       } /* if */
 
-      pVertice = pGrafo->pVertCorr;
-
       if ( LIS_AvancarElementoCorrente(pGrafo->pVerticesGrafo,0) == LIS_CondRetListaVazia ){
-
-         if (pVertice == NULL){
-            return GRF_CondRetGrafoVazio;
-         } /* if */
-
-         else{
-            return GRF_CondRetErroEstrutura;
-         } /* else */
+         return GRF_CondRetGrafoVazio;
       } /* if */
 
-      if (pValorAre = NULL){
+
+      GRF_CondRet = ProcurarVertice(pGrafo, pValorVerOrig);
+            if ( GRF_CondRet != GRF_CondRetVerticeExiste){
+               return GRF_CondRet;
+            }/* if */
+
+      pVerticeOrig = pGrafo->pVertCorr;
+
+      GRF_CondRet = ProcurarVertice(pGrafo, pValorVerDest);
+            if ( GRF_CondRet != GRF_CondRetVerticeExiste){
+               return GRF_CondRet;
+            }/* if */
+
+      pVerticeDest = pGrafo->pVertCorr;
+
+
+      if (pValorAre == NULL || pValorVerOrig == NULL || pValorVerDest == NULL){
          return GRF_CondRetValorFornecidoNulo;
       } /* if */
 
-      VER_CondRet = VER_DestruirAresta(pVertice, pValorAre, pGrafo->ComparaValorAre);
+
+      VER_CondRet = VER_DestruirAresta(pVerticeOrig, pVerticeDest, pValorAre, pGrafo->ComparaValorAre);
 
       if ( VER_CondRet == VER_CondRetArestaNaoExiste ){
          return GRF_CondRetArestaNaoExiste;
