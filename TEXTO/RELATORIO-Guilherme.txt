@@ -52,3 +52,9 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 01/10	30min			revisar código do módulo	Ajustar TESTGRF para trabalhar com três
 								grafos diferentes, como Flávio especificou
 								em resposta a e-mail.
+01/10	2h			redigir código de módulo	Codificar ObterValor e ToggleOrigem, além de
+								contadores de vértice e origem e adaptações
+								das funções RemoverVertice e InserirVertice com
+								a vigilância desses contadores.
+01/10	1h			redigir script de teste		Testar ProcurarVertice, ObterValor e ToggleOrigem.
+								E corrigir eventuais erros.

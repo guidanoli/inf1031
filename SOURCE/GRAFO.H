@@ -68,6 +68,9 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
          GRF_CondRetArestaNaoExiste ,
                /* Aresta inexistente */
 
+         GRF_CondRetUnicaOrigem ,
+               /* Só há uma origem e mais de um vértice */
+
          GRF_CondRetFuncaoNula ,
                /* O ponteiro para função é nulo */
 
@@ -176,6 +179,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     GRF_CondRetGrafoNaoExiste     - o ponteiro para grafo é nulo
 *     GRF_CondRetGrafoVazio         - o grafo não possui vértices
 *     GRF_CondRetValorFornecidoNulo - o ponteiro para valor é nulo
+*     GRF_CondRetUnicaOrigem
 *     GRF_CondRetErroEstrutura
 *     GRF_CondRetVerticeNaoExiste   - não foi encontrado tal vértice
 *
@@ -277,5 +281,71 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
    GRF_tpCondRet GRF_CaminharGrafo( GRF_tppGrafo pGrafo ,
                                     void * pValor,
                                     int Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: GRF  &Obter valor do vértice corrente
+*
+*  $ED Descrição da função
+*     Retorna o valor armazenado no vértice corrente.
+*
+*  $EP Parâmetros
+*     pGrafo  - ponteiro para o grafo
+*     ppValor - endereço para ponteiro para valor
+*
+*  $FV Valor retornado
+*     GRF_CondRetOK
+*     GRF_CondRetGrafoNaoExiste
+*
+***********************************************************************/
+
+   GRF_tpCondRet GRF_ObterValor( GRF_tppGrafo pGrafo, void ** ppValor ) ;
+         
+/***********************************************************************
+*
+*  $FC Função: GRF  &On/off origem no vértice corrente
+*
+*  $ED Descrição da função
+*     Se o vértice corrente é origem, o faz não-origem mais.
+*     Se o vértice corrente não é origem, o torna origem.
+*
+*  $EP Parâmetros
+*     pGrafo  - ponteiro para o grafo
+*
+*  $FV Valor retornado
+*     GRF_CondRetOK
+*     GRF_CondRetGrafoNaoExiste
+*     GRF_CondRetGrafoVazio
+*     GRF_CondRetUnicaOrigem
+*     GRF_CondRetErroEstrutura
+*     GRF_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   GRF_tpCondRet GRF_ToggleOrigem( GRF_tppGrafo pGrafo ) ;     
+
+/***********************************************************************
+*
+*  $FC Função: GRF  -Procurar vértice em grafo
+*
+*  $ED Descrição da função
+*     Procura na lista de vértices de um grafo um vértice com dado valor
+*     fornecido.
+*
+*  $EP Parâmetros
+*     pGrafo  - ponteiro para o grafo
+*     pValor  - ponteiro genérico para o valor do vértice procurado
+*
+*  $FV Valor retornado
+*     GRF_CondRetOK                 - o vértice foi encontrado
+*     GRF_CondRetGrafoNaoExiste     - o ponteiro para o grafo é nulo
+*     GRF_CondRetGrafoVazio
+*     GRF_CondRetErroEstrutura      - algum erro na estrutura ocorreu
+*     GRF_CondRetVerticeNaoExiste   - o vertice com o valor dado não existe
+*
+***********************************************************************/
+
+   GRF_tpCondRet GRF_ProcurarVertice( GRF_tppGrafo pGrafo ,
+										        void *pValor ) ;
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

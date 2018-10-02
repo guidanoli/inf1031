@@ -40,6 +40,9 @@
 #define INSERIR_ARESTA_CMD       "=inseriraresta"
 #define REMOVER_ARESTA_CMD       "=removeraresta"
 #define CAMINHAR_GRAFO_CMD       "=caminhargrafo"
+#define OBTER_VALOR_CMD          "=obtervalor"
+#define TOGGLE_ORIGEM_CMD        "=toggleorigem"
+#define PROCURAR_VERTICE_CMD     "=procurarvertice"
 
 #define TST_GRF_TRUE 1
 #define TST_GRF_FALSE 0
@@ -75,6 +78,9 @@
 *    =inseriraresta             indexGrafo ValorVerOrigem ValorVerDestino ValorAresta CondRetEsperada
 *    =removeraresta             indexGrafo ValorVerOrigem ValorVerDestino ValorAresta CondRetEsperada
 *    =caminhargrafo             indexGrafo ValorAresta Sentido CondRetEsperada
+*    =obtervalor                indexGrafo ValorEsperado CondRetEsperada
+*    =toggleorigem              indexGrafo CondRetEsperada
+*    =procurarvertice           indexGrafo ValorVertice CondRetEsperada
 *
 ***********************************************************************/
 
@@ -86,11 +92,11 @@
 
       GRF_tpCondRet CondRetEsperada = GRF_CondRetFaltouMemoria;
       GRF_tpCondRet CondRetObtida   = GRF_CondRetOK;
-
       TST_tpCondRet CondRetTST = TST_CondRetOK;
 
+      char *pValorObtido = NULL;
       char ValorDado[DIM_STRINGS] = "";
-      char ValorDado2[DIM_STRINGS] = "";
+      char ValorDado2[DIM_STRINGS] = "!";
       char ValorDado3[DIM_STRINGS] = "";
 
       /* Testar criargrafo */
@@ -207,7 +213,7 @@
              sentido < 0 || sentido > 1 )
          {
             return TST_CondRetParm;
-         }
+         } /* if */
 
          CondRetObtida = GRF_CaminharGrafo( pGrafo[indiceGrafo] ,
                                             ValorDado ,
@@ -233,8 +239,73 @@
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao remover vertice");
 
-      }
+      } /* if */
 
+      /* Testar obtervalor */
+
+      if( strcmp(ComandoTeste,OBTER_VALOR_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("isi",&indiceGrafo,ValorDado,&CondRetEsperada);
+
+         if( numParamLidos != 3 || !ValidaIndiceGrafo(indiceGrafo) )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetObtida = GRF_ObterValor( pGrafo[indiceGrafo] , (void**) &pValorObtido );
+
+         CondRetTST = TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao obter valor de vertice");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         if( pValorObtido != NULL )
+         {
+            strcpy_s(ValorDado2,DIM_STRINGS,pValorObtido);
+         } /* if */
+
+         return TST_CompararString(ValorDado,ValorDado2,"Valor obtido nao corresponde ao esperado");
+
+      } /* if */
+      
+      /* Testar toggleorigem */
+
+      if( strcmp(ComandoTeste,TOGGLE_ORIGEM_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("ii",&indiceGrafo,&CondRetEsperada);
+
+         if( numParamLidos != 2 || !ValidaIndiceGrafo(indiceGrafo) )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetObtida = GRF_ToggleOrigem( pGrafo[indiceGrafo] );
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao tornar vertice origem");
+
+      } /* if */
+
+      /* Testar procurarvertice */
+
+      if( strcmp(ComandoTeste,PROCURAR_VERTICE_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("isi",&indiceGrafo,ValorDado,&CondRetEsperada);
+
+         if( numParamLidos != 3 || !ValidaIndiceGrafo(indiceGrafo) )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetObtida = GRF_ProcurarVertice( pGrafo[indiceGrafo] , ValorDado );
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao procurar vertice");
+
+      }
 
       return TST_CondRetNaoConhec;
 

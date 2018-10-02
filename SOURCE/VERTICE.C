@@ -631,6 +631,10 @@
       ----------------------
       */
 
+      if ((pAresta->ExcluirValor) != NULL){
+         (pAresta->ExcluirValor)(pAresta->Valor);
+      }/* if */
+
       free(pAresta);
       return VER_CondRetOK;
 

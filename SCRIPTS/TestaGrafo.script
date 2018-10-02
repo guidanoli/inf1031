@@ -15,15 +15,17 @@
 =declararparm  ValorFornecidoNulo    int 5
 =declararparm  ArestaExiste          int 6
 =declararparm  ArestaNaoExiste       int 7
-=declararparm  FuncNula	             int 8
-=declararparm  ErroEstrutura         int 9
-=declararparm  Memoria               int 10
+=declararparm  UnicaOrigem           int 8
+=declararparm  FuncNula	             int 9
+=declararparm  ErroEstrutura         int 10
+=declararparm  Memoria               int 11
 
 == Declarar os valores dos vértices
 =declararparm  StrErro     string  "!"
 =declararparm  StrA        string  "A"
 =declararparm  StrB        string  "B"
 =declararparm  StrC        string  "C"
+=declararparm  StrD        string  "D"
 
 == Declarar os valores das arestas
 =declararparm  Stra        string  "a"
@@ -262,15 +264,15 @@
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
 =inserirvertice 0 StrB OK
-=inseriraresta 0 StrA StrA Stra OK
-=inseriraresta 0 StrA StrA Strb OK
-=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrA Stra OK
+=inseriraresta 0 StrB StrA Strb OK
+=inseriraresta 0 StrB StrB Stra OK
 =inseriraresta 0 StrB StrA Strc OK
 =inseriraresta 0 StrB StrB Strb OK
-=removervertice 0 StrA OK
+=removervertice 0 StrB OK
 =destruirgrafo 0 OK
 
-== Remover todos os vértices de um grafo manualmente e verificar arestas excluídas
+== Remover todos os vértices de um grafo manualmente
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
 =inserirvertice 0 StrB OK
@@ -281,9 +283,9 @@
 =inseriraresta 0 StrC StrB Stra OK
 =inseriraresta 0 StrC StrA Strc OK
 =inseriraresta 0 StrA StrC Stra OK
-=removervertice 0 StrA OK
-=removervertice 0 StrB OK
 =removervertice 0 StrC OK
+=removervertice 0 StrB OK
+=removervertice 0 StrA OK
 =destruirgrafo 0 OK
 
 == Testar remover aresta de grafo inexistente
@@ -325,4 +327,112 @@
 =inserirvertice 0 StrB OK
 =inseriraresta 0 StrA StrB Stra OK
 =removeraresta 0 StrA StrB Stra OK
+=destruirgrafo 0 OK
+
+== Testar obter valor de grafo inexistente
+=obtervalor 0 StrErro GrafoNaoExiste
+
+== Testar obter valor de um grafo vazio
+=criargrafo 0 OK
+=obtervalor 0 StrErro GrafoVazio
+=destruirgrafo 0 OK
+
+== Obter valor de um grafo existente e de um vértice existente
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=obtervalor 0 StrA OK
+=destruirgrafo 0 OK
+
+== Testar tornar origem em grafo inexistente
+=toggleorigem 0 GrafoNaoExiste
+
+== Testar tornar origem em grafo vazio
+=criargrafo 0 OK
+=toggleorigem 0 GrafoVazio
+=destruirgrafo 0 OK
+
+== Testar tornar origem em grafo com um vértice (origem)
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=toggleorigem 0 UnicaOrigem
+=destruirgrafo 0 OK
+
+== Testar procurar vértice em grafo inexistente
+=procurarvertice 0 StrA GrafoNaoExiste
+
+== Testar procurar vértice em grafo vazio
+=criargrafo 0 OK
+=procurarvertice 0 StrA GrafoVazio
+=destruirgrafo 0 OK
+
+== Testar procurar vértice inexistente em grafo com vértices
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=procurarvertice 0 StrB VerticeNaoExiste
+=destruirgrafo 0 OK
+
+== Procurar vértice existente
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=procurarvertice 0 StrA OK
+=destruirgrafo 0 OK
+
+== Procurar vértice existente em outro grafo
+//Prova que grafos são independentes
+=criargrafo 0 OK
+=criargrafo 1 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 1 StrC OK
+=procurarvertice 1 StrA VerticeNaoExiste
+=destruirgrafo 0 OK
+=destruirgrafo 1 OK
+
+== Tornar origem outro vértice que não a origem inicial, e "des-tornar" a origem inicial uma origem
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=procurarvertice 0 StrB OK
+=toggleorigem 0 OK
+=procurarvertice 0 StrA OK
+=toggleorigem 0 OK
+=destruirgrafo 0 OK
+
+== Testar remover único vértice origem dentre vários resultar em erro
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=procurarvertice 0 StrA OK
+=removervertice 0 StrA UnicaOrigem
+=destruirgrafo 0 OK
+
+== Tornar quase todos vértices origem e deletar todos manualmente e testar a última origem dar erro
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=toggleorigem 0 OK
+=inserirvertice 0 StrC OK
+=toggleorigem 0 OK
+=inserirvertice 0 StrD OK
+=removervertice 0 StrA OK
+=removervertice 0 StrB OK
+=removervertice 0 StrC UnicaOrigem
+=removervertice 0 StrD OK
+=removervertice 0 StrC OK
+=destruirgrafo 0 OK
+
+== Obter valor de todos os vértices de um grafo
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inserirvertice 0 StrD OK
+=procurarvertice 0 StrA OK
+=obtervalor 0 StrA OK
+=procurarvertice 0 StrB OK
+=obtervalor 0 StrB OK
+=procurarvertice 0 StrC OK
+=obtervalor 0 StrC OK
+=procurarvertice 0 StrD OK
+=obtervalor 0 StrD OK
 =destruirgrafo 0 OK
