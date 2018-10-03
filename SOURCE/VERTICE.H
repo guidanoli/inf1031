@@ -97,6 +97,20 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     Cria a estrutura de um vértice.
 *     O tipo do valor armazenados não é espeficiado.
 *
+*  $AE Assertivas de entrada
+*     pValor é um ponteiro para o valor a ser armazenado no vértice.
+*     ExcluirValor é uma função que exclui o tipo de dado referenciado
+*     por pValor, CopiaValor é uma função que faz o ponteiro referenciado 
+*     pelo primeiro argumento apontar para uma cópia do valor referenciado
+*     pelo segundo argumento. ppVerticeParm deve ser NULL ou referenciar um
+*     vértice existente.
+*
+*  $AS Assertivas de saída
+*     Se ppVerticeParm não apontava para um vértice com erro de estrutura, ele
+*     passa a referenciar um vértice, cujo valor é uma cópia daquele referenciado
+*     por pValor. As listas de sucessores e antecessores desse novo vértice são
+*     necessáriamente vazias.
+*
 *  $EP Parâmetros
 *     ExcluirValor  - ponteiro para a função que processa a
 *                     exclusão do valor referenciado pelo elemento
@@ -115,6 +129,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     VER_CondRetOK
 *     VER_CondRetFaltouMemoria
 *     VER_CondRetFuncaoNula      - ponteiro para função CopiaValor é nulo
+*     VER_CondRetErroEstrutura
+*     VER_CondRetValorFornecidoNulo
 *
 ***********************************************************************/
 
@@ -129,6 +145,14 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 *  $ED Descrição da função
 *     Destrói o vértice fornecido.
+*
+*  $AE Assertivas de entrada
+*     A função recebe um ponteiro para um vértice existente ou NULL.
+*
+*  $AS Assertivas de saída
+*     Se o parâmetro aponta para um vértice sem erros de estrutura,
+*     ele passa a ser NULL e o vértice para o qual ele apontava é
+*     destruido junto com suas listas e todas as arestas que a referenciavam.
 *
 *  $EP Parâmetros
 *     pVertice - ponteiro para o vértice
@@ -149,6 +173,14 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *  $ED Descrição da função
 *     Retorna pVertice->pValor.
 *     Esta função não altera o vértice ou sua estrutura interna.
+*
+*  $AE Assertivas de entrada
+*     A função recebe um ponteiro para um vértice existente ou NULL.
+*
+*  $AS Assertivas de saída
+*     Se o vértice referenciado pelo parâmetro existe e não possui erros
+*     de estrutura, a função retorna uma referência ao valor deste vértice.
+*     Se o vértice referenciado não existe a função retorna NULL
 *
 *  $EP Parâmetros
 *     pVertice - ponteiro para o vértice cujo valor deseja-se obter
@@ -171,6 +203,26 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     pDestino, com o valor pValorAresta. Recebe também
 *     ponteiro para funções que tratam do tipo de dados
 *     apontado por pValorAresta.
+*
+*  $AE Assertivas de entrada
+*     Os ponteiros pPartida e pDestino são nulos ou apontam
+*     para vértices existentes.
+*     A função ComparaValor recebe duas referências a valores do
+*     mesmo tipo referenciado por pValorAresta, retorna 0 se os valores 
+*     referenciados forem iguais e um valor diferente de 0 caso contrario.
+*     ExcluirValor é uma função que exclui o tipo de dado referenciado
+*     por pValor.
+*     CopiaValor é uma função que faz o ponteiro referenciado 
+*     pelo primeiro argumento apontar para uma cópia do valor referenciado
+*     pelo segundo argumento.
+*
+*  $AS Assertivas de saída
+*     Se tanto pPartida quanto pDestino apontam para vértices válidos,
+*     pValorAresta é diferente de NULL e as funções CopiaValor e ComparaValor
+*     são válidas, é criada uma aresta cujo valor é uma cópia do referenciado
+*     por pValorAresta. Esta nova aresta referencia os dois vértices passados.
+*     São criados elementos na lista de sucessores do vértice de partida e na
+*     lista de antecessores do vértice destino que referenciam a nova aresta criada.
 *
 *  $EP Parâmetros
 *     pPartida -      ponteiro para vértice de partida da aresta
@@ -221,6 +273,20 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *  $ED Descrição da função
 *     Destrói uma aresta dado valor de aresta e ponteiros dos vértices
 *     de destino e partida.
+*
+*  $AE Assertivas de entrada
+*     Os ponteiros pPartida e pDestino são nulos ou apontam
+*     para vértices existentes.
+*     A função ComparaValor recebe duas referências a valores do
+*     mesmo tipo referenciado por pValorAresta, retorna 0 se os valores 
+*     referenciados forem iguais e um valor diferente de 0 caso contrario.
+*
+*  $AS Assertivas de saída
+*     Se tanto pPartida quanto pDestino apontam para vértices válidos
+*     e existir uma aresta cujo valor é igual ao valor referenciado por
+*     pValor, parte do vértice referenciado por pPartida e chega no vértice
+*     referenciado por pDestino, esta aresta será excluída, junto o seu valor
+*     e todos os elementos de lista que a referenciavam.
 *
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para vértice de partida da aresta

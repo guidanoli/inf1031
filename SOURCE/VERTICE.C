@@ -89,10 +89,16 @@
                                     void (* CopiaValor ) ( void ** pA, void * pB) ,
                                     VER_tppVertice *ppVerticeParm )
    {
+      VER_tpCondRet RetVer;
 
 	   VER_tppVertice pNovoVertice;
       LIS_tppLista pListaSuc;
 	   LIS_tppLista pListaAnt;
+
+      if( pValor == NULL )
+      {
+         return VER_CondRetValorFornecidoNulo;
+      } /* if */
 
       if( CopiaValor == NULL )
       {
@@ -101,7 +107,11 @@
 
       if( *ppVerticeParm != NULL )
       {
-         VER_DestruirVertice(ppVerticeParm);
+         RetVer = VER_DestruirVertice(ppVerticeParm);
+         if ( RetVer != VER_CondRetOK )
+         {
+            return RetVer;
+         } /* if */
       } /* if */
 
       pNovoVertice = ( VER_tppVertice ) malloc( sizeof( VER_tpVertice ) );
