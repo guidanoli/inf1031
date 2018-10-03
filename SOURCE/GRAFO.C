@@ -1,20 +1,20 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: GRF Grafo Dirigido
+*  $MCI MÃ³dulo de implementaÃ§Ã£o: GRF Grafo Dirigido
 *
 *  Arquivo gerado:              GRAFO.c
 *  Letras identificadoras:      GRF
 *
-*  Curso: INF 1301 Programação Modular
+*  Curso: INF 1301 ProgramaÃ§Ã£o Modular
 *  Orientador: Flavio Bevilacqua
 *  Autores:   gui   Guilherme Dantas
 *             cai   Caique Molina
 *             nag   Nagib Suaid
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       gui   11/09/2018  início do desenvolvimento
+*  $HA HistÃ³rico de evoluÃ§Ã£o:
+*     VersÃ£o  Autor    Data     ObservaÃ§Ãµes
+*     1       gui   11/09/2018  inÃ­cio do desenvolvimento
 *     1.1     gui   21/09/2018  novo modelo de grafo dirigido
-*     1.2     gui   25/09/2018  implementação das funções básicas de vértices e arestas
+*     1.2     gui   25/09/2018  implementaÃ§Ã£o das funÃ§Ãµes bÃ¡sicas de vÃ©rtices e arestas
 *
 ***************************************************************************/
 
@@ -28,7 +28,7 @@
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: GRF Cabeça do grafo
+*  $TC Tipo de dados: GRF CabeÃ§a do grafo
 *
 *
 ***********************************************************************/
@@ -36,58 +36,58 @@
    typedef struct GRF_tagGrafo {
 
          VER_tppVertice pVertCorr;
-               /* Ponteiro para vértice corrente
-                  É nulo para grafo vazio */
+               /* Ponteiro para vÃ©rtice corrente
+                  Ã‰ nulo para grafo vazio */
 
          LIS_tppLista pOrigensGrafo ;
-               /* Ponteiro para cabeça da lista das origens */
+               /* Ponteiro para cabeÃ§a da lista das origens */
 
          LIS_tppLista pVerticesGrafo ;
-               /* Ponteiro para cabeça da lista dos vértices */
+               /* Ponteiro para cabeÃ§a da lista dos vÃ©rtices */
 
          int (* ComparaValorAre ) ( void * pA, void * pB);
-               /* Ponteiro para função de comparação de valores de aresta
-                  Retorna 0 caso *pa == *pB, e diferente de 0 caso contrário */
+               /* Ponteiro para funÃ§Ã£o de comparaÃ§Ã£o de valores de aresta
+                  Retorna 0 caso *pa == *pB, e diferente de 0 caso contrÃ¡rio */
 
          int (* ComparaValorVer ) ( void * pA, void * pB);
-               /* Ponteiro para função de comparação de valores de vértice
-                  Retorna 0 caso *pa == *pB, e diferente de 0 caso contrário */
+               /* Ponteiro para funÃ§Ã£o de comparaÃ§Ã£o de valores de vÃ©rtice
+                  Retorna 0 caso *pa == *pB, e diferente de 0 caso contrÃ¡rio */
 
          void (* CopiaValorAre ) ( void ** pA, void * pB);
-               /* Ponteiro para função que copia valores de aresta
+               /* Ponteiro para funÃ§Ã£o que copia valores de aresta
                   Copia o valor de pb para *pA */
 
          void (* CopiaValorVer ) ( void ** pA, void * pB);
-               /* Ponteiro para função que copia valores de vértice
+               /* Ponteiro para funÃ§Ã£o que copia valores de vÃ©rtice
                   Copia o valor de pb para *pA */
 
          void (* ExcluirValorVer ) ( void * pDado );
-               /* Ponteiro para função que excluir o valor do vértice
+               /* Ponteiro para funÃ§Ã£o que excluir o valor do vÃ©rtice
                   Exclui o valor de *pDado de acordo com seu tipo
                   PODE SER NULO */
 
          void (* ExcluirValorAre ) ( void * pDado );
-               /* Ponteiro para função que excluir o valor da aresta
+               /* Ponteiro para funÃ§Ã£o que excluir o valor da aresta
                   Exclui o valor de *pDado de acordo com seu tipo
                   PODE SER NULO */
 
          int numVertices;
-               /* Número de vértices */
+               /* NÃºmero de vÃ©rtices */
 
          int numOrigens;
-               /* Número de origens */
+               /* NÃºmero de origens */
 
    } GRF_tpGrafo ;
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** ProtÃ³tipos das funÃ§Ãµes encapuladas no mÃ³dulo *****/
 
    static void DestruirVertice ( void * pVertice );
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes exportadas pelo mÃ³dulo  *****/
 
 /***************************************************************************
 *
-*  Função: GRF  &Criar grafo
+*  FunÃ§Ã£o: GRF  &Criar grafo
 *  ****/
 
    GRF_tpCondRet GRF_CriarGrafo( int (* ComparaValorAre ) ( void * pA, void * pB) ,
@@ -154,17 +154,17 @@
       if( *ppGrafoParam != NULL )
       {
          GRF_DestruirGrafo( ppGrafoParam );
-      }
+      } /* if */
 
       *ppGrafoParam = pNovoGrafo;
 
       return GRF_CondRetOK;
 
-   } /* Fim função: GRF  &Criar grafo */
+   } /* Fim funÃ§Ã£o: GRF  &Criar grafo */
 
 /***************************************************************************
 *
-*  Função: GRF  &Destruir grafo
+*  FunÃ§Ã£o: GRF  &Destruir grafo
 *  ****/
 
    GRF_tpCondRet GRF_DestruirGrafo( GRF_tppGrafo * ppGrafoParam )
@@ -183,11 +183,11 @@
 
       return GRF_CondRetOK;
 
-   } /* Fim função: GRF  &Destruir grafo */
+   } /* Fim funÃ§Ã£o: GRF  &Destruir grafo */
 
 /***************************************************************************
 *
-*  Função: GRF  &Inserir vértice
+*  FunÃ§Ã£o: GRF  &Inserir vÃ©rtice
 *  ****/
 
    GRF_tpCondRet GRF_InserirVertice( GRF_tppGrafo pGrafo ,
@@ -207,7 +207,7 @@
       } /* if */
 
       pVertices = pGrafo->pVerticesGrafo;
-      /* Facilitar o acesso à lista de Vértices */
+      /* Facilitar o acesso Ã  lista de VÃ©rtices */
 
       if( pVertices == NULL )
       {
@@ -216,15 +216,15 @@
 
       RetGrf = GRF_ProcurarVertice( pGrafo ,
                                 pValor ) ;
-      /* Verificar que não há outro vértice com mesmo indentificador */
+      /* Verificar que nÃ£o hÃ¡ outro vÃ©rtice com mesmo indentificador */
 
       if( RetGrf != GRF_CondRetVerticeNaoExiste &&
           RetGrf != GRF_CondRetGrafoVazio )
       {
          /* 
-         Erros possíveis:  GRF_CondRetErroEstrutura
+         Erros possÃ­veis:  GRF_CondRetErroEstrutura
                            GRF_CondRetOK 
-         OBS: GRF_CondRetGrafoNaoExiste já foi coberto em cima 
+         OBS: GRF_CondRetGrafoNaoExiste jÃ¡ foi coberto em cima 
          */
 
          if( RetGrf == GRF_CondRetOK )
@@ -239,31 +239,31 @@
                                  pValor ,
                                  pGrafo->CopiaValorVer ,
                                  &pNovoVertice ) ;
-      /* Cria uma novo vértice com a regra de exclusão e
-         comparação padrões do grafo e o valor fornecido */
+      /* Cria uma novo vÃ©rtice com a regra de exclusÃ£o e
+         comparaÃ§Ã£o padrÃµes do grafo e o valor fornecido */
 
       if( RetVer != VER_CondRetOK )
       {
          /* 
-         Erros possíveis:  VER_CondRetFaltouMemoria
+         Erros possÃ­veis:  VER_CondRetFaltouMemoria
                            GRF_CondRetFuncaoNula 
-         OBS: GRF_CondRetGrafoNaoExiste já foi coberto em cima 
+         OBS: GRF_CondRetGrafoNaoExiste jÃ¡ foi coberto em cima 
          */
 
          if( RetVer == VER_CondRetFaltouMemoria )
          {
             return GRF_CondRetFaltouMemoria;
-         }
+         } /* if */
          else // RetVer == GRF_CondRetFuncaoNula
          {
             return GRF_CondRetFuncaoNula;
-         }
+         } /* else */
 
       } /* if */
 
       RetLis = LIS_InserirElementoApos( pVertices ,
                                         pNovoVertice )  ;
-      /* Insere a vértice na lista dos vértices do grafo */
+      /* Insere a vÃ©rtice na lista dos vÃ©rtices do grafo */
 
       if( RetLis == LIS_CondRetFaltouMemoria )
       {
@@ -272,22 +272,22 @@
       } /* if */
 
       pGrafo->pVertCorr = pNovoVertice;
-      /* Ponteiro para vértice corrente aponta para o novo vértice */
+      /* Ponteiro para vÃ©rtice corrente aponta para o novo vÃ©rtice */
 
       if( pGrafo->numVertices == 0 )
       {
          GRF_ToggleOrigem(pGrafo);
-      }
+      } /* if */
 
       (pGrafo->numVertices)++;
 
       return GRF_CondRetOK;
 
-   } /* Fim função: GRF  &Inserir vértice */
+   } /* Fim funÃ§Ã£o: GRF  &Inserir vÃ©rtice */
 
 /***************************************************************************
 *
-*  Função: GRF  &Remover vértice
+*  FunÃ§Ã£o: GRF  &Remover vÃ©rtice
 *  ****/
 
       GRF_tpCondRet GRF_RemoverVertice( GRF_tppGrafo pGrafo ,
@@ -382,7 +382,7 @@
          else
          {
             return GRF_CondRetErroEstrutura;
-         } /* if */
+         } /* else */
 
          RetLis = LIS_ExcluirElemento(pListaVer);
 
@@ -416,11 +416,11 @@
 
          return GRF_CondRetOK;
 
-      } /* Fim função: GRF  &Remover vértice */
+      } /* Fim funÃ§Ã£o: GRF  &Remover vÃ©rtice */
 
 /***************************************************************************
 *
-*  Função: GRF  &Inserir aresta
+*  FunÃ§Ã£o: GRF  &Inserir aresta
 *  ****/
 
    GRF_tpCondRet GRF_InserirAresta( GRF_tppGrafo pGrafo ,
@@ -477,7 +477,7 @@
             if( (*(pGrafo->ComparaValorVer))(pValorCorr,pValorDestino) == 0 )
             {
                vB = pVertCorr;
-            } /* else if */
+            } /* if */
 
             RetLis = LIS_AvancarElementoCorrente(pVertices,1);
 
@@ -519,11 +519,11 @@
 
       } /* switch */
 
-   } /* Fim da função: GRF  Inserir aresta */
+   } /* Fim da funÃ§Ã£o: GRF  Inserir aresta */
 
 /***************************************************************************
 *
-*  Função: GRF  &Caminhar por grafo
+*  FunÃ§Ã£o: GRF  &Caminhar por grafo
 *  ****/
 
    GRF_tpCondRet GRF_CaminharGrafo( GRF_tppGrafo pGrafo ,
@@ -552,8 +552,8 @@
 
       if( pGrafo->pVertCorr == NULL )
       {
-         /* Uma incoerência do grafo, pois certificou-se acima que o grafo
-            não é vazio, portanto, o ponteiro pVertCorr não poderia ser nulo */
+         /* Uma incoerÃªncia do grafo, pois certificou-se acima que o grafo
+            nÃ£o Ã© vazio, portanto, o ponteiro pVertCorr nÃ£o poderia ser nulo */
          return GRF_CondRetErroEstrutura;
       } /* if */
 
@@ -569,8 +569,8 @@
          {
          case VER_CondRetValorFornecidoNulo:
             /* Optou-se por deixar avaliar se
-               pValor é nulo apenas aqui por
-               elegância de código.
+               pValor Ã© nulo apenas aqui por
+               elegÃ¢ncia de cÃ³digo.
             */
             return GRF_CondRetValorFornecidoNulo;
 
@@ -579,8 +579,8 @@
 
          case VER_CondRetFuncaoNula:
             /* Optou-se por deixar avaliar se
-               a função é nula apenas aqui por
-               elegância de código.
+               a funÃ§Ã£o Ã© nula apenas aqui por
+               elegÃ¢ncia de cÃ³digo.
             */
             return GRF_CondRetFuncaoNula;
 
@@ -591,21 +591,21 @@
             */
             return GRF_CondRetErroEstrutura;
          } /* switch */
-      }
+      } /* if */
 
       if( pVerticeDestino == NULL )
       {
          return GRF_CondRetErroEstrutura;
-      }
+      } /* if */
 
       pGrafo->pVertCorr = pVerticeDestino;
       return GRF_CondRetOK;
 
-   } /* Fim da função: GRF  Caminhar por grafo */
+   } /* Fim da funÃ§Ã£o: GRF  Caminhar por grafo */
 
 /***************************************************************************
 *
-*  Função: GRF  &Destruir aresta
+*  FunÃ§Ã£o: GRF  &Destruir aresta
 *  ****/
 
    GRF_tpCondRet GRF_RemoverAresta( GRF_tppGrafo pGrafo,
@@ -680,13 +680,13 @@
       default:
          return GRF_CondRetErroEstrutura;
       
-      } /* if */
+      } /* switch */
 
-   } /*Fim da função: GRF Destruir aresta */
+   } /*Fim da funÃ§Ã£o: GRF Destruir aresta */
 
 /***************************************************************************
 *
-*  Função: GRF  &Obter valor do vértice corrente
+*  FunÃ§Ã£o: GRF  &Obter valor do vÃ©rtice corrente
 *  ****/
 
    GRF_tpCondRet GRF_ObterValor( GRF_tppGrafo pGrafo, void ** ppValor )
@@ -721,11 +721,11 @@
 
       return GRF_CondRetOK;
 
-   } /* Fim da função: GRF Obter valor do vértice corrente */
+   } /* Fim da funÃ§Ã£o: GRF Obter valor do vÃ©rtice corrente */
 
 /***************************************************************************
 *
-*  Função: GRF  On/off origem no vértice corrente
+*  FunÃ§Ã£o: GRF  On/off origem no vÃ©rtice corrente
 *  ****/
 
    GRF_tpCondRet GRF_ToggleOrigem( GRF_tppGrafo pGrafo )
@@ -789,11 +789,11 @@
 
       return GRF_CondRetOK;
 
-   } /* Fim da função: GRF On/off origem no vértice corrente */
+   } /* Fim da funÃ§Ã£o: GRF On/off origem no vÃ©rtice corrente */
 
 /***************************************************************************
 *
-*  Função: GRF  Procura vértice em grafo
+*  FunÃ§Ã£o: GRF  Procura vÃ©rtice em grafo
 *  ****/
 
    GRF_tpCondRet GRF_ProcurarVertice( GRF_tppGrafo pGrafo ,
@@ -823,7 +823,7 @@
 
          while( RetLis == LIS_CondRetOK )
          {
-            /* Verifica se algum dos vértices possui o indentificador pValor */
+            /* Verifica se algum dos vÃ©rtices possui o indentificador pValor */
 
             VER_tppVertice elem = NULL;
             void * pValorRecebido = NULL;
@@ -840,7 +840,7 @@
             if( pValorRecebido == NULL )
             {
                return GRF_CondRetErroEstrutura;
-            }
+            } /* if */
 
             if( (*(pGrafo->ComparaValorVer))(pValorRecebido,pValor) == 0 )
             {
@@ -860,25 +860,25 @@
 
       return GRF_CondRetVerticeNaoExiste;
 
-   } /* Fim da função: GRF  -Procurar vértice em grafo */
+   } /* Fim da funÃ§Ã£o: GRF  -Procurar vÃ©rtice em grafo */
 
-/*****  Código das funções encapsuladas no módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes encapsuladas no mÃ³dulo  *****/
 
 /***********************************************************************
 *
-*  $FC Função: GRF  -Destruir Vértice
+*  $FC FunÃ§Ã£o: GRF  -Destruir VÃ©rtice
 *
-*  $ED Descrição da função
-*     Destrói um vértice
+*  $ED DescriÃ§Ã£o da funÃ§Ã£o
+*     DestrÃ³i um vÃ©rtice
 *
-*  $EP Parâmetros
-*     pVertice - ponteiro para vértice
+*  $EP ParÃ¢metros
+*     pVertice - ponteiro para vÃ©rtice
 *
 ***********************************************************************/
 
    void DestruirVertice ( void * pVertice )
    {
       VER_DestruirVertice( (VER_tppVertice *) &pVertice );
-   } /* Fim da função: GRF  -Destruir Vértice */ 
+   } /* Fim da funÃ§Ã£o: GRF  -Destruir VÃ©rtice */ 
 
-/********** Fim do módulo de implementação: GRF  Grafo **********/
+/********** Fim do mÃ³dulo de implementaÃ§Ã£o: GRF  Grafo **********/
