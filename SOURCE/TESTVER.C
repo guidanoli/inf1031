@@ -146,7 +146,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
          if(pRecebido != NULL)
          {
             strcpy_s(StringEsperado, DIM_VALOR_VERTICE, pRecebido);
-         }
+         } /* if */
 
          return TST_CompararString(pDado,StringEsperado,"Valor obtido nao corresponde ao esperado");
 
@@ -217,14 +217,14 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
          if( CondRetTST != TST_CondRetOK )
          {
             return CondRetTST;
-         }
+         } /* if */
 
          pValorVerDestino = (char *) VER_ObterValor(VerticeDestino);
 
          if( pValorVerDestino != NULL )
          {
             strcpy_s(StringEsperado,DIM_VALOR_VERTICE,pValorVerDestino);
-         }
+         } /* if */
 
          return TST_CompararString(StringEsperado2,StringEsperado,"Valor obtido nao corresponde ao esperado");
 
