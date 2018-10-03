@@ -1,20 +1,20 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: VER Vértice
+*  $MCI MÃ³dulo de implementaÃ§Ã£o: VER VÃ©rtice
 *
 *  Arquivo gerado:              VERTICE.c
 *  Letras identificadoras:      VER
 *
-*  Curso: INF 1301 Programação Modular
+*  Curso: INF 1301 ProgramaÃ§Ã£o Modular
 *  Orientador: Flavio Bevilacqua
 *  Autores:   gui   Guilherme Dantas
 *             cai   Caique Molina
 *             nag   Nagib Suaid
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       gui   17/09/2018  início do desenvolvimento
-*     1.1     gui   21/09/2018  implementação das funções básicas de vértices
-*     1.2     gui   25/09/2018  implementação das funções básicas de arestas
+*  $HA HistÃ³rico de evoluÃ§Ã£o:
+*     VersÃ£o  Autor    Data     ObservaÃ§Ãµes
+*     1       gui   17/09/2018  inÃ­cio do desenvolvimento
+*     1.1     gui   21/09/2018  implementaÃ§Ã£o das funÃ§Ãµes bÃ¡sicas de vÃ©rtices
+*     1.2     gui   25/09/2018  implementaÃ§Ã£o das funÃ§Ãµes bÃ¡sicas de arestas
 *
 ***************************************************************************/
 
@@ -36,22 +36,22 @@
 	typedef struct VER_tagAresta{
 
 		void * Valor ;
-			/* Ponteiro genérico para o valor armazenado na aresta */
+			/* Ponteiro genÃ©rico para o valor armazenado na aresta */
 
 		VER_tppVertice pPart;
-			/* Ponteiro para vértice de origem da aresta */
+			/* Ponteiro para vÃ©rtice de origem da aresta */
 
 		VER_tppVertice pDest;
-			/* Ponteiro para vértice de destino da aresta*/
+			/* Ponteiro para vÃ©rtice de destino da aresta*/
 
       void ( * ExcluirValor ) ( void * pDado ) ;
-               /* Ponteiro para a função de destruição do valor */
+               /* Ponteiro para a funÃ§Ã£o de destruiÃ§Ã£o do valor */
 
 	} VER_tpAresta;
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: VER Vértice
+*  $TC Tipo de dados: VER VÃ©rtice
 *
 *
 ***********************************************************************/
@@ -59,29 +59,29 @@
    typedef struct VER_tagVertice {
 
           void * Valor ;
-               /* Ponteiro genérico para o valor armazenado no vértice */
+               /* Ponteiro genÃ©rico para o valor armazenado no vÃ©rtice */
 
           LIS_tppLista pAnt;
-               /* Ponteiro para a cabeça da lista de arestas que apontam para o vértice (antecessores) */
+               /* Ponteiro para a cabeÃ§a da lista de arestas que apontam para o vÃ©rtice (antecessores) */
 
           LIS_tppLista pSuc;
-               /* Ponteiro para a cabeça da lista de arestas que partem do vértice (sucessores) */
+               /* Ponteiro para a cabeÃ§a da lista de arestas que partem do vÃ©rtice (sucessores) */
 
           void ( * ExcluirValor ) ( void * pDado ) ;
-               /* Ponteiro para a função de destruição do valor */
+               /* Ponteiro para a funÃ§Ã£o de destruiÃ§Ã£o do valor */
 
    } VER_tpVertice ;
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** ProtÃ³tipos das funÃ§Ãµes encapuladas no mÃ³dulo *****/
 
    static VER_tpCondRet DestruirArestaPorPonteiro(  VER_tppAresta pAresta );
-   /* função prática para uso interno na rotina VER_DestruirVertice */
+   /* funÃ§Ã£o prÃ¡tica para uso interno na rotina VER_DestruirVertice */
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes exportadas pelo mÃ³dulo  *****/
 
 /***************************************************************************
 *
-*  Função: VER  &Criar vértice
+*  FunÃ§Ã£o: VER  &Criar vÃ©rtice
 *  ****/
 
    VER_tpCondRet VER_CriarVertice(  void   ( * ExcluirValor ) ( void * pDado ) ,
@@ -139,11 +139,11 @@
 
       return VER_CondRetOK;
 
-	} /* Fim função: VER  &Criar vértice */
+	} /* Fim funÃ§Ã£o: VER  &Criar vÃ©rtice */
 
 /***************************************************************************
 *
-*  Função: VER  &Destuir vértice
+*  FunÃ§Ã£o: VER  &Destuir vÃ©rtice
 *  ****/
 
     VER_tpCondRet VER_DestruirVertice( VER_tppVertice * pVertice )
@@ -221,11 +221,11 @@
 
        return VER_CondRetOK;
 
-    } /* Fim função: VER  &Destruir vértice */
+    } /* Fim funÃ§Ã£o: VER  &Destruir vÃ©rtice */
 
 /***************************************************************************
 *
-*  Função: VER  &Destruir aresta
+*  FunÃ§Ã£o: VER  &Destruir aresta
 *  ****/
 
    VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVerPartida,
@@ -306,7 +306,7 @@
 
       /*
       -----------------------------------
-         Tratando do vértice de destino
+         Tratando do vÃ©rtice de destino
       -----------------------------------
       */
 
@@ -326,7 +326,7 @@
 
       /*
       -----------------------------------
-         Tratando do vértice de partida
+         Tratando do vÃ©rtice de partida
       -----------------------------------
       */
 
@@ -353,11 +353,11 @@
       free(pAresta);
       return VER_CondRetOK;
 
-   } /* Fim função: VER  &Destruir Aresta */
+   } /* Fim funÃ§Ã£o: VER  &Destruir Aresta */
 
 /***************************************************************************
 *
-*  Função: VER  &Obter valor do vértice
+*  FunÃ§Ã£o: VER  &Obter valor do vÃ©rtice
 *  ****/
 
    void * VER_ObterValor( VER_tppVertice pVertice )
@@ -370,11 +370,11 @@
 
       return pVertice->Valor;
 
-   } /* Fim função: VER  &Obter valor do vértice */
+   } /* Fim funÃ§Ã£o: VER  &Obter valor do vÃ©rtice */
 
 /***************************************************************************
 *
-*  Função: VER  &Criar aresta
+*  FunÃ§Ã£o: VER  &Criar aresta
 *  ****/
 
    VER_tpCondRet VER_CriarAresta(   VER_tppVertice pPartida ,
@@ -454,7 +454,7 @@
       pNovaAresta->pPart = pPartida;
       pNovaAresta->ExcluirValor = ExcluirValor;
 
-      /* Torna Valor de pAresta nulo por precaução */
+      /* Torna Valor de pAresta nulo por precauÃ§Ã£o */
       pNovaAresta->Valor = NULL;
 
       /* Copia o valor de pValorAresta para pValor da aresta pNovaAresta */
@@ -479,11 +479,11 @@
 
       return VER_CondRetOK;
 
-   } /* Fim função: VER  &Criar Aresta */
+   } /* Fim funÃ§Ã£o: VER  &Criar Aresta */
 
 /***************************************************************************
 *
-*  Função: VER  &Percorrer Aresta
+*  FunÃ§Ã£o: VER  &Percorrer Aresta
 *  ****/
 
    VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida,
@@ -553,13 +553,13 @@
 
          } /* while */
 
-      }
+      } /* if */
 
       return VER_CondRetArestaNaoExiste;
 
-   } /* Fim função: VER  &Percorrer Aresta */
+   } /* Fim funÃ§Ã£o: VER  &Percorrer Aresta */
 
-/*****  Código das funções encapsuladas no módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes encapsuladas no mÃ³dulo  *****/
 
    VER_tpCondRet DestruirArestaPorPonteiro(  VER_tppAresta pAresta )
    {
@@ -571,7 +571,7 @@
       if( pAresta == NULL )
       {
          return VER_CondRetValorFornecidoNulo;
-      }
+      } /* if */
 
       pDestino = pAresta->pDest;
       pPartida = pAresta->pPart;
@@ -591,7 +591,7 @@
 
       /*
       -----------------------------------
-         Tratando do vértice de destino
+         Tratando do vÃ©rtice de destino
       -----------------------------------
       */
    
@@ -609,7 +609,7 @@
 
       /*
       -----------------------------------
-         Tratando do vértice de partida
+         Tratando do vÃ©rtice de partida
       -----------------------------------
       */
 
@@ -638,6 +638,6 @@
       free(pAresta);
       return VER_CondRetOK;
 
-   } /* Fim função: VER  &Destruir Aresta */
+   } /* Fim funÃ§Ã£o: VER  &Destruir Aresta */
 
-/********** Fim do módulo de implementação: VER  Vértice **********/
+/********** Fim do mÃ³dulo de implementaÃ§Ã£o: VER  VÃ©rtice **********/
