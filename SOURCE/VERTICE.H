@@ -1,44 +1,48 @@
 /***************************************************************************
 *
-*  $MCD MÛdulo de implementaÁ„o: VER VÈrtice
+*  $MCD M√≥dulo de implementa√ß√£o: VER V√©rtice
 *
 *  Arquivo gerado:              VERTICE.h
 *  Letras identificadoras:      VER
 *
-*  Curso: INF 1301 ProgramaÁ„o Modular
+*  Curso: INF 1301 Programa√ß√£o Modular
 *  Orientador: Flavio Bevilacqua
 *  Autores:   gui   Guilherme Dantas
 *             cai   Caique Molina
 *             nag   Nagib Suaid
 *
-*  $HA HistÛrico de evoluÁ„o:
-*     Vers„o  Autor    Data     ObservaÁıes
-*     1       gui   17/09/2018  inÌcio do desenvolvimento
-*     1.1     gui   21/09/2018  definiÁ„o das funÁıes b·sicas
-*     1.2     gui   25/09/2018  implementaÁ„o das funÁıes b·sicas de arestas
+*  $HA Hist√≥rico de evolu√ß√£o:
+*     Vers√£o  Autor    Data     Observa√ß√µes
+*     1       gui   17/09/2018  in√≠cio do desenvolvimento
+*     1.1     gui   21/09/2018  defini√ß√£o das fun√ß√µes b√°sicas
+*     1.2     gui   25/09/2018  implementa√ß√£o das fun√ß√µes b√°sicas de arestas
 *
-*  $ED DescriÁ„o do mÛdulo
+*  $ED Descri√ß√£o do m√≥dulo
 *     
-*     WIP
+*     Este m√≥dulo implementa um conjunto simples de fun√ß√µes para criar 
+*     v√©rtices e arestas entre estes.
+*     V√©rtices possuem um valor do tipo void* que pode apontar para qualquer 
+*     estrutura, uma lista de arestas que partem do v√©rtice e uma lista de
+*     arestas que chegam no v√©rtice.
 *
 ***************************************************************************/
 
 #include "LISTA.H"
 
-/***** DeclaraÁıes exportadas pelo mÛdulo *****/
+/***** Declara√ß√µes exportadas pelo m√≥dulo *****/
 
-/* Tipo referÍncia para um grafo */
+/* Tipo refer√™ncia para um grafo */
 
 typedef struct VER_tagVertice * VER_tppVertice;
 typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: VER CondiÁıes de retorno
+*  $TC Tipo de dados: VER Condi√ß√µes de retorno
 *
 *
-*  $ED DescriÁ„o do tipo
-*     CondiÁıes de retorno das funÁıes do vÈrtice
+*  $ED Descri√ß√£o do tipo
+*     Condi√ß√µes de retorno das fun√ß√µes do v√©rtice
 *
 ***********************************************************************/
 
@@ -48,48 +52,48 @@ typedef struct VER_tagAresta * VER_tppAresta;
                /* Concluiu corretamente */
 
          VER_CondRetVerticeNaoExiste ,
-               /* O ponteiro para vÈrtice È nulo */
+               /* O ponteiro para v√©rtice √© nulo */
 
          VER_CondRetArestaExiste ,
-               /* Uma aresta com mesmo valor j· existe */
+               /* Uma aresta com mesmo valor j√° existe */
 
          VER_CondRetArestaNaoExiste ,
-               /* O ponteiro para a aresta È nulo */
+               /* O ponteiro para a aresta √© nulo */
 
          VER_CondRetValorFornecidoNulo ,
-               /* O valor fornecido È nulo */
+               /* O valor fornecido √© nulo */
 
          VER_CondRetFuncaoNula ,
-               /* O ponteiro para funÁ„o È nulo */
+               /* O ponteiro para fun√ß√£o √© nulo */
 
          VER_CondRetErroEstrutura ,
-               /* Erro na estrutura do vÈrtice */    
+               /* Erro na estrutura do v√©rtice */    
 
          VER_CondRetFaltouMemoria
-               /* Faltou memÛria ao tentar criar um vÈrtice */
+               /* Faltou mem√≥ria ao tentar criar um v√©rtice */
 
    } VER_tpCondRet ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: VER  &Criar vÈrtice
+*  $FC Fun√ß√£o: VER  &Criar v√©rtice
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Cria a estrutura de um vÈrtice.
-*     O tipo do valor armazenados n„o È espeficiado.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Cria a estrutura de um v√©rtice.
+*     O tipo do valor armazenados n√£o √© espeficiado.
 *
-*  $EP Par‚metros
-*     ExcluirValor  - ponteiro para a funÁ„o que processa a
-*                     exclus„o do valor referenciado pelo elemento
-*                     a ser excluÌdo.
-*                     Ver descriÁ„o do mÛdulo.
-*     pValor        - ponteiro genÈrico para o valor do vÈrtice procurado
-*     ppVerticeParm - endereÁo do ponteiro para vÈrtice a ser criado
+*  $EP Par√¢metros
+*     ExcluirValor  - ponteiro para a fun√ß√£o que processa a
+*                     exclus√£o do valor referenciado pelo elemento
+*                     a ser exclu√≠do.
+*                     Ver descri√ß√£o do m√≥dulo.
+*     pValor        - ponteiro gen√©rico para o valor do v√©rtice procurado
+*     ppVerticeParm - endere√ßo do ponteiro para v√©rtice a ser criado
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
 *     VER_CondRetFaltouMemoria
-*     VER_CondRetFuncaoNula      - ponteiro para funÁ„o CopiaValor È nulo
+*     VER_CondRetFuncaoNula      - ponteiro para fun√ß√£o CopiaValor √© nulo
 *
 ***********************************************************************/
 
@@ -100,18 +104,18 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: VER  &Destruir vÈrtice
+*  $FC Fun√ß√£o: VER  &Destruir v√©rtice
 *
-*  $ED DescriÁ„o da funÁ„o
-*     DestrÛi o vÈrtice fornecido.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Destr√≥i o v√©rtice fornecido.
 *
-*  $EP Par‚metros
-*     pVertice - ponteiro para o vÈrtice
+*  $EP Par√¢metros
+*     pVertice - ponteiro para o v√©rtice
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
-*     VER_CondRetVerticeNaoExiste   - ponteiro para vÈrtice È nulo
-*     VER_CondRetErroEstrutura      - algum erro na estrutura do vÈrtice ocorreu
+*     VER_CondRetVerticeNaoExiste   - ponteiro para v√©rtice √© nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do v√©rtice ocorreu
 *
 ***********************************************************************/
 
@@ -119,22 +123,22 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: VER  &Obter referÍncia para o valor contido no vÈrtice
+*  $FC Fun√ß√£o: VER  &Obter refer√™ncia para o valor contido no v√©rtice
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Faz o ponteiro *pValor apontar para o valor armazenado no vÈrtice
-*     Caso o vÈrtice n„o exista, *pValor ser· NULL.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Faz o ponteiro *pValor apontar para o valor armazenado no v√©rtice
+*     Caso o v√©rtice n√£o exista, *pValor ser√° NULL.
 *
-*  $EP Par‚metros
-*     pVertice - ponteiro para o vÈrtice cujo valor deseja-se obter
-*     pValor   - ponteiro que apontar· para o valor do vÈrtice
+*  $EP Par√¢metros
+*     pVertice - ponteiro para o v√©rtice cujo valor deseja-se obter
+*     pValor   - ponteiro que apontar√° para o valor do v√©rtice
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - obteve sem problemas
-*     VER_CondRetVerticeNaoExiste   - ponteiro para vÈrtice È nulo
+*     VER_CondRetVerticeNaoExiste   - ponteiro para v√©rtice √© nulo
 *     VER_CondRetErroEstrutura      - caso o valor seja nulo
 *                                     (Assertiva Estrutural)
-*     VER_CondRetFuncaoNula         - ponteiro para funÁ„o CopiaValor È nulo
+*     VER_CondRetFuncaoNula         - ponteiro para fun√ß√£o CopiaValor √© nulo
 *
 ***********************************************************************/
 
@@ -142,40 +146,40 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: VER  &Criar aresta
+*  $FC Fun√ß√£o: VER  &Criar aresta
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Cria uma aresta que sai do vÈrtice pPartida e vai para
-*     pDestino, com o valor pValorAresta. Recebe tambÈm
-*     ponteiro para funÁıes que tratam do tipo de dados
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Cria uma aresta que sai do v√©rtice pPartida e vai para
+*     pDestino, com o valor pValorAresta. Recebe tamb√©m
+*     ponteiro para fun√ß√µes que tratam do tipo de dados
 *     apontado por pValorAresta.
 *
-*  $EP Par‚metros
-*     pPartida - ponteiro para vÈrtice de partida da aresta
-*     pDestino - ponteiro para vÈrtice de destino da aresta
+*  $EP Par√¢metros
+*     pPartida - ponteiro para v√©rtice de partida da aresta
+*     pDestino - ponteiro para v√©rtice de destino da aresta
 *     pAresta  - ponteiro para valor da aresta
-*     ComparaValor - ponteiro para funÁ„o que compara valores do
+*     ComparaValor - ponteiro para fun√ß√£o que compara valores do
 *                    tipo de pValorA e pValorB.
-*                    Retorno da funÁ„o:
+*                    Retorno da fun√ß√£o:
 *                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contr·rio
-*     CopiaValor   - ponteiro para funÁ„o que copia o valor de
+*                    >>> diferente de 0 caso contr√°rio
+*     CopiaValor   - ponteiro para fun√ß√£o que copia o valor de
 *                    pB para *pA. Essencial para estruturas de dados
 *                    que trabalham com ponteiros, como string.
-*                    O espaÁo referenciado por *pA È inicialmente nulo
+*                    O espa√ßo referenciado por *pA √© inicialmente nulo
 *                    e deve ser inicalmente alocado dinamicamente
 *                    com o tipo de estrutura de dados apropriado.
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - criou sem problemas
-*     VER_CondRetVerticeNaoExiste   - ponteiro para vÈrtice È nulo
-*     VER_CondRetArestaExiste       - h· uma aresta com mesmo valor saindo de
+*     VER_CondRetVerticeNaoExiste   - ponteiro para v√©rtice √© nulo
+*     VER_CondRetArestaExiste       - h√° uma aresta com mesmo valor saindo de
 *                                     pPartida e indo para pDestino.
 *                                     (Assertiva Estrutural)
-*     VER_CondRetErroEstrutura      - h· algum erro na estrutura do vÈrtice
-*     VER_CondRetFaltouMemoria      - n„o foi possÌvel alocar uma nova aresta
-*     VER_CondRetFuncaoNula         - ponteiro para funÁ„o CopiaValor ou
-*                                     para funÁ„o ComparaValor È nulo
+*     VER_CondRetErroEstrutura      - h√° algum erro na estrutura do v√©rtice
+*     VER_CondRetFaltouMemoria      - n√£o foi poss√≠vel alocar uma nova aresta
+*     VER_CondRetFuncaoNula         - ponteiro para fun√ß√£o CopiaValor ou
+*                                     para fun√ß√£o ComparaValor √© nulo
 *
 ***********************************************************************/
 
@@ -189,28 +193,28 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: VER  &Destruir aresta
+*  $FC Fun√ß√£o: VER  &Destruir aresta
 *
-*  $ED DescriÁ„o da funÁ„o
-*     DestrÛi uma aresta dado valor de aresta e ponteiros dos vÈrtices
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Destr√≥i uma aresta dado valor de aresta e ponteiros dos v√©rtices
 *     de destino e partida.
 *
-*  $EP Par‚metros
-*     pVerPartida  - ponteiro para vÈrtice de partida da aresta
-*     pVerDestino  - ponteiro para vÈrtice de origem da aresta
+*  $EP Par√¢metros
+*     pVerPartida  - ponteiro para v√©rtice de partida da aresta
+*     pVerDestino  - ponteiro para v√©rtice de origem da aresta
 *     pValor       - ponteiro para valor armazenado na aresta
-*     ComparaValor - ponteiro para funÁ„o que compara valores do
+*     ComparaValor - ponteiro para fun√ß√£o que compara valores do
 *                    tipo de pValorA e pValorB.
-*                    Retorno da funÁ„o:
+*                    Retorno da fun√ß√£o:
 *                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contr·rio
+*                    >>> diferente de 0 caso contr√°rio
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
-*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta È nulo
-*     VER_CondRetErroEstrutura      - algum erro na estrutura do vÈrtice ocorreu
-*     VER_CondRetVerticeNaoExiste   - o vÈrtice de partida da aresta n„o existe
-*     VER_CondRetFuncaoNula         - ponteiro para funÁ„o ComparaValor È nulo
+*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta √© nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do v√©rtice ocorreu
+*     VER_CondRetVerticeNaoExiste   - o v√©rtice de partida da aresta n√£o existe
+*     VER_CondRetFuncaoNula         - ponteiro para fun√ß√£o ComparaValor √© nulo
 *
 ***********************************************************************/
 
@@ -221,31 +225,31 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: VER  &Percorrer aresta
+*  $FC Fun√ß√£o: VER  &Percorrer aresta
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Percorre uma aresta partindo do vÈrtice de partida fornecido
-*     segundo um valor tambÈm fornecido, e armazena no ponteiro pDestino
-*     o endereÁo do vÈrtice de destino
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Percorre uma aresta partindo do v√©rtice de partida fornecido
+*     segundo um valor tamb√©m fornecido, e armazena no ponteiro pDestino
+*     o endere√ßo do v√©rtice de destino
 *
-*  $EP Par‚metros
-*     pVerPartida  - ponteiro para o vÈrtice de partida
+*  $EP Par√¢metros
+*     pVerPartida  - ponteiro para o v√©rtice de partida
 *     pValor       - valor da aresta que deseja-se percorrer
-*     pVerDestino  - ponteiro para o vÈrtice de destino
-*     ComparaValor - ponteiro para funÁ„o que compara valores do
+*     pVerDestino  - ponteiro para o v√©rtice de destino
+*     ComparaValor - ponteiro para fun√ß√£o que compara valores do
 *                    tipo de pValorA e pValorB.
-*                    Retorno da funÁ„o:
+*                    Retorno da fun√ß√£o:
 *                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contr·rio
-*     Sentido      - 0 pra tr·s, 1 para frente
+*                    >>> diferente de 0 caso contr√°rio
+*     Sentido      - 0 pra tr√°s, 1 para frente
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
 *     VER_CondRetValorFornecidoNulo - foi fornecido um valor nulo
-*     VER_CondRetVerticeNaoExiste   - ponteiro para vÈrtice È nulo
-*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta È nulo
-*     VER_CondRetErroEstrutura      - algum erro na estrutura do vÈrtice ocorreu
-*     VER_CondRetFuncaoNula         - ponteiro para funÁ„o ComparaValor È nulo
+*     VER_CondRetVerticeNaoExiste   - ponteiro para v√©rtice √© nulo
+*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta √© nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do v√©rtice ocorreu
+*     VER_CondRetFuncaoNula         - ponteiro para fun√ß√£o ComparaValor √© nulo
 *
 ***********************************************************************/
 
@@ -255,4 +259,4 @@ typedef struct VER_tagAresta * VER_tppAresta;
                                       int (* ComparaValor) ( void * pA, void * pB),
                                       int Sentido ) ;
 
-/********** Fim do mÛdulo de definiÁ„o: VER  VÈrtice **********/
+/********** Fim do m√≥dulo de defini√ß√£o: VER  V√©rtice **********/
