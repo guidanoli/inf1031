@@ -1,44 +1,48 @@
 /***************************************************************************
 *
-*  $MCD MÛdulo de definiÁ„o: GRF  Grafo Dirigido
+*  $MCD M√≥dulo de defini√ß√£o: GRF  Grafo Dirigido
 *
 *  Arquivo gerado:              GRAFO.h
 *  Letras identificadoras:      GRF
 *
-*  Curso: INF 1301 ProgramaÁ„o Modular
+*  Curso: INF 1301 Programa√ß√£o Modular
 *  Orientador: Flavio Bevilacqua
 *  Autores:   gui   Guilherme Dantas
 *             cai   Caique Molina
 *             nag   Nagib Suaid
 *
-*  $HA HistÛrico de evoluÁ„o:
-*     Vers„o  Autor    Data     ObservaÁıes
-*     1       gui   11/09/2018  inÌcio do desenvolvimento
+*  $HA Hist√≥rico de evolu√ß√£o:
+*     Vers√£o  Autor    Data     Observa√ß√µes
+*     1       gui   11/09/2018  in√≠cio do desenvolvimento
 *     1.1     gui   21/09/2018  novo modelo de grafo dirigido
-*     1.2     gui   25/09/2018  implementaÁ„o das funÁıes b·sicas de vÈrtices e arestas
-*
-*  $ED DescriÁ„o do mÛdulo
+*     1.2     gui   25/09/2018  implementa√ß√£o das fun√ß√µes b√°sicas de v√©rtices e arestas
+*     1.3     gui   02/10/2018  implementa√ß√£o da lista de origens e fun√ß√µes auxiliares
+*  $ED Descri√ß√£o do m√≥dulo
 *     
-*     WIP
+*     Este m√≥dulo implementa um conjunto simples de fun√ß√µes para criar e
+*     explorar um grafo dirigido.
+*     O grafo possui uma cabe√ßa que cont√©m uma refer√™ncia para uma lista de v√©rtices,
+*     um lista de origens e um v√©rtice corrente.
+*     O n√≥ corrente ser√° nulo se e somente se o grafo estiver vazio.
 *
 ***************************************************************************/
 
 #include "LISTA.H"
 #include "VERTICE.H"
 
-/***** DeclaraÁıes exportadas pelo mÛdulo *****/
+/***** Declara√ß√µes exportadas pelo m√≥dulo *****/
 
-/* Tipo referÍncia para um grafo */
+/* Tipo refer√™ncia para um grafo */
 
 typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: GRF CondiÁıes de retorno
+*  $TC Tipo de dados: GRF Condi√ß√µes de retorno
 *
 *
-*  $ED DescriÁ„o do tipo
-*     CondiÁıes de retorno das funÁıes do grafo
+*  $ED Descri√ß√£o do tipo
+*     Condi√ß√µes de retorno das fun√ß√µes do grafo
 *
 ***********************************************************************/
 
@@ -54,58 +58,58 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
                /* Grafo vazio */
 
          GRF_CondRetVerticeExiste ,
-               /* VÈrtice com dado valor existente */
+               /* V√©rtice com dado valor existente */
 
          GRF_CondRetVerticeNaoExiste ,
-               /* VÈrtice com dado valor n„o existe*/
+               /* V√©rtice com dado valor n√£o existe*/
 
          GRF_CondRetValorFornecidoNulo ,
-               /* Valor fornecido È nulo */
+               /* Valor fornecido √© nulo */
 
          GRF_CondRetArestaExiste ,
-               /* Aresta com mesmo valor, origem e destino j· existe */
+               /* Aresta com mesmo valor, origem e destino j√° existe */
 
          GRF_CondRetArestaNaoExiste ,
                /* Aresta inexistente */
 
          GRF_CondRetUnicaOrigem ,
-               /* SÛ h· uma origem e mais de um vÈrtice */
+               /* S√≥ h√° uma origem e mais de um v√©rtice */
 
          GRF_CondRetFuncaoNula ,
-               /* O ponteiro para funÁ„o È nulo */
+               /* O ponteiro para fun√ß√£o √© nulo */
 
          GRF_CondRetErroEstrutura ,
                /* Erro na estrutura do grafo */
 
          GRF_CondRetFaltouMemoria
-               /* Faltou memÛria ao tentar criar um elemento do grafo */
+               /* Faltou mem√≥ria ao tentar criar um elemento do grafo */
 
    } GRF_tpCondRet ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Criar grafo
+*  $FC Fun√ß√£o: GRF  &Criar grafo
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Cria a estrutura de um grafo sem vÈrtices ou arestas.
-*     O tipo dos valores armazenados n„o È espeficiado.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Cria a estrutura de um grafo sem v√©rtices ou arestas.
+*     O tipo dos valores armazenados n√£o √© espeficiado.
 *
-*  $EP Par‚metros
-*     ComparaValorAre   - Ponteiro para funÁ„o de comparaÁ„o de valores de aresta
-*                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contr·rio
-*     ComparaValorVer   - Ponteiro para funÁ„o de comparaÁ„o de valores de vÈrtice
-*                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contr·rio
-*     CopiaValorAre     - Ponteiro para funÁ„o que copia valores de aresta
+*  $EP Par√¢metros
+*     ComparaValorAre   - Ponteiro para fun√ß√£o de compara√ß√£o de valores de aresta
+*                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contr√°rio
+*     ComparaValorVer   - Ponteiro para fun√ß√£o de compara√ß√£o de valores de v√©rtice
+*                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contr√°rio
+*     CopiaValorAre     - Ponteiro para fun√ß√£o que copia valores de aresta
 *                         Copia o valor de pb para *pA
-*     CopiaValorVer     - Ponteiro para funÁ„o que copia valores de vÈrtice
+*     CopiaValorVer     - Ponteiro para fun√ß√£o que copia valores de v√©rtice
 *                         Copia o valor de pb para *pA
-*     ppGrafoParam      - EndereÁo para ponteiro de grafo que ser· criado
-*                         Caso n„o for possÌvel criar o grafo, *ppGrafoParam = NULL
+*     ppGrafoParam      - Endere√ßo para ponteiro de grafo que ser√° criado
+*                         Caso n√£o for poss√≠vel criar o grafo, *ppGrafoParam = NULL
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - criou grafo sem problemas
-*     GRF_CondRetFuncaoNula        - ponteiro para alguma das funÁıes È nulo
-*     GRF_CondRetFaltouMemoria   - n„o foi possÌvel alocar memÛria para grafo
+*     GRF_CondRetFuncaoNula        - ponteiro para alguma das fun√ß√µes √© nulo
+*     GRF_CondRetFaltouMemoria   - n√£o foi poss√≠vel alocar mem√≥ria para grafo
 *
 ***********************************************************************/
 
@@ -119,17 +123,17 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Destruir grafo
+*  $FC Fun√ß√£o: GRF  &Destruir grafo
 *
-*  $ED DescriÁ„o da funÁ„o
-*     DestrÛi o grafo fornecido.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Destr√≥i o grafo fornecido.
 *
-*  $EP Par‚metros
-*     ppGrafoParam - endereÁo do ponteiro para o grafo a ser destruido
+*  $EP Par√¢metros
+*     ppGrafoParam - endere√ßo do ponteiro para o grafo a ser destruido
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - destruiu sem problemas
-*     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo È nulo
+*     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo √© nulo
 *
 ***********************************************************************/
 
@@ -138,24 +142,24 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Inserir vÈrtice
+*  $FC Fun√ß√£o: GRF  &Inserir v√©rtice
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Insere um novo vÈrtice ao grafo fornecido.
-*     Considera que n„o haver· mais de um vÈrtice com o mesmo
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Insere um novo v√©rtice ao grafo fornecido.
+*     Considera que n√£o haver√° mais de um v√©rtice com o mesmo
 *     valor no mesmo grafo.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo - ponteiro para o grafo
-*     pValor - valores do novo vÈrtice 
+*     pValor - valores do novo v√©rtice 
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - inseriu sem problemas
-*     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo È nulo
-*     GRF_CondRetVerticeExiste   - j· existe um vÈrtice no grafo tal valor
-*     GRF_CondRetFuncaoNula        - o ponteiro para funÁ„o de cÛpia È nula
+*     GRF_CondRetGrafoNaoExiste  - o ponteiro para o grafo √© nulo
+*     GRF_CondRetVerticeExiste   - j√° existe um v√©rtice no grafo tal valor
+*     GRF_CondRetFuncaoNula        - o ponteiro para fun√ß√£o de c√≥pia √© nula
 *     GRF_CondRetErroEstrutura   - algum erro na estrutura do grafo ocorreu 
-*     GRF_CondRetFaltouMemoria   - n„o foi possÌvel alocar um novo vÈrtice
+*     GRF_CondRetFaltouMemoria   - n√£o foi poss√≠vel alocar um novo v√©rtice
 *
 ***********************************************************************/
 
@@ -164,24 +168,24 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
    
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Remover vÈrtice
+*  $FC Fun√ß√£o: GRF  &Remover v√©rtice
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Remove um vÈrtice ao grafo fornecido.
-*     Se n„o h· tal vÈrtice no grafo, nada ser· feito.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Remove um v√©rtice ao grafo fornecido.
+*     Se n√£o h√° tal v√©rtice no grafo, nada ser√° feito.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo - ponteiro para o grafo
-*     pValor - valores do novo vÈrtice 
+*     pValor - valores do novo v√©rtice 
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - removeu sem problemas
-*     GRF_CondRetGrafoNaoExiste     - o ponteiro para grafo È nulo
-*     GRF_CondRetGrafoVazio         - o grafo n„o possui vÈrtices
-*     GRF_CondRetValorFornecidoNulo - o ponteiro para valor È nulo
+*     GRF_CondRetGrafoNaoExiste     - o ponteiro para grafo √© nulo
+*     GRF_CondRetGrafoVazio         - o grafo n√£o possui v√©rtices
+*     GRF_CondRetValorFornecidoNulo - o ponteiro para valor √© nulo
 *     GRF_CondRetUnicaOrigem
 *     GRF_CondRetErroEstrutura
-*     GRF_CondRetVerticeNaoExiste   - n„o foi encontrado tal vÈrtice
+*     GRF_CondRetVerticeNaoExiste   - n√£o foi encontrado tal v√©rtice
 *
 ***********************************************************************/
 
@@ -190,27 +194,27 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Inserir aresta
+*  $FC Fun√ß√£o: GRF  &Inserir aresta
 *
-*  $ED DescriÁ„o da funÁ„o
+*  $ED Descri√ß√£o da fun√ß√£o
 *     Insere uma aresta com valor fornecido ValorAresta que sai do
-*     vÈrtice *pValorPartida e vai para o vÈrtice *pValorDestino.
+*     v√©rtice *pValorPartida e vai para o v√©rtice *pValorDestino.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo            - ponteiro para o grafo
-*     pValorPartida     - valor do vÈrtice de partida
-*     pValorDestino     - valor do vÈrtice de destino
+*     pValorPartida     - valor do v√©rtice de partida
+*     pValorDestino     - valor do v√©rtice de destino
 *     ValorAresta       - valor da aresta a ser inserida
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
-*     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo È nulo
+*     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo √© nulo
 *     GRF_CondRetValorFornecidoNulo - valor da aresta nulo
-*     GRF_CondRetArestaExiste       - j· existe uma aresta com mesma origem,
+*     GRF_CondRetArestaExiste       - j√° existe uma aresta com mesma origem,
 *                                     destino e valor no grafo
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
-*     GRF_CondRetVerticeNaoExiste   - algum dos valores vÈrtices fornecidos n„o existe
-*     GRF_CondRetFaltouMemoria      - n„o foi possÌvel alocar espaÁo na memÛria
+*     GRF_CondRetVerticeNaoExiste   - algum dos valores v√©rtices fornecidos n√£o existe
+*     GRF_CondRetFaltouMemoria      - n√£o foi poss√≠vel alocar espa√ßo na mem√≥ria
 *
 ***********************************************************************/
 
@@ -221,26 +225,26 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Remover aresta
+*  $FC Fun√ß√£o: GRF  &Remover aresta
 *
-*  $ED DescriÁ„o da funÁ„o
+*  $ED Descri√ß√£o da fun√ß√£o
 *     Remove uma aresta com valor fornecido ValorAresta que sai do
-*     vÈrtice *pValorPartida e vai para o vÈrtice *pValorDestino.
+*     v√©rtice *pValorPartida e vai para o v√©rtice *pValorDestino.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo            - ponteiro para o grafo
-*     pValorPartida     - valor do vÈrtice de partida
-*     pValorDestino     - valor do vÈrtice de destino
+*     pValorPartida     - valor do v√©rtice de partida
+*     pValorDestino     - valor do v√©rtice de destino
 *     ValorAresta       - valor da aresta a ser inserida
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
-*     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo È nulo
+*     GRF_CondRetGrafoNaoExiste     - ponteiro para grafo √© nulo
 *     GRF_CondRetGrafoVazio         -
-*     GRF_CondRetValorFornecidoNulo - valor da aresta ou de vÈrtice nulo
-*     GRF_CondRetFuncaoNula         - funÁ„o de comparaÁ„o nula
-*     GRF_CondRetArestaNaoExiste    - n„o foi encontrada tal aresta
-*     GRF_CondRetVerticeNaoExiste   - algum dos valores vÈrtices fornecidos n„o existe
+*     GRF_CondRetValorFornecidoNulo - valor da aresta ou de v√©rtice nulo
+*     GRF_CondRetFuncaoNula         - fun√ß√£o de compara√ß√£o nula
+*     GRF_CondRetArestaNaoExiste    - n√£o foi encontrada tal aresta
+*     GRF_CondRetVerticeNaoExiste   - algum dos valores v√©rtices fornecidos n√£o existe
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
 *
 ***********************************************************************/
@@ -252,28 +256,28 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Caminhar por grafo
+*  $FC Fun√ß√£o: GRF  &Caminhar por grafo
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Caminha do vÈrtice corrente por uma aresta em um determinado sentido.
-*     Se nestas vari·veis existir mais de uma aresta, ser· caminhada aquela
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Caminha do v√©rtice corrente por uma aresta em um determinado sentido.
+*     Se nestas vari√°veis existir mais de uma aresta, ser√° caminhada aquela
 *     que foi inserida primeiro no grafo.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo  - ponteiro para o grafo
 *     pValor  - valor da aresta que deseja-se caminhar
 *     Sentido - sentido do caminhamento
 *               >> 1 para frente
-*               >> 0 para tr·s
+*               >> 0 para tr√°s
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - caminhou sem problemas
 *     GRF_CondRetGrafoNaoExiste
 *     GRF_CondRetErroEstrutura
-*     GRF_CondRetGrafoVazio         - n„o h· vertices no grafo
-*     GRF_CondRetValorFornecidoNulo - pValor È nulo
-*     GRF_CondRetFuncaoNula         - funÁ„o ComparaValorAre È nula
-*     GRF_CondRetArestaNaoExiste    - n„o foi encontrada a aresta com
+*     GRF_CondRetGrafoVazio         - n√£o h√° vertices no grafo
+*     GRF_CondRetValorFornecidoNulo - pValor √© nulo
+*     GRF_CondRetFuncaoNula         - fun√ß√£o ComparaValorAre √© nula
+*     GRF_CondRetArestaNaoExiste    - n√£o foi encontrada a aresta com
 *                                     o valor pValor
 *
 ***********************************************************************/
@@ -284,14 +288,14 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &Obter valor do vÈrtice corrente
+*  $FC Fun√ß√£o: GRF  &Obter valor do v√©rtice corrente
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Retorna o valor armazenado no vÈrtice corrente.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Retorna o valor armazenado no v√©rtice corrente.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo  - ponteiro para o grafo
-*     ppValor - endereÁo para ponteiro para valor
+*     ppValor - endere√ßo para ponteiro para valor
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK
@@ -303,13 +307,13 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
          
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  &On/off origem no vÈrtice corrente
+*  $FC Fun√ß√£o: GRF  &On/off origem no v√©rtice corrente
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Se o vÈrtice corrente È origem, o faz n„o-origem mais.
-*     Se o vÈrtice corrente n„o È origem, o torna origem.
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Se o v√©rtice corrente √© origem, o faz n√£o-origem mais.
+*     Se o v√©rtice corrente n√£o √© origem, o torna origem.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo  - ponteiro para o grafo
 *
 *  $FV Valor retornado
@@ -326,26 +330,26 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: GRF  -Procurar vÈrtice em grafo
+*  $FC Fun√ß√£o: GRF  -Procurar v√©rtice em grafo
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Procura na lista de vÈrtices de um grafo um vÈrtice com dado valor
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Procura na lista de v√©rtices de um grafo um v√©rtice com dado valor
 *     fornecido.
 *
-*  $EP Par‚metros
+*  $EP Par√¢metros
 *     pGrafo  - ponteiro para o grafo
-*     pValor  - ponteiro genÈrico para o valor do vÈrtice procurado
+*     pValor  - ponteiro gen√©rico para o valor do v√©rtice procurado
 *
 *  $FV Valor retornado
-*     GRF_CondRetOK                 - o vÈrtice foi encontrado
-*     GRF_CondRetGrafoNaoExiste     - o ponteiro para o grafo È nulo
+*     GRF_CondRetOK                 - o v√©rtice foi encontrado
+*     GRF_CondRetGrafoNaoExiste     - o ponteiro para o grafo √© nulo
 *     GRF_CondRetGrafoVazio
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura ocorreu
-*     GRF_CondRetVerticeNaoExiste   - o vertice com o valor dado n„o existe
+*     GRF_CondRetVerticeNaoExiste   - o vertice com o valor dado n√£o existe
 *
 ***********************************************************************/
 
    GRF_tpCondRet GRF_ProcurarVertice( GRF_tppGrafo pGrafo ,
 										        void *pValor ) ;
 
-/********** Fim do mÛdulo de definiÁ„o: GRF  Grafo **********/
+/********** Fim do m√≥dulo de defini√ß√£o: GRF  Grafo **********/
