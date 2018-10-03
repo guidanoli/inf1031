@@ -19,11 +19,23 @@
 *
 *  $ED Descrição do módulo
 *     
-*     Este módulo implementa um conjunto simples de funções para criar 
-*     vértices e arestas entre estes.
-*     Vértices possuem um valor do tipo void* que pode apontar para qualquer 
-*     estrutura, uma lista de arestas que partem do vértice e uma lista de
-*     arestas que chegam no vértice.
+*     Este módulo implementa vértices e arestas genéricos.
+*     Vértices possuem:
+*        - ponteiro genérico que pode apontar para qualquer estrutura (void *)
+*        - uma lista de arestas que partem do vértice (ponteiros VER_tppAresta)
+*        - uma lista de arestas que chegam no vértice (ponteiros VER_tppAresta)
+*        - um ponteiro para função que exclui o valor genérico
+*
+*      A função de liberação dos valores contidos no vértice e aresta deve
+*        assegurar a liberação de todos os espaços referênciados pelo
+*        ponteiro pValor.
+*        Esta função é chamada antes de se desalocar um elemento
+*        de uma lista.
+*        Caso não seja necessário desalocar o valor referenciado pelo
+*        elemento, o ponteiro para a função de liberação poderá ser NULL .
+*        Caso o elemento da lista seja a única âncora do valor referenciado,
+*        esta função deve promover a destruição (free) desse valor e
+*        de todos os dados nele ancorados.
 *
 ***************************************************************************/
 
@@ -87,6 +99,12 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                     exclusão do valor referenciado pelo elemento
 *                     a ser excluído.
 *                     Ver descrição do módulo.
+*     CopiaValor   -  ponteiro para função que copia o valor de
+*                     pB para *pA. Essencial para estruturas de dados
+*                     que trabalham com ponteiros, como string.
+*                     O espaço referenciado por *pA é inicialmente nulo
+*                     e a função deve alocado dinamicamente este ponteiro
+*                     com o tipo de estrutura de dados apropriado.
 *     pValor        - ponteiro genérico para o valor do vértice procurado
 *     ppVerticeParm - endereço do ponteiro para vértice a ser criado
 *
@@ -126,19 +144,16 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *  $FC Função: VER  &Obter referência para o valor contido no vértice
 *
 *  $ED Descrição da função
-*     Faz o ponteiro *pValor apontar para o valor armazenado no vértice
-*     Caso o vértice não exista, *pValor será NULL.
+*     Retorna pVertice->pValor.
+*     Esta função não altera o vértice ou sua estrutura interna.
 *
 *  $EP Parâmetros
 *     pVertice - ponteiro para o vértice cujo valor deseja-se obter
-*     pValor   - ponteiro que apontará para o valor do vértice
 *
 *  $FV Valor retornado
-*     VER_CondRetOK                 - obteve sem problemas
-*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
-*     VER_CondRetErroEstrutura      - caso o valor seja nulo
-*                                     (Assertiva Estrutural)
-*     VER_CondRetFuncaoNula         - ponteiro para função CopiaValor é nulo
+*     Retorna o valor armazenado em vértice.
+*     Se o vértice não existir ou se o valor for nulo,
+*     será retornado NULL.
 *
 ***********************************************************************/
 
@@ -155,20 +170,20 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     apontado por pValorAresta.
 *
 *  $EP Parâmetros
-*     pPartida - ponteiro para vértice de partida da aresta
-*     pDestino - ponteiro para vértice de destino da aresta
-*     pAresta  - ponteiro para valor da aresta
-*     ComparaValor - ponteiro para função que compara valores do
-*                    tipo de pValorA e pValorB.
-*                    Retorno da função:
-*                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contrário
-*     CopiaValor   - ponteiro para função que copia o valor de
-*                    pB para *pA. Essencial para estruturas de dados
-*                    que trabalham com ponteiros, como string.
-*                    O espaço referenciado por *pA é inicialmente nulo
-*                    e deve ser inicalmente alocado dinamicamente
-*                    com o tipo de estrutura de dados apropriado.
+*     pPartida -      ponteiro para vértice de partida da aresta
+*     pDestino -      ponteiro para vértice de destino da aresta
+*     pAresta  -      ponteiro para valor da aresta
+*     ComparaValor -  ponteiro para função que compara valores do
+*                     tipo de pValorA e pValorB.
+*                     Retorno da função:
+*                     >>> 0 caso pValorA == pValorB
+*                     >>> diferente de 0 caso contrário
+*     CopiaValor   -  ponteiro para função que copia o valor de
+*                     pB para *pA. Essencial para estruturas de dados
+*                     que trabalham com ponteiros, como string.
+*                     O espaço referenciado por *pA é inicialmente nulo
+*                     e a função deve alocado dinamicamente este ponteiro
+*                     com o tipo de estrutura de dados apropriado.
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - criou sem problemas
