@@ -89,10 +89,17 @@
                                     void (* CopiaValor ) ( void ** pA, void * pB) ,
                                     VER_tppVertice *ppVerticeParm )
    {
+      VER_tpCondRet RetVer;
 
 	   VER_tppVertice pNovoVertice;
       LIS_tppLista pListaSuc;
 	   LIS_tppLista pListaAnt;
+
+      if( pValor == NULL )
+      {
+         return VER_CondRetValorFornecidoNulo;
+      } /* if */
+
 
       if( CopiaValor == NULL )
       {
@@ -101,7 +108,11 @@
 
       if( *ppVerticeParm != NULL )
       {
-         VER_DestruirVertice(ppVerticeParm);
+         RetVer = VER_DestruirVertice(ppVerticeParm);
+         if ( RetVer != VER_CondRetOK )
+         {
+            return RetVer;
+         } /* if */
       } /* if */
 
       pNovoVertice = ( VER_tppVertice ) malloc( sizeof( VER_tpVertice ) );
@@ -143,7 +154,7 @@
 
 /***************************************************************************
 *
-*  Função: VER  &Destuir vértice
+*  Função: VER  &Destruir vértice
 *  ****/
 
     VER_tpCondRet VER_DestruirVertice( VER_tppVertice * pVertice )
@@ -561,6 +572,28 @@
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
+/***********************************************************************
+*
+*  $FC Função: VER  -Destruir Aresta Por Ponteiro
+*
+*  $ED Descrição da função
+*     Destrói um aresta, tirando o vínculo entre os vértices que
+*     conectava.
+*
+*  $AE Assertivas de entrada
+*     A função deve receber um ponteiro para aresta ou NULO.
+*
+*  $AS Assertivas de saída
+*     Se o ponteiro não for nulo, e apontar para vértices existentes,
+*     e estes vértices estiverem sem erros de estrutura, excluirá
+*     a aresta da lista de arestas dos vértices que ela conecta,
+*     o valor da aresta e a própria aresta em si.
+*
+*  $EP Parâmetros
+*     pAresta - ponteiro para aresta
+*
+***********************************************************************/
+
    VER_tpCondRet DestruirArestaPorPonteiro(  VER_tppAresta pAresta )
    {
 
@@ -638,6 +671,6 @@
       free(pAresta);
       return VER_CondRetOK;
 
-   } /* Fim função: VER  &Destruir Aresta */
+   } /* Fim função: VER  &Destruir Aresta Por Ponteiro */
 
 /********** Fim do módulo de implementação: VER  Vértice **********/
