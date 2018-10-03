@@ -58,3 +58,7 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 								a vigilância desses contadores.
 01/10	1h			redigir script de teste		Testar ProcurarVertice, ObterValor e ToggleOrigem.
 								E corrigir eventuais erros.
+02/10	1h			revisar código do módulo	Revisar implementação das funções anteriormente
+								implementadas
+03/10	1h			revisar projetos		Revisar documentação dos módulos, e arquivos
+								que serão entregues no mesmo arquivo empacotado.

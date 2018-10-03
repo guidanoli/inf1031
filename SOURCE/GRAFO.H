@@ -103,6 +103,12 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *                         Copia o valor de pb para *pA
 *     CopiaValorVer     - Ponteiro para função que copia valores de vértice
 *                         Copia o valor de pb para *pA
+*     ExcluirValorVer   - ponteiro para a função que processa a
+*                         exclusão do valor referenciado pelo vértice
+*                         Ver descrição do módulo.
+*     ExcluirValorAre   - ponteiro para a função que processa a
+*                         exclusão do valor referenciado pela aresta
+*                         Ver descrição do módulo.
 *     ppGrafoParam      - Endereço para ponteiro de grafo que será criado
 *                         Caso não for possível criar o grafo, *ppGrafoParam = NULL
 *
@@ -183,7 +189,9 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     GRF_CondRetGrafoNaoExiste     - o ponteiro para grafo é nulo
 *     GRF_CondRetGrafoVazio         - o grafo não possui vértices
 *     GRF_CondRetValorFornecidoNulo - o ponteiro para valor é nulo
-*     GRF_CondRetUnicaOrigem
+*     GRF_CondRetUnicaOrigem        - o grafo possui mais de um vértice
+*                                     e uma única origem
+*     GRF_CondRetFaltouMemoria
 *     GRF_CondRetErroEstrutura
 *     GRF_CondRetVerticeNaoExiste   - não foi encontrado tal vértice
 *
@@ -214,6 +222,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *                                     destino e valor no grafo
 *     GRF_CondRetErroEstrutura      - algum erro na estrutura do grafo ocorreu
 *     GRF_CondRetVerticeNaoExiste   - algum dos valores vértices fornecidos não existe
+*     GRF_CondRetFuncaoNula         - algum dos ponteiros para função é nulo
 *     GRF_CondRetFaltouMemoria      - não foi possível alocar espaço na memória
 *
 ***********************************************************************/
@@ -233,9 +242,9 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $EP Parâmetros
 *     pGrafo            - ponteiro para o grafo
-*     pValorPartida     - valor do vértice de partida
-*     pValorDestino     - valor do vértice de destino
-*     ValorAresta       - valor da aresta a ser inserida
+*     pValorVerOrig     - valor do vértice de partida
+*     pValorVerDest     - valor do vértice de destino
+*     pValorAre         - valor da aresta a ser inserida
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - inseriu sem problemas
@@ -299,6 +308,8 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK
+*     GRF_CondRetErroEstrutura
+*     GRF_CondRetGrafoVazio
 *     GRF_CondRetGrafoNaoExiste
 *
 ***********************************************************************/

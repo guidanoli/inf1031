@@ -45,7 +45,10 @@
 
 /* Tipo referência para um grafo */
 
+/* ponteiro para estrutura de vértice */
 typedef struct VER_tagVertice * VER_tppVertice;
+
+/* ponteiro para estrutura de aresta */
 typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
@@ -99,13 +102,13 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                     exclusão do valor referenciado pelo elemento
 *                     a ser excluído.
 *                     Ver descrição do módulo.
+*     pValor        - ponteiro genérico para o valor do vértice procurado
 *     CopiaValor   -  ponteiro para função que copia o valor de
 *                     pB para *pA. Essencial para estruturas de dados
 *                     que trabalham com ponteiros, como string.
 *                     O espaço referenciado por *pA é inicialmente nulo
 *                     e a função deve alocado dinamicamente este ponteiro
 *                     com o tipo de estrutura de dados apropriado.
-*     pValor        - ponteiro genérico para o valor do vértice procurado
 *     ppVerticeParm - endereço do ponteiro para vértice a ser criado
 *
 *  $FV Valor retornado
@@ -184,6 +187,10 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                     O espaço referenciado por *pA é inicialmente nulo
 *                     e a função deve alocado dinamicamente este ponteiro
 *                     com o tipo de estrutura de dados apropriado.
+*     ExcluirValor  - ponteiro para a função que processa a
+*                     exclusão do valor referenciado pelo elemento
+*                     a ser excluído.
+*                     Ver descrição do módulo.
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - criou sem problemas
@@ -191,6 +198,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     VER_CondRetArestaExiste       - há uma aresta com mesmo valor saindo de
 *                                     pPartida e indo para pDestino.
 *                                     (Assertiva Estrutural)
+*     VER_CondRetValorFornecidoNulo - pValorAresta é nulo
 *     VER_CondRetErroEstrutura      - há algum erro na estrutura do vértice
 *     VER_CondRetFaltouMemoria      - não foi possível alocar uma nova aresta
 *     VER_CondRetFuncaoNula         - ponteiro para função CopiaValor ou

@@ -1,0 +1,75 @@
+*********************************
+ARCABOUÇO DE TESTE AUTOMATIZADO
+PARA MÓDULO GRAFO E VÉRTICE
+--------------------------------
+PUC-Rio INF1301 2018.2 T2
+*********************************
+
+Professor: Flávio Bevilacqua
+Turma: 3WB
+Membros do trio:
+	Caique Soares
+	Guilherme Dantas
+	Nagib Suaid
+
+[ Diretórios ]
+./ Caique	relatório e anotações de Caique
+./ Nagib	relatório e anotações de Nagib
+./ Guilherme	relatório e anotações de Guilherme
+
+[ Arquivos ]
+
+	-- BATCHES --
+	TestaTudo.bat	...	gera os logs de saída dos testes
+
+	-- BIBLIOTECAS --
+		
+		-ESTÁTICAS:
+		ArcaboucoTeste.lib
+
+		-DINÂMICAS:
+		<não há>
+
+	-- CONSTRUTOS --
+	TRAB2-1.exe	...	testa o módulo GRAFO
+	TRAB2-2.exe	...	testa o módulo VÉRTICE
+
+	-- DOCUMENTAÇÃO --
+	LEIAME.txt	...	este documento
+
+	-- MÓDULOS --
+
+		- IMPLEMENTAÇÃO:
+		GRAFO.C
+		LISTA.C
+		TESTGRF.C
+		TESTVER.C
+		VERTICE.C
+
+		- DEFINIÇÃO:
+		GENERICO.H
+		GRAFO.H
+		LERPARM.H
+		LISTA.H
+		TST_ESPC.H
+		VERTICE.H
+
+	-- SCRIPTS --
+	TestaGrafo.script
+	TestaVertice.script
+
+	-- .COMP --
+	TRAB2-1.comp
+	TRAB2-2.comp
+	
+	-- .MAKE --
+	TRAB2-1.make
+	TRAB2-2.make
+
+[ Funcionalidades ]
+
+Para gerar o log de saída, basta rodar o batch "TestaTudo.bat". Ele executará o arcabouço de testes, analisando
+todos os scripts de teste presentes na pasta e gerará dois arquivos distintos:
+
+* SaidaTesteVertice.log	...	resultado do teste do módulo VÉRTICE
+* SaidaTesteGrafo.log	...	resultado do teste do módulo GRAFO
