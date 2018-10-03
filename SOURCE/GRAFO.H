@@ -94,6 +94,20 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Cria a estrutura de um grafo sem vértices ou arestas.
 *     O tipo dos valores armazenados não é espeficiado.
 *
+*  $AE Assertivas de entrada
+*	  A função deverá receber um ponteiro para a função que compara o valor de duas
+*	  arestas, um ponteiro para a função que compara o valor de dois vertices,
+*     um ponteiro para a função que copia o valor do vértice do
+*	  segundo parametro para o primeiro parametro, um ponteiro para a função que copia
+*     o valor da aresta do segundo parametro para o primeiro parametro, um ponteiro para 
+*     a função que exclui o valor de um vértice, um ponteiro para a função que exclui o valor
+*     de uma aresta e um ponteiro que referencia o grafo.
+*
+*  $AS Assertivas de saída
+*     Armazena todos os paramentros de função na cabeça do grafo, zera os contadores de vértice de origem,
+*     aloca o struct de grafo e armazena o endereço para o grafo alocado no ponteiro ppGrafoParam, retornando
+*     GRF_CondRetOK.
+*
 *  $EP Parâmetros
 *     ComparaValorAre   - Ponteiro para função de comparação de valores de aresta
 *                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contrário
@@ -134,8 +148,15 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $ED Descrição da função
 *     Destrói o grafo fornecido.
 *
+*  $AE Assertivas de entrada
+*	  A função recebe um parametro que referencia o grafo.
+*
+*  $AS Assertivas de saída
+*	  Destroi as listas de origem e vertices, e da free no grafo referenciado
+*	  e no final atribui NULL ao *ppGrafoParam.
+*
 *  $EP Parâmetros
-*     ppGrafoParam - endereço do ponteiro para o grafo a ser destruido
+*     ppGrafoParam - endereço do ponteiro para o grafo a ser destruido.
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - destruiu sem problemas
@@ -301,6 +322,15 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $ED Descrição da função
 *     Retorna o valor armazenado no vértice corrente.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para o grafo e o endereco do ponteiro para o valor
+*	  a ser obtido.
+*
+*  $AS Assertivas de saída
+*     Atribui o valor do vértice corrente do grafo para *ppValor,
+*	  se o grafo nao existir e o ponteiro *ppValor existir, *ppValor será nulo
+*     e retorna GRF_CondRetOK.
 *
 *  $EP Parâmetros
 *     pGrafo  - ponteiro para o grafo

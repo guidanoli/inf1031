@@ -255,6 +255,22 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     segundo um valor também fornecido, e armazena no ponteiro pDestino
 *     o endereço do vértice de destino
 *
+*  $AE Assertivas de entrada
+*	  A função deve receber um ponteiro do vértice de partida,
+*	  o valor da aresta, um ponteiro que referencia o vertice destino,
+*     que também pode ser nulo, um ponteiro para a função que
+*     compara o valor de duas arestas e o sentido que irá andar
+*     ( 0 para trás ou 1 para frente).
+*  
+*  $AS Assertivas de saída
+*	  A função deverá alterar o ponteiro do vértice destino pVerDestino
+*     com o valor do Vértice destino caso o sentido seja 1, ou com o valor
+*     do vértice de partida caso o valor seja 0. E retornar VER_CondRetOK,
+*	  caso contrário deverá retornar a condição de retorno de acordo com o erro obtido.
+*
+*
+*
+*
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para o vértice de partida
 *     pValor       - valor da aresta que deseja-se percorrer
