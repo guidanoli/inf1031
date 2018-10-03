@@ -97,6 +97,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     Cria a estrutura de um vértice.
 *     O tipo do valor armazenados não é espeficiado.
 *
+*  $AE 
+*
 *  $EP Parâmetros
 *     ExcluirValor  - ponteiro para a função que processa a
 *                     exclusão do valor referenciado pelo elemento
@@ -115,6 +117,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     VER_CondRetOK
 *     VER_CondRetFaltouMemoria
 *     VER_CondRetFuncaoNula      - ponteiro para função CopiaValor é nulo
+*     VER_CondRetValorFornecidoNulo -pValor é nulo
 *
 ***********************************************************************/
 
