@@ -866,13 +866,25 @@
 
 /***********************************************************************
 *
-*  $FC Função: GRF  -Destruir Vértice
+*  $FC Função: GRF  -Destruir vértice
 *
 *  $ED Descrição da função
-*     Destrói um vértice
+*     Destrói um vértice recebendo um ponteiro genérico, e arestas
+*     conectadas a ele.
+*
+*  $AE Assertivas de entrada
+*     A função recebe um ponteiro que aponta para uma struct VER_tppVertice
+*     ou um ponteiro NULO.
+*
+*  $AS Assertivas de saída
+*     A função torna o ponteiro NULO.
+*     Se o ponteiro fornecido não for nulo, exclui quaisquer arestas
+*     que estavam conectadas a este vértice, exclui o valor
+*     armazenado no vértice e nas arestas, e o próprio vértice em si.
+*     Senão, nada será feito.
 *
 *  $EP Parâmetros
-*     pVertice - ponteiro para vértice
+*     pVertice - ponteiro genérico que aponta para o vértice
 *
 ***********************************************************************/
 
