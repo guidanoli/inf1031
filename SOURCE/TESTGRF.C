@@ -139,7 +139,7 @@
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao destruir grafo");
 
-      }
+      } /* if */
 
       /* Testar inserirvertice */
 
@@ -221,7 +221,7 @@
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao caminhar por grafo");
 
-      }
+      } /* if */
       
       /* Testar removervertice */
 
@@ -305,7 +305,7 @@
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao procurar vertice");
 
-      }
+      } /* if */
 
       return TST_CondRetNaoConhec;
 
