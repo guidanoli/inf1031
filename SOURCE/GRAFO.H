@@ -12,11 +12,13 @@
 *             nag   Nagib Suaid
 *
 *  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       gui   11/09/2018  início do desenvolvimento
-*     1.1     gui   21/09/2018  novo modelo de grafo dirigido
-*     1.2     gui   25/09/2018  implementação das funções básicas de vértices e arestas
-*     1.3     gui   02/10/2018  implementação da lista de origens e funções auxiliares
+*     Versão  Autor      Data     Observações
+*     1       gui     11/09/2018  início do desenvolvimento
+*     1.1     gui     21/09/2018  novo modelo de grafo dirigido
+*     1.2     gui     25/09/2018  implementação das funções básicas de vértices e arestas
+*     1.3     gui     02/10/2018  implementação da lista de origens e funções auxiliares
+*     1.4   gui,cai   03/10/2018  assertivas de entrada e saída
+*
 *  $ED Descrição do módulo
 *     
 *     Este módulo implementa um conjunto simples de funções para criar e
@@ -133,12 +135,12 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRF_tpCondRet GRF_CriarGrafo( int (* ComparaValorAre ) ( void * pA, void * pB) ,
-                                 int (* ComparaValorVer ) ( void * pA, void * pB) ,
-                                 void (* CopiaValorAre ) ( void ** pA, void * pB) ,
-                                 void (* CopiaValorVer ) ( void ** pA, void * pB) ,
-                                 void (* ExcluirValorVer ) ( void * pDado ) ,
-                                 void (* ExcluirValorAre ) ( void * pDado ) ,
+   GRF_tpCondRet GRF_CriarGrafo( int ( *ComparaValorAre ) ( void * pA, void * pB) ,
+                                 int ( *ComparaValorVer ) ( void * pA, void * pB) ,
+                                 void ( *CopiaValorAre ) ( void ** pA, void * pB) ,
+                                 void ( *CopiaValorVer ) ( void ** pA, void * pB) ,
+                                 void ( *ExcluirValorVer ) ( void * pDado ) ,
+                                 void ( *ExcluirValorAre ) ( void * pDado ) ,
                                  GRF_tppGrafo * ppGrafoParam ) ;
 
 /***********************************************************************
@@ -149,11 +151,14 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Destrói o grafo fornecido.
 *
 *  $AE Assertivas de entrada
-*	  A função recebe um parametro que referencia o grafo.
+*	  A função recebe um endereço de ponteiro existente que aponta
+*    para um grafo ou é NULO.
 *
 *  $AS Assertivas de saída
-*	  Destroi as listas de origem e vertices, e da free no grafo referenciado
-*	  e no final atribui NULL ao *ppGrafoParam.
+*	  Caso o grafo exista, destrói as listas de origem e de vértices,
+*    e libera o grafo fornecido. Anula o valor de *ppGrafoParam e
+*    retorna GRF_CondRetOK. Caso o grafo não exista, retorna
+*    GRF_CondRetGrafoNaoExiste.
 *
 *  $EP Parâmetros
 *     ppGrafoParam - endereço do ponteiro para o grafo a ser destruido.
@@ -184,20 +189,20 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $AS Assertivas de saída
 *     Se o ponteiro para grafo não for nulo, nem tiver algum
-*     erro de estrutura, nem o valor fornecido for nulo,
-*     a função insere um vértice na lista de vértices do grafo.
+*     erro de estrutura, nem ter função interna nula, nem o valor
+*     fornecido for nulo, nem existir outro vértice com o mesmo valor,
+*     e houver espaço para ser alocado na memória, então a função
+*     insere um vértice na lista de vértices do grafo e retorna GRF_CondRetOK .
+*     Caso contrário, a função retornará a condição de retorno
+*     apropriada para o erro e o vértice não será inserido.
 *     Se o grafo antes da execução da função for vazio, este
 *     vértice será inserido também na lista de origens.
 *     O valor armazenado no vértice inserido será pValor,
 *     e serão alocadas duas listas na estrutura do vértice:
 *     lista de sucessores (das arestas que saem do vértice) e
 *     lista de antecessores (das arestas que apontam para o vértice).
-*     Se o grafo tiver algum erro de estrutura, a condição de
-*     retorno notificará o módulo cliente.
 *     Além disso, a função de exclusão referenciada no vértice
 *     será a mesma referenciada pela cabeça do grafo em ExcluiValorVer.
-*     A função retorna GRF_CondRetOK se foi inserido o vértice sem
-*     problemas, e a condição de retorno apropriada caso contrário.
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
@@ -227,18 +232,20 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $AE Assertivas de entrada
 *     Recebe um ponteiro para grafo ou NULO.
 *     Recebe um ponteiro para o valor armazenado no
-*     vértice a ser removido.
+*     vértice a ser removido, que deve apontar para
+*     uma estrutura de dado do tipo padrão de vértice do grafo.
 *
 *  $AS Assertivas de saída
 *     Se o ponteiro para grafo não for nulo, nem tiver algum
 *     erro de estrutura, nem o valor fornecido for nulo,
+*     nem algum dos vértices forem inválidos, nem o vértice
+*     for a única origem de um grafo com mais de um vértice,
+*     nem faltar memória, nem o grafo for vazio,
 *     a função remove o vértice do grafo, excluindo além do
 *     próprio vértice, todas as arestas conectadas a ele,
 *     elementos de listas dos vértices que estas arestas conectem
 *     que referenciem estas arestas, e, caso este vértice for uma origem,
 *     o elemento que aponta pro vértice da lista de origem.
-*     Se o grafo tiver algum erro de estrutura, a condição de
-*     retorno notificará o módulo cliente.
 *     A função retorna GRF_CondRetOK se foi removido o vértice sem
 *     problemas, e a condição de retorno apropriada caso contrário.
 *
@@ -279,14 +286,13 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     estrutura de dados do tipo padrão de aresta do grafo.
 *
 *  $AS Assertivas de saída
-*     Se o grafo não for nulo, o segundo e terceiro parâmetros apontarem
-*     para o tipo de dados padrão de vértice do grafo fornecido, o quarto
-*     parâmetro apontar para o tipo de dados padrão de aresta do grafo
-*     forneido, e não houver já uma aresta com os mesmos parâmetros,
-*     a função inserirá no grafo a aresta saindo do vértice
-*     referenciado por pValorPartida para o vértice referenciado por
-*     pValorDestino, armazenando nesta nova aresta o valor apontado por
-*     ValorAresta.
+*     Se o grafo não for nulo, os valores foram de tipos válidos
+*     e não-nulos, não houver já uma aresta com os mesmos parâmetros, os
+*     vértices com os valores existirem, não faltar memória,
+*     as funções internas forem válidas, a função inserirá no grafo
+*     a aresta saindo do vértice referenciado por pValorPartida para
+*     o vértice referenciado por  pValorDestino, armazenando nesta
+*     nova aresta o valor apontado por ValorAresta.
 *
 *  $EP Parâmetros
 *     pGrafo            - ponteiro para o grafo
@@ -320,6 +326,24 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Remove uma aresta com valor fornecido ValorAresta que sai do
 *     vértice *pValorPartida e vai para o vértice *pValorDestino.
 *
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para grafo ou NULO.
+*     Recebe dois ponteiros para estruturas de dados correspondente
+*     ao tipo padrão de vértice do grafo fornecido,
+*     que correspondem ao valor do vértice de partida, de origem,
+*     e mais outro ponteiro do valor de aresta, que aponta para uma
+*     estrutura de dados do tipo padrão de aresta do grafo.
+*
+*  $AS Assertivas de saída
+*     Se o grafo, a aresta e os vértices existirem, as funções
+*     internas não forem nulas, e não houver erro de estrutura,
+*     a função removerá a aresta do grafo, liberando o valor armazenado
+*     na aresta, e removendo o elemento que referencia a aresta
+*     presente na lista de arestas dos vértices que a aresta
+*     conecta, e retorna GRF_CondRetOK. Caso contrário,
+*     retornará a condição de retorno condizente com o erro
+*     e não será alterada a estrutura do grafo.
+*
 *  $EP Parâmetros
 *     pGrafo            - ponteiro para o grafo
 *     pValorVerOrig     - valor do vértice de partida
@@ -339,9 +363,9 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 ***********************************************************************/
 
    GRF_tpCondRet GRF_RemoverAresta( GRF_tppGrafo pGrafo,
-                                    void* pValorVerOrig,
-                                    void* pValorVerDest,
-                                    void* pValorAre) ;
+                                    void * pValorVerOrig,
+                                    void * pValorVerDest,
+                                    void * pValorAre) ;
 
 /***********************************************************************
 *
@@ -351,6 +375,21 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Caminha do vértice corrente por uma aresta em um determinado sentido.
 *     Se nestas variáveis existir mais de uma aresta, será caminhada aquela
 *     que foi inserida primeiro no grafo.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para grafo ou NULO,
+*     um ponteiro do valor de aresta, que aponta para uma
+*     estrutura de dados do tipo padrão de aresta do grafo,
+*     e um inteiro que indica o sentido do caminhamento
+*     (0 para trás e 1 para frente).
+*
+*  $AS Assertivas de saída
+*     Se o grafo e a aresta existirem, e o vértice corrente
+*     do grafo tiver a aresta no sentido indicado,
+*     o novo vértice corrente será o vértice do outro
+*     lado da aresta, e retornará GRF_CondRetOK.
+*     Caso contrário, a função não realiza nada, e 
+*     retorna a condição de retorno apropriada.
 *
 *  $EP Parâmetros
 *     pGrafo  - ponteiro para o grafo
@@ -383,13 +422,14 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Retorna o valor armazenado no vértice corrente.
 *
 *  $AE Assertivas de entrada
-*     Recebe um ponteiro para o grafo e o endereco do ponteiro para o valor
-*	  a ser obtido.
+*     Recebe um ponteiro para um grafo ou NULO e o endereço de um ponteiro
+*     existente.
 *
 *  $AS Assertivas de saída
-*     Atribui o valor do vértice corrente do grafo para *ppValor,
-*	  se o grafo nao existir e o ponteiro *ppValor existir, *ppValor será nulo
-*     e retorna GRF_CondRetOK.
+*     Se o grafo existir, atribui o valor do vértice corrente do grafo à
+*     variável *ppValor, retornando GRF_CondRetOK. Caso contrário,
+*     *ppValor será NULO, e a função retornará a condição de retorno
+*     condizente com o erro.
 *
 *  $EP Parâmetros
 *     pGrafo  - ponteiro para o grafo
@@ -413,6 +453,17 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     Se o vértice corrente é origem, o faz não-origem mais.
 *     Se o vértice corrente não é origem, o torna origem.
 *
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para um grafo ou NULO.
+*
+*  $AS Assertivas de saída
+*     Se o grafo existir e não for vazio, torna o vértice
+*     corrente em origem. Se o grafo tiver mais de uma
+*     origem e o vértice corrente for origem, o tornará
+*     não-origem. Em ambos os casos, retorna GRF_CondRetOK.
+*     Caso contrário, a função retornará a condição de retorno
+*     condizente com o erro.
+*
 *  $EP Parâmetros
 *     pGrafo  - ponteiro para o grafo
 *
@@ -434,7 +485,21 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *
 *  $ED Descrição da função
 *     Procura na lista de vértices de um grafo um vértice com dado valor
-*     fornecido.
+*     fornecido, tornando-o vértice corrente, caso exista.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para um grafo ou NULO, e um ponteiro
+*     para o valor do vértice a ser procurado - que deve
+*     apontar para uma estrutura de dados do tipo padrão
+*     de vértice do grafo fornecido.
+*
+*  $AS Assertivas de saída
+*     Se o grafo existir e não for vazio, e houver um vértice
+*     no grafo com o mesmo valor, o ponteiro de vértice corrente
+*     agora apontará para o vértice com valor pValor e a função
+*     retornará GRF_CondRetOK. Caso contrário, o vértice corrente
+*     não mudará e a função retornará a condição de retorno
+*     apropriada para o erro.
 *
 *  $EP Parâmetros
 *     pGrafo  - ponteiro para o grafo
@@ -450,6 +515,6 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 ***********************************************************************/
 
    GRF_tpCondRet GRF_ProcurarVertice( GRF_tppGrafo pGrafo ,
-										        void *pValor ) ;
+										        void * pValor ) ;
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

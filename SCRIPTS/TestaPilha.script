@@ -1,0 +1,44 @@
+// Script:    			TestaPilha.script
+// Autor:     			Guilherme Dantas 
+// Data:			06/10/2018  
+// Propósito: 			Testa a integridade das funções de acesso
+//            			do módulo Pilha para com sua estrutura de dados,
+//            			baseando-se no modelo arquitetado.
+//
+
+== Declarar as condicoes de retorno
+=declararparm  OK                    int 0
+=declararparm  Memoria               int 1
+
+== Criar pilha
+=criarpilha 0 OK
+
+== Destruir pilha
+=destruirpilha 0 OK
+
+== Criar e destruir 10 pilhas
+=criarpilha 0 OK
+=criarpilha 1 OK
+=criarpilha 2 OK
+=criarpilha 3 OK
+=criarpilha 4 OK
+=criarpilha 5 OK
+=criarpilha 6 OK
+=criarpilha 7 OK
+=criarpilha 8 OK
+=criarpilha 9 OK
+=destruirpilha 0 OK
+=destruirpilha 1 OK
+=destruirpilha 2 OK
+=destruirpilha 3 OK
+=destruirpilha 4 OK
+=destruirpilha 5 OK
+=destruirpilha 6 OK
+=destruirpilha 7 OK
+=destruirpilha 8 OK
+=destruirpilha 9 OK
+
+== Criar pilha em cima de outra já existente
+=criarpilha 0 OK
+=criarpilha 0 OK
+=destruirpilha 0 OK

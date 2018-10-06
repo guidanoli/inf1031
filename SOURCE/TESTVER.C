@@ -53,8 +53,9 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static int ValidarIndexVertice( int indexVertice ) ;
-   static int ComparaStrings (void *pa, void*pb) ;
-   static void CopiaStrings (void **pa, void *pb) ;
+   static int ComparaStrings ( void * pa, void * pb ) ;
+   static void CopiaStrings (void ** pDestino , void * pOrigem ) ;
+   static void ConcatenaStrings ( void ** pSaida , void * pValor ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -259,7 +260,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
    } /* Fim função: TVER -Validar indice de VERTICE */
 
 
- /***********************************************************************
+/***********************************************************************
 *
 *  $FC Função: TVER -Compara Strings
 *
@@ -268,23 +269,36 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
    int ComparaStrings (void *pa, void *pb)
    {
 
-      return strcmp( (char*)pa, (char*)pb );
+      return strcmp( (char*) pa , (char*) pb );
 
    } /* Fim função: TVER -Compara Strings */
 
- /***********************************************************************
+/***********************************************************************
 *
 *  $FC Função: TVER -Copia Strings
 *
 ***********************************************************************/
 
-   void CopiaStrings (void **pa, void *pb)
+   void CopiaStrings (void ** pDestino , void * pOrigem )
    {
 
-      *pa = (char *) malloc(sizeof(char)*DIM_VALOR_VERTICE);
-      strcpy_s( (char*)(*pa), DIM_VALOR_VERTICE, (char*)pb );
+      *pDestino = (char *) malloc( sizeof(char) * DIM_VALOR_VERTICE );
+      strcpy_s( (char*)(*pDestino) , DIM_VALOR_VERTICE , (char*)pOrigem );
 
    } /* Fim função: TVER -Copia Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Concatena Strings
+*
+***********************************************************************/
+
+   void ConcatenaStrings ( void ** pSaida , void * pValor )
+   {
+
+      strcat( (char *) *pSaida , (char *) pValor );
+
+   }
 
 /********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
 

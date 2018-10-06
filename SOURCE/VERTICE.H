@@ -16,6 +16,7 @@
 *     1       gui   17/09/2018  início do desenvolvimento
 *     1.1     gui   21/09/2018  definição das funções básicas
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
+*     1.3  cai,nag  03/10/2018  assertivas de entrada e saída
 *
 *  $ED Descrição do módulo
 *     
@@ -211,7 +212,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     mesmo tipo referenciado por pValorAresta, retorna 0 se os valores 
 *     referenciados forem iguais e um valor diferente de 0 caso contrario.
 *     ExcluirValor é uma função que exclui o tipo de dado referenciado
-*     por pValor.
+*     por pValor, e todos os dados referenciados por ele.
 *     CopiaValor é uma função que faz o ponteiro referenciado 
 *     pelo primeiro argumento apontar para uma cópia do valor referenciado
 *     pelo segundo argumento.
@@ -329,13 +330,11 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     ( 0 para trás ou 1 para frente).
 *  
 *  $AS Assertivas de saída
-*	  A função deverá alterar o ponteiro do vértice destino pVerDestino
+*     Caso o ponteiro para vértice, valor e função não for nulo,
+*     o Sentido for 0 ou 1, a função deverá alterar o ponteiro do vértice destino *pVerDestino
 *     com o valor do Vértice destino caso o sentido seja 1, ou com o valor
-*     do vértice de partida caso o valor seja 0. E retornar VER_CondRetOK,
-*	  caso contrário deverá retornar a condição de retorno de acordo com o erro obtido.
-*
-*
-*
+*     do vértice de partida caso o valor seja 0 e retornar VER_CondRetOK.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido.
 *
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para o vértice de partida

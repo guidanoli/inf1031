@@ -15,6 +15,7 @@
 *     1       gui   17/09/2018  início do desenvolvimento
 *     1.1     gui   21/09/2018  implementação das funções básicas de vértices
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
+*     1.3     gui   03/10/2018  assertivas de entrada e saída
 *
 ***************************************************************************/
 

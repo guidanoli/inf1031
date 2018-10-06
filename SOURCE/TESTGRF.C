@@ -57,8 +57,9 @@
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static int ValidaIndiceGrafo ( int indice ) ;
-   static int ComparaStrings ( void *pa , void*pb ) ;
-   static void CopiaStrings ( void **pa , void *pb ) ;
+   static int ComparaStrings ( void * pa , void * pb ) ;
+   static void CopiaStrings ( void ** pa , void * pb ) ;
+   static void ConcatenaStrings ( void ** pSaida , void * pValor ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -340,6 +341,19 @@
       strcpy_s( (char*)(*pa), DIM_STRINGS, (char*)pb );
 
    } /* Fim função: TGRF -Copia Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TGRF -Concatena Strings
+*
+***********************************************************************/
+
+   void ConcatenaStrings ( void ** pSaida , void * pValor )
+   {
+
+      strcat( (char *) *pSaida , (char *) pValor );
+
+   } /* Fim função: TGRF -Concatena Strings */
 
  /***********************************************************************
 *

@@ -16,6 +16,8 @@
 *     1.1     gui   21/09/2018  novo modelo de grafo dirigido
 *     1.2     gui   25/09/2018  implementação das funções básicas de vértices e arestas
 *     1.3     gui   02/10/2018  implementação da lista de origens e funções auxiliares
+*     1.4     gui   03/10/2018  assertivas de entrada e saída
+*
 ***************************************************************************/
 
 #include   <stdio.h>

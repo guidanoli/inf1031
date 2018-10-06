@@ -2,7 +2,7 @@
 ARCABOUÇO DE TESTE AUTOMATIZADO
 PARA MÓDULO GRAFO E VÉRTICE
 --------------------------------
-PUC-Rio INF1301 2018.2 T2
+PUC-Rio INF1301 2018.2 T3
 *********************************
 
 Professor: Flávio Bevilacqua
@@ -13,9 +13,9 @@ Membros do trio:
 	Nagib Suaid
 
 [ Diretórios ]
-./ Caique	relatório e anotações de Caique
-./ Nagib	relatório e anotações de Nagib
-./ Guilherme	relatório e anotações de Guilherme
+./ Caique	relatório de Caique
+./ Nagib	relatório de Nagib
+./ Guilherme	relatório de Guilherme
 
 [ Arquivos ]
 
@@ -58,13 +58,8 @@ Membros do trio:
 	TestaGrafo.script
 	TestaVertice.script
 
-	-- .COMP --
-	TRAB2-1.comp
-	TRAB2-2.comp
-	
-	-- .MAKE --
-	TRAB2-1.make
-	TRAB2-2.make
+	-- MODELO --
+	Modelo.pdf	...	Modelo, exemplo e assertivas estruturais
 
 [ Funcionalidades ]
 

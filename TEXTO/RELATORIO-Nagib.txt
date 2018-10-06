@@ -1,13 +1,3 @@
-﻿Data	Horas Trabalhadas              Tipo de Tarefa			             Descrição da Tarefa Realizada
+﻿Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
-17/9   2.5h                           Projetar                       Fazendo o modelo dos modulos grafo e vertice
-19/9   2h                             Revisar Projetos               Desenhamos o modelo e exemplo do projeto grafo
-21/9   2h                             Revisar Projetos          Fizemos algumas modificação no modelo e nas assertivas estruturais
-21/9   4h                             Codificar módulo          Implementamos funções do módulo VERTICE e do módulo GRAFO
-26/9   2h                             Codificar módulo                 Codificar parte módulo de teste TESTVER.C
-26/9   1.5h                           Codificar módulo                 Codificar parte módulo de teste TESTVER.C
-28/9   1h                             Redigir script de teste          Criando casos de teste para modulo vértice
-28/9   0.5h                           Realizar testes                  Rodando o script de teste do modulo vértice
-28/9   2h                             diagnosticar e corrigir os       Corrigindo problemas encontrados nos modulos
-                                      problemas encontrados            TESTEVER.C e VERTICE.C
-01/10  2h                             Codificar módulo                 Implementamos algumas funções do modulo GRAFO.C
+DD/MM	HH			(...)				(...)
