@@ -36,7 +36,7 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static int ValidarIndexVertice( int indexVertice ) ;
+   static int ValidarIndexPilha( int indexPilha ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -48,19 +48,13 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
 *     Podem ser criadas até 10 pilhas, identificadas pelos índices 0 a 9 (inclusive)
 *
 *     Comandos disponíveis:
-*
-*     //TEMP
-*    =criarvertice              inxVERTICE, StringEsperado, CondRetEsp
-*	  =destruirvertice			  inxVERTICE, CondRetEsp
-*	  =obtervalor					  inxVERTICE, ValorEsp
-*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, CondRetEsp
-*	  =destruiraresta				  inxVERTICEPart, inxVERTICEDest, StringEsperadoAre, CondRetEsp
-*    =percorreraresta           inxVERTIVEPart, StringEsperadoAre, Sentido, StringEsperadoVerDestino, ConsRetEsp
+*    =criarpilha                indexPilha, CondRetEsp
+*    =destruirvertice			  indexPilha, CondRetEsp
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
 
-      int inxVERTICE = -1;
+      int indexPilha = -1;
       int numLidos = -1;
 
       PIL_tpCondRet CondRetEsp = PIL_CondRetFaltouMemoria;
@@ -74,32 +68,32 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
 
       if (strcmp(ComandoTeste, CRIAR_PILHA_CMD) == 0) {
 
-         numLidos = LER_LerParametros("ii", &inxVERTICE, &CondRetEsp);
+         numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
 
          if ((numLidos != 2) ||
-            (!ValidarIndexVertice(inxVERTICE))) {
+            (!ValidarIndexPilha(indexPilha))) {
             return TST_CondRetParm;
          } /* if */
 
-         CondRetPIL = PIL_CriarPilha(&vtPilhas[inxVERTICE],NULL);
+         CondRetPIL = PIL_CriarPilha(&vtPilhas[indexPilha],NULL);
 
-          return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao criar pilha");
+         return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao criar pilha");
 
       } /* fim ativa: Testar criarpilha */
 
       /* Testar destruirpilha */
 
       if (strcmp(ComandoTeste, DESTRUIR_PILHA_CMD) == 0) {
-         numLidos = LER_LerParametros("i", &inxVERTICE);
+         numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
 
-         if ((numLidos != 1) ||
-            (!ValidarIndexVertice(inxVERTICE))) {
+         if ((numLidos != 2) ||
+            (!ValidarIndexPilha(indexPilha))) {
             return TST_CondRetParm;
          } /* if */
 
-         PIL_DestruirPilha(&vtPilhas[inxVERTICE]);
+         CondRetPIL = PIL_DestruirPilha(&vtPilhas[indexPilha]);
 
-        return TST_CondRetOK;
+         return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao destruir pilha");
 
       } /*fim ativa: Testar destruirpilha*/
 
@@ -117,18 +111,18 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
 *
 ***********************************************************************/
 
-   int ValidarIndexVertice( int indexVertice )
+   int ValidarIndexPilha( int indexPilha )
    {
 
-      if ( ( indexVertice <  0 )
-        || ( indexVertice >= DIM_VT_PILHA ))
+      if ( ( indexPilha <  0 )
+        || ( indexPilha >= DIM_VT_PILHA ))
       {
          return TST_PIL_FALSE ;
       } /* if */
          
       return TST_PIL_TRUE ;
 
-   } /* Fim função: TPIL -Validar indice de VERTICE */
+   } /* Fim função: TPIL -Validar indice de pilha */
 
-/********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
+/********** Fim do módulo de implementação: TPIL Teste pilha com inteiros **********/
 

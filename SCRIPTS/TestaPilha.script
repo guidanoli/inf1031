@@ -1,6 +1,7 @@
 // Script:    			TestaPilha.script
 // Autor:     			Guilherme Dantas 
-// Data:			06/10/2018  
+// Versionamento:		0.1	06/10/2018	criar e destruir pilha
+//				0.1.1 	07/10/2018	destruir pilha retorna cond. ret.
 // Propósito: 			Testa a integridade das funções de acesso
 //            			do módulo Pilha para com sua estrutura de dados,
 //            			baseando-se no modelo arquitetado.
@@ -8,12 +9,17 @@
 
 == Declarar as condicoes de retorno
 =declararparm  OK                    int 0
-=declararparm  Memoria               int 1
+=declararparm  PilhaNaoExiste        int 1
+=declararparm  ErroEstrutura         int 2
+=declararparm  Memoria               int 3
+
+== Destruir pilha inexistente
+=destruirpilha 0 PilhaNaoExiste
 
 == Criar pilha
 =criarpilha 0 OK
 
-== Destruir pilha
+== Destruir pilha existente
 =destruirpilha 0 OK
 
 == Criar e destruir 10 pilhas

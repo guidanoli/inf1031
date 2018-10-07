@@ -61,7 +61,13 @@
       
       if( *ppPilhaParam != NULL )
       {
-         PIL_DestruirPilha( *ppPilhaParam );
+         PIL_tpCondRet Ret = PIL_DestruirPilha( ppPilhaParam );
+
+         if( Ret == PIL_CondRetErroEstrutura )
+         {
+            return Ret;
+         } /* if */
+
       } /* if */
 
       pPilha = ( PIL_tpElemPilha * ) malloc( sizeof( PIL_tpElemPilha ));
@@ -90,17 +96,17 @@
 *  Função: PIL  &Destruir pilha
 *  ******/
 
-   void PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam )
+   PIL_tpCondRet PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam )
    {
 
       if( *ppPilhaParam == NULL )
       {
-         return;
+         return PIL_CondRetPilhaNaoExiste;
       } /* if */
 
       if( (*ppPilhaParam)->pLista == NULL )
       {
-         return;
+         return PIL_CondRetErroEstrutura;
       } /* if */
 
       LIS_DestruirLista( (*ppPilhaParam)->pLista );
@@ -108,6 +114,8 @@
       free( *ppPilhaParam );
 
       *ppPilhaParam = NULL;
+
+      return PIL_CondRetOK;
 
    } /* Fim função: PIL  &Destruir pilha */
 

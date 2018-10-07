@@ -64,6 +64,12 @@
          PIL_CondRetOK ,
                /* Concluiu corretamente */
 
+         PIL_CondRetPilhaNaoExiste ,
+               /* Ponteiro para pilha é nulo */
+
+         PIL_CondRetErroEstrutura ,
+               /* Há algum erro na estrutura interna da pilha */
+
          PIL_CondRetFaltouMemoria
                /* Faltou memória ao tentar criar um elemento de pilha */
 
@@ -87,12 +93,14 @@
 *
 *  $AS Assertivas de Saída
 *     Se já houver uma pilha armazenada por *ppPilhaParam, esta pilha
-*     será destruída para ser substituída pela nova pilha.
+*     será destruída para ser substituída pela nova pilha, caso não
+*     haja nenhum erro na estrutura interna da pilha.
 *     Se houver memória o suficiente, a pilha terá uma lista interna
 *     sem elementos, e com um contador indicando zero elementos.
 *     A pilha então será armazenada no ponteiro referenciado pelo
 *     ponteiro ppPilhaParam.
-*     Caso contrário, nada será alocado.
+*     Caso contrário, nada será alocado e a condição de retorno
+*     devido será retornado.
 *
 *  $EP Parâmetros
 *     ExcluirValor  - ponteiro para a função que processa a
@@ -102,6 +110,7 @@
 *
 *  $FV Valor retornado
 *     PIL_CondRetOK
+*     PIL_CondRetErroEstrutura
 *     PIL_CondRetFaltouMemoria
 *
 ***********************************************************************/
@@ -115,13 +124,11 @@
 *
 *  $ED Descrição da função
 *     Destrói a pilha fornecida.
-*     O parâmetro ponteiro para a pilha é ANULADO.
-*     Se ocorrer algum erro durante a destruição, a pilha resultará
-*     estruturalmente incorreta.
-*     OBS. não existe previsão para possíveis falhas de execução.
+*     O parâmetro ponteiro para a pilha é ANULADO, caso
+*     não haja algum erro de estrutura interna.
 *
 *  $AE Assertivas de Entrada
-*     O ponteiro deve apontar para uma pilha ou ser NULO.
+*     O ponteiro *ppPilhaParam deve apontar para uma pilha ou ser NULO.
 *     A pilha deve conter uma lista interna ou um ponteiro NULO
 *     ( o que está incorreto, mas não prejudica a deleção da pilha ).
 *
@@ -129,9 +136,20 @@
 *     Se a pilha existir, libera a memória ocupada por ela.
 *     Se a pilha conter uma lista interna, ela é liberada também.
 *     O ponteiro agora é NULO.
+*     Senão, a pilha não será destruída e a condição de retorno
+*     devida será retornada.
+*
+*  $FV Valor retornado
+*     PIL_CondRetOK
+*     PIL_CondRetPilhaNaoExiste
+*     PIL_CondRetErroEstrutura
+*     PIL_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
-   void PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam ) ;
+   PIL_tpCondRet PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam ) ;
+
+
+
 
 /********** Fim do módulo de definição: PIL  Pilha genérica **********/
