@@ -1,0 +1,50 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: PROGMOD.exe
+
+      Arquivo de teste:    TestaPilha.script
+
+
+!!!    0  Linha:     1  // Script:    			TestaPilha.script 
+!!!    0  Linha:     2  // Autor:     			Guilherme Dantas 
+!!!    0  Linha:     3  // Versionamento:		0.1	06/10/2018	criar e destruir pilha 
+!!!    0  Linha:     4  //				0.1.1 	07/10/2018	destruir pilha retorna cond. ret. 
+!!!    0  Linha:     5  //				0.1.2	07/10/2018	empilhar 
+!!!    0  Linha:     6  //				0.1.3	08/10/2018	desempilhar 
+!!!    0  Linha:     7  // Propósito: 			Testa a integridade das funções de acesso 
+!!!    0  Linha:     8  //            			do módulo Pilha para com sua estrutura de dados, 
+!!!    0  Linha:     9  //            			baseando-se no modelo arquitetado. 
+!!!    0  Linha:    10  // 
+   12  == Declarar as condicoes de retorno
+   20  == Declarar valor nulo
+   24  == Destruir pilha inexistente
+   27  == Criar pilha
+   30  == Destruir pilha existente sem elemento
+   33  == Criar e destruir 10 pilhas
+   41  == Criar pilha em cima de outra já existente
+   46  == Empilhar em pilha inexistente
+   49  == Empilhar em pilha existente
+   53  == Destruir pilha com elemento
+   56  == Empilhar valor nulo em pilha existente
+   61  == Empilhar valores iguais na mesma pilha
+   70  == Desempilhar de uma pilha inexistente
+   73  == Desempilhar de uma pilha vazia
+   78  == Desempilhar de pilha não-vazia
+   84  == Testar valor nulo não foi empilhado
+   90  == Testar se pilha inexistente está vazia
+   93  == Testar se pilha vazia é vazia
+   98  == Testar se pilha não-vazia é vazia
+
+!!! Número de linhas lidas:         102
+!!! Número de casos de teste:        19
+!!! Número comandos corretos:        54
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0
