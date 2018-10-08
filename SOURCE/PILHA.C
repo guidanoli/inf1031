@@ -32,7 +32,7 @@
 *
 ***********************************************************************/
 
-   typedef struct PIL_tagElemPilha {
+   typedef struct PIL_tagPilha {
 
       LIS_tppLista pLista;
             /* ponteiro para cabeça de lista */
@@ -40,7 +40,7 @@
       int numElem;
             /* contador de elementos da lista */
 
-   } PIL_tpElemPilha ;
+   } PIL_tpPilha ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -53,11 +53,11 @@
 *  Função: PIL  &Criar pilha
 *  ******/
 
-   PIL_tpCondRet PIL_CriarPilha( PIL_tppElemPilha * ppPilhaParam ,
+   PIL_tpCondRet PIL_CriarPilha( PIL_tppPilha * ppPilhaParam ,
                                   void ( * ExcluirValor ) ( void * pDado ) )
    {
 
-      PIL_tpElemPilha * pPilha = NULL;
+      PIL_tpPilha * pPilha = NULL;
       
       if( *ppPilhaParam != NULL )
       {
@@ -70,7 +70,7 @@
 
       } /* if */
 
-      pPilha = ( PIL_tpElemPilha * ) malloc( sizeof( PIL_tpElemPilha ));
+      pPilha = ( PIL_tpPilha * ) malloc( sizeof( PIL_tpPilha ));
       if( pPilha == NULL )
       {
          return PIL_CondRetFaltouMemoria;
@@ -96,7 +96,7 @@
 *  Função: PIL  &Destruir pilha
 *  ******/
 
-   PIL_tpCondRet PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam )
+   PIL_tpCondRet PIL_DestruirPilha( PIL_tppPilha * ppPilhaParam )
    {
 
       if( *ppPilhaParam == NULL )
@@ -124,13 +124,13 @@
 *  Função: PIL  &Empilhar elemento na pilha
 *  ******/
 
-   PIL_tpCondRet PIL_Empilhar( PIL_tppElemPilha pPilhaParam ,
+   PIL_tpCondRet PIL_Empilhar( PIL_tppPilha pPilha ,
                                void * pValor )
    {
 
       LIS_tpCondRet RetLis;
 
-      if( pPilhaParam == NULL )
+      if( pPilha == NULL )
       {
          return PIL_CondRetPilhaNaoExiste;
       } /* if */
@@ -140,22 +140,57 @@
          return PIL_CondRetValorFornecidoNulo;
       } /* if */
 
-      if( pPilhaParam->pLista == NULL )
+      if( pPilha->pLista == NULL )
       {
          return PIL_CondRetErroEstrutura;
       } /* if */
       
-      RetLis = LIS_InserirElementoApos(pPilhaParam->pLista,pValor);
+      RetLis = LIS_InserirElementoApos(pPilha->pLista,pValor);
 
       if( RetLis == LIS_CondRetFaltouMemoria )
       {
          return PIL_CondRetFaltouMemoria;
       } /* if */
 
-      (pPilhaParam->numElem)++;
+      (pPilha->numElem)++;
 
       return PIL_CondRetOK;
 
    } /* Fim função: PIL  &Empilhar elemento na pilha */
+
+/***************************************************************************
+*
+*  Função: PIL  &Desempilhar elemento na pilha
+*  ******/
+
+   void * PIL_Desempilhar( PIL_tppPilha pPilha )
+   {
+      void * pValorObtido = NULL;
+      LIS_tpCondRet RetLis;
+
+      if( pPilha == NULL )
+      {
+         return NULL;
+      } /* if */
+
+      if( pPilha->pLista == NULL )
+      {
+         return NULL;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente(pPilha->pLista,0) == LIS_CondRetListaVazia )
+      {
+         return NULL;
+      }
+
+      pValorObtido = LIS_ObterValor(pPilha->pLista);
+      
+      RetLis = LIS_ExcluirElemento(pPilha->pLista);
+
+      (pPilha->numElem)--;
+
+      return pValorObtido;
+
+   } /* Fim função: PIL  &Desempilhar elemento na pilha */
 
 /********** Fim do módulo de implementação: PIL  Pilha genérica **********/

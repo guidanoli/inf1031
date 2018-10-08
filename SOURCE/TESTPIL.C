@@ -25,14 +25,19 @@
 
 #define CRIAR_PILHA_CMD          "=criarpilha"
 #define DESTRUIR_PILHA_CMD       "=destruirpilha"
+#define EMPILHAR_CMD             "=empilhar"
+#define DESEMPILHAR_CMD          "=desempilhar"
 
 #define TST_PIL_TRUE  1
 #define TST_PIL_FALSE 0
 
+#define TST_VALOR_NULO -1234
+#define TST_VALOR_ERRO -1235
+
 #define DIM_VT_PILHA 10
 
-PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
-                                              NULL, NULL, NULL, NULL, NULL };
+PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
+                                          NULL, NULL, NULL, NULL, NULL };
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -50,6 +55,7 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
 *     Comandos disponíveis:
 *    =criarpilha                indexPilha, CondRetEsp
 *    =destruirvertice			  indexPilha, CondRetEsp
+*    =empilhar                  indexPilha, IntDado
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -61,13 +67,14 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
       TST_tpCondRet CondRetTST = TST_CondRetOK;
       PIL_tpCondRet CondRetPIL = PIL_CondRetOK;
 
-      int IntDado = -1;
-      int IntEsperado = -1;
+      int IntDado = TST_VALOR_ERRO;
+      int IntEsperado = TST_VALOR_ERRO;
+      int * pInt = NULL;
 
       /* Testar criarpilha */
 
-      if (strcmp(ComandoTeste, CRIAR_PILHA_CMD) == 0) {
-
+      if (strcmp(ComandoTeste, CRIAR_PILHA_CMD) == 0)
+      {
          numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
 
          if ((numLidos != 2) ||
@@ -83,7 +90,8 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
 
       /* Testar destruirpilha */
 
-      if (strcmp(ComandoTeste, DESTRUIR_PILHA_CMD) == 0) {
+      if (strcmp(ComandoTeste, DESTRUIR_PILHA_CMD) == 0)
+      {
          numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
 
          if ((numLidos != 2) ||
@@ -96,6 +104,52 @@ PIL_tppElemPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL, NULL, NULL,
          return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao destruir pilha");
 
       } /*fim ativa: Testar destruirpilha*/
+
+      /* Testar empilhar */
+
+      if (strcmp(ComandoTeste, EMPILHAR_CMD) == 0)
+      {
+         numLidos = LER_LerParametros("iii", &indexPilha, &IntDado, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexPilha(indexPilha))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         if( IntDado == TST_VALOR_NULO )
+         {
+            CondRetPIL = PIL_Empilhar(vtPilhas[indexPilha],NULL);
+         } /* if */
+         else
+         {
+            CondRetPIL = PIL_Empilhar(vtPilhas[indexPilha],&IntDado);
+         } /* else */
+         
+         return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao empilhar");
+
+      } /*fim ativa: Testar empilhar*/
+
+      /* Testar desempilhar */
+
+      if (strcmp(ComandoTeste, DESEMPILHAR_CMD) == 0)
+      {
+         numLidos = LER_LerParametros("ii", &indexPilha, &IntEsperado); 
+
+         if ((numLidos != 2) ||
+            (!ValidarIndexPilha(indexPilha))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         pInt = (int *) PIL_Desempilhar(vtPilhas[indexPilha]);
+
+         if( pInt != NULL )
+         {
+            IntDado = *pInt;
+         } /* if */
+
+         return TST_CompararInt(IntEsperado,IntDado,"Valor obtido diverge do esperado");
+         
+      } /*fim ativa; Testar desempilhar*/
 
       return TST_CondRetNaoConhec;
 

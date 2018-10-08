@@ -47,7 +47,7 @@
 
 /* Tipo referência para uma pilha */
 
-   typedef struct PIL_tagElemPilha * PIL_tppElemPilha;
+   typedef struct PIL_tagPilha * PIL_tppPilha;
 
 /***********************************************************************
 *
@@ -69,6 +69,9 @@
 
          PIL_CondRetValorFornecidoNulo ,
                /* Ponteiro para valor é nulo */
+
+         PIL_CondRetPilhaVazia ,
+               /* A pilha não possui nenhume elemento */
 
          PIL_CondRetErroEstrutura ,
                /* Há algum erro na estrutura interna da pilha */
@@ -118,7 +121,7 @@
 *
 ***********************************************************************/
 
-    PIL_tpCondRet PIL_CriarPilha( PIL_tppElemPilha * ppPilhaParam ,
+    PIL_tpCondRet PIL_CriarPilha( PIL_tppPilha * ppPilhaParam ,
                                   void ( * ExcluirValor ) ( void * pDado ) ) ;
 
 /***********************************************************************
@@ -127,8 +130,6 @@
 *
 *  $ED Descrição da função
 *     Destrói a pilha fornecida.
-*     O parâmetro ponteiro para a pilha é ANULADO, caso
-*     não haja algum erro de estrutura interna.
 *
 *  $AE Assertivas de Entrada
 *     O ponteiro *ppPilhaParam deve apontar para uma pilha ou ser NULO.
@@ -138,7 +139,7 @@
 *  $AS Assertivas de Saída
 *     Se a pilha existir, libera a memória ocupada por ela.
 *     Se a pilha conter uma lista interna, ela é liberada também.
-*     O ponteiro agora é NULO.
+*     O ponteiro *ppPilhaParam é ANULADO.
 *     Senão, a pilha não será destruída e a condição de retorno
 *     devida será retornada.
 *
@@ -150,17 +151,25 @@
 *
 ***********************************************************************/
 
-   PIL_tpCondRet PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam ) ;
+   PIL_tpCondRet PIL_DestruirPilha( PIL_tppPilha * ppPilhaParam ) ;
 
 /***********************************************************************
 *
 *  $FC Função: PIL  &Empilhar elemento na pilha
 *
 *  $ED Descrição da função
+*     Empilha o valor fornecido no topo da pilha.
 *
 *  $AE Assertivas de Entrada
+*     Recebe um ponteiro para uma pilha ou NULO, e um ponteiro
+*     para o valor a ser empilhado.
 *
 *  $AS Assertivas de Saída
+*     Caso a pilha exista, haja memória, não tenha erro na
+*     estrutura interna, e o valor não for nulo, o elemento
+*     será empilhado no topo da pilha.
+*     Caso contrário, será retornada a condição de retorno
+*     aquequada, e o elemento não será empilhado.
 *
 *  $FV Valor retornado
 *     PIL_CondRetOK
@@ -171,8 +180,28 @@
 *
 ***********************************************************************/
 
-   PIL_tpCondRet PIL_Empilhar( PIL_tppElemPilha pPilhaParam ,
+   PIL_tpCondRet PIL_Empilhar( PIL_tppPilha pPilha ,
                                void * pValor ) ;
 
+/***********************************************************************
+*
+*  $FC Função: PIL  &Desempilhar elemento na pilha
+*
+*  $ED Descrição da função
+*
+*  $AE Assertivas de Entrada
+*
+*  $AS Assertivas de Saída
+*
+*  $FV Valor retornado
+*     PIL_CondRetOK
+*     PIL_CondRetPilhaNaoExiste
+*     PIL_CondRetPilhaVazia
+*     PIL_CondRetValorFornecidoNulo
+*     PIL_CondRetErroEstrutura
+*
+***********************************************************************/
+
+   void * PIL_Desempilhar( PIL_tppPilha pPilha ) ;
 
 /********** Fim do módulo de definição: PIL  Pilha genérica **********/
