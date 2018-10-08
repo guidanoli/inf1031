@@ -119,4 +119,43 @@
 
    } /* Fim função: PIL  &Destruir pilha */
 
+/***************************************************************************
+*
+*  Função: PIL  &Empilhar elemento na pilha
+*  ******/
+
+   PIL_tpCondRet PIL_Empilhar( PIL_tppElemPilha pPilhaParam ,
+                               void * pValor )
+   {
+
+      LIS_tpCondRet RetLis;
+
+      if( pPilhaParam == NULL )
+      {
+         return PIL_CondRetPilhaNaoExiste;
+      } /* if */
+
+      if( pValor == NULL )
+      {
+         return PIL_CondRetValorFornecidoNulo;
+      } /* if */
+
+      if( pPilhaParam->pLista == NULL )
+      {
+         return PIL_CondRetErroEstrutura;
+      } /* if */
+      
+      RetLis = LIS_InserirElementoApos(pPilhaParam->pLista,pValor);
+
+      if( RetLis == LIS_CondRetFaltouMemoria )
+      {
+         return PIL_CondRetFaltouMemoria;
+      } /* if */
+
+      (pPilhaParam->numElem)++;
+
+      return PIL_CondRetOK;
+
+   } /* Fim função: PIL  &Empilhar elemento na pilha */
+
 /********** Fim do módulo de implementação: PIL  Pilha genérica **********/

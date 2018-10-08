@@ -67,6 +67,9 @@
          PIL_CondRetPilhaNaoExiste ,
                /* Ponteiro para pilha é nulo */
 
+         PIL_CondRetValorFornecidoNulo ,
+               /* Ponteiro para valor é nulo */
+
          PIL_CondRetErroEstrutura ,
                /* Há algum erro na estrutura interna da pilha */
 
@@ -149,7 +152,27 @@
 
    PIL_tpCondRet PIL_DestruirPilha( PIL_tppElemPilha * ppPilhaParam ) ;
 
+/***********************************************************************
+*
+*  $FC Função: PIL  &Empilhar elemento na pilha
+*
+*  $ED Descrição da função
+*
+*  $AE Assertivas de Entrada
+*
+*  $AS Assertivas de Saída
+*
+*  $FV Valor retornado
+*     PIL_CondRetOK
+*     PIL_CondRetPilhaNaoExiste
+*     PIL_CondRetValorFornecidoNulo
+*     PIL_CondRetErroEstrutura
+*     PIL_CondRetFaltouMemoria
+*
+***********************************************************************/
 
+   PIL_tpCondRet PIL_Empilhar( PIL_tppElemPilha pPilhaParam ,
+                               void * pValor ) ;
 
 
 /********** Fim do módulo de definição: PIL  Pilha genérica **********/
