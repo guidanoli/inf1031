@@ -9,7 +9,8 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     1       gui   06/10/2018  Início do desenvolvimento
+*     0       gui   06/10/2018  Início do desenvolvimento
+*     1       gui   08/10/2018  Criar, destruir, empilhar e desempilhar
 *
 *  $ED Descrição do módulo
 *     Implementa o conceito de pilha a partir do módulo lista,
@@ -41,10 +42,6 @@
             /* contador de elementos da lista */
 
    } PIL_tpPilha ;
-
-/***** Protótipos das funções encapuladas no módulo *****/
-
-   //aqui os protótipos com static
 
 /*****  Código das funções exportadas pelo módulo  *****/
 

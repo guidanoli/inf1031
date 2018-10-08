@@ -2,3 +2,5 @@ Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
 06/10	30min			codificar módulo		Esqueleto de PILHA.C, PILHA.H e TESTPIL.C
 06/10	10min			codificar script de teste	Script de teste para PILHA com criar e destruir
+07/10   2h			codificar módulo		empilhar, desempilhar
+08/10	1h			codificar script de teste	empilhar, desempilhar

@@ -9,6 +9,7 @@
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
 *     0       gui   06/10/2018  Início do desenvolvimento
+*     1       gui   08/10/2018  Criar, destruir, empilhar e desempilhar
 *
 ***************************************************************************/
 

@@ -9,7 +9,8 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     1       gui   06/10/2018  Início do desenvolvimento
+*     0       gui   06/10/2018  Início do desenvolvimento
+*     1       gui   08/10/2018  Criar, destruir, empilhar e desempilhar
 *
 *  $ED Descrição do módulo
 *     Implementa pilhas genéricas a partir do módulo lista,
@@ -18,28 +19,20 @@
 *     Podem existir n pilhas em operação simultaneamente.
 *     As pilhas possuem uma cabeça encapsulando o seu estado.
 *
-*     Cada pilha é homogênea quanto ao tipo dos dados que armazena.
+*     A pilha não possui restrição quanto ao tipo dos dados que armazena.
 *     Cada elemento da pilha referencia o valor que contém.
 *
 *     Os ponteiros para os dados são copiados para elementos da pilha.
 *        Não é copiado o valor apontado por estes ponteiros.
 *
-*     O controle da destruição do valor de um elemento a ser excluído
-*        é realizado por uma função fornecida pelo usuário.
+*     Os valores referenciados pelos elementos da pilha não são liberados.
+*        Cabe ao módulo cliente fazer o housekeeping.
 *
-*     Cada pilha referencia uma função que determina como devem ser
-*        desalocados os dados nela contidos.
-*
-*     A função de liberação dos valores contidos nos elementos deve
-*        assegurar a liberação de todos os espaços referênciados pelo
-*        valor contido em um elemento.
-*        Esta função é chamada antes de se desalocar um elemento
-*        de uma pilha.
-*        Caso não seja necessário desalocar o valor referenciado pelo
-*        elemento, o ponteiro para a função de liberação poderá ser NULL .
-*        Caso o elemento da pilha seja a única âncora do valor referenciado,
-*        esta função deve promover a destruição (free) desse valor e
-*        de todos os dados nele ancorados.
+*     Caso uma pilha seja destruída antes de esvaziada, não será possível
+*     ter acesso aos valores referenciados pelos elementos.
+*        Cabe ao módulo cliente esvaziar a pilha, desempilhando elemento
+*        por elemento, para então tratar de liberá-los ou manipulá-los
+*        como queira.
 *
 ***************************************************************************/
 
@@ -109,10 +102,8 @@
 *     devido será retornado.
 *
 *  $EP Parâmetros
-*     ExcluirValor  - ponteiro para a função que processa a
-*                     exclusão do valor referenciado pelo elemento
-*                     a ser excluído.
-*                     Ver descrição do módulo.
+*     ppPilhaParam - endereço do ponteiro no módulo cliente que irá
+*                    referenciar a pilha a ser criada.
 *
 *  $FV Valor retornado
 *     PIL_CondRetOK
@@ -142,6 +133,10 @@
 *     Senão, a pilha não será destruída e a condição de retorno
 *     devida será retornada.
 *
+*  $EP Parâmetros
+*     ppPilhaParam - endereço do ponteiro no módulo cliente que
+*                    referencia a pilha a ser destruída.
+*
 *  $FV Valor retornado
 *     PIL_CondRetOK
 *     PIL_CondRetPilhaNaoExiste
@@ -170,6 +165,10 @@
 *     Caso contrário, será retornada a condição de retorno
 *     aquequada, e o elemento não será empilhado.
 *
+*  $EP Parâmetros
+*     pPilha -       ponteiro para pilha a ser manipulada.
+*     pValor -       ponteiro para valor a ser inserido no topo da pilha.
+*
 *  $FV Valor retornado
 *     PIL_CondRetOK
 *     PIL_CondRetPilhaNaoExiste
@@ -187,17 +186,27 @@
 *  $FC Função: PIL  &Desempilhar elemento na pilha
 *
 *  $ED Descrição da função
+*     Caso a pilha não estiver nula, retira o elemento do topo da
+*     pilha e retorna valor armazenado nele.
 *
 *  $AE Assertivas de Entrada
+*     Recebe um ponteiro que aponta para uma pilha ou NULO.
 *
 *  $AS Assertivas de Saída
+*     Caso a pilha exista, não tenha erro na estrutura interna, e não
+*     estava vazia antes de executada a função, tem o elemento do topo
+*     removido e seu valor retornado pela função.
+*     Caso contrário, a função retorna NULO e a pilha não é alterada.
+*     O topo da pilha agora é o último elemento a ser inserido antes
+*     do antigo topo da pilha, ou nenhum, caso a pilha tinha apenas
+*     um elemento.
+*
+*  $EP Parâmetros
+*     pPilha -       ponteiro para pilha a ser manipulada.
 *
 *  $FV Valor retornado
-*     PIL_CondRetOK
-*     PIL_CondRetPilhaNaoExiste
-*     PIL_CondRetPilhaVazia
-*     PIL_CondRetValorFornecidoNulo
-*     PIL_CondRetErroEstrutura
+*     O valor armazenado no topo da pilha.
+*     OU NULO, caso a pilha estiver vazia.
 *
 ***********************************************************************/
 
