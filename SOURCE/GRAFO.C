@@ -27,6 +27,9 @@
 #include   <assert.h>
 
 #include "GRAFO.h"
+#include "LISTA.H"
+#include "VERTICE.H"
+#include "PILHA.H"
 
 /***********************************************************************
 *
@@ -46,6 +49,9 @@
 
          LIS_tppLista pVerticesGrafo ;
                /* Ponteiro para cabeça da lista dos vértices */
+
+         PIL_tppPilha pPilhaReleitura ;
+               /* Ponteiro para pilha de releitura */
 
          int (* ComparaValorAre ) ( void * pA, void * pB);
                /* Ponteiro para função de comparação de valores de aresta
@@ -83,8 +89,9 @@
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static void DestruirVertice ( void * pVertice );
 
+   static void DestruirVertice ( void * pVertice );
+   static int NumVertices ( GRF_tppGrafo pGrafo );
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
@@ -104,7 +111,9 @@
       GRF_tppGrafo pNovoGrafo;
       LIS_tppLista pListaOrigem;
       LIS_tppLista pListaVertices;
-      
+      PIL_tppPilha pPilha;
+      PIL_tpCondRet RetPil;
+
       *ppGrafoParam = NULL;
 
       if( ComparaValorAre == NULL ||
@@ -139,9 +148,21 @@
          return GRF_CondRetFaltouMemoria;
       } /* if */
 
+      RetPil = PIL_CriarPilha(&pPilha);
+
+      if( RetPil != PIL_CondRetOK )
+      {
+         LIS_DestruirLista(pListaVertices);
+         LIS_DestruirLista(pListaOrigem);
+         free(pNovoGrafo);
+         return GRF_CondRetFaltouMemoria;
+      } /* if */
+
       pNovoGrafo->pVertCorr = NULL;
       pNovoGrafo->pOrigensGrafo = pListaOrigem;
       pNovoGrafo->pVerticesGrafo = pListaVertices;
+
+      pNovoGrafo->pPilhaReleitura = pPilha;
 
       pNovoGrafo->ComparaValorAre = ComparaValorAre;
       pNovoGrafo->ComparaValorVer = ComparaValorVer;
@@ -894,5 +915,66 @@
    {
       VER_DestruirVertice( (VER_tppVertice *) &pVertice );
    } /* Fim da função: GRF  -Destruir Vértice */ 
+
+/***********************************************************************
+*
+*  $FC Função: GRF  -Número de vértices
+*
+*  $ED Descrição da função
+*     Obtem a quantidade de vértices do grafo
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para grafo ou NULO.
+*
+*  $AS Assertivas de saída
+*     A função não modifica a estrutura do grafo.
+*     O vértice corrente é o último a ser inserido.
+*     Caso o grafo não exista ou tiver algum erro de
+*     estrutura, a condição de retorono adequada será retornada.
+*
+*  $EP Parâmetros
+*     pGrafo   - ponteiro para grafo
+*
+*  $FV Valor retornado
+*     Quantidade de vértices no grafo fornecido.
+*     Caso o grafo for vazio, ou for inexistente, ou a lista de
+*     vértices não existir (erro de estrutura), retornará 0.
+*
+***********************************************************************/
+
+   int NumVertices ( GRF_tppGrafo pGrafo )
+   {
+      int num = 0;
+      LIS_tpCondRet RetLis;
+      LIS_tppLista pVertices;
+
+      if( pGrafo == NULL )
+      {
+         return num;
+      } /* if */
+
+      pVertices = pGrafo->pVerticesGrafo;
+
+      if( pVertices == NULL )
+      {
+         return num;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente(pVertices,0) != LIS_CondRetListaVazia )
+      {
+         RetLis = LIS_CondRetOK;
+         IrInicioLista(pVertices);
+
+         while( RetLis == LIS_CondRetOK )
+         {
+            num++;
+            RetLis = LIS_AvancarElementoCorrente(pVertices,1);
+         } /* while */
+
+      } /* if */
+
+      return num;
+
+   } /* Fim da função: GRF  -Número de vértices */
 
 /********** Fim do módulo de implementação: GRF  Grafo **********/

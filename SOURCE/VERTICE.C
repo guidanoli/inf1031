@@ -25,7 +25,8 @@
 #include   <malloc.h>
 #include   <assert.h>
 
-#include "VERTICE.h"
+#include "VERTICE.H"
+#include "LISTA.H"
 
 /***********************************************************************
 *

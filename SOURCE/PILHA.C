@@ -67,6 +67,7 @@
       } /* if */
 
       pPilha = ( PIL_tpPilha * ) malloc( sizeof( PIL_tpPilha ));
+
       if( pPilha == NULL )
       {
          return PIL_CondRetFaltouMemoria;

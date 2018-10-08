@@ -29,9 +29,6 @@
 *
 ***************************************************************************/
 
-#include "LISTA.H"
-#include "VERTICE.H"
-
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um grafo */

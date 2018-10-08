@@ -40,8 +40,6 @@
 *
 ***************************************************************************/
 
-#include "LISTA.H"
-
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um grafo */
