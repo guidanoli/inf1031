@@ -1,7 +1,7 @@
 // Script:    			TestaVertice.script
 // Autor:     			Guilherme Dantas 
-// Data de Criação:		28/09/2018   
-// Data de Modificação:      	29/09/2018
+// Versionamento:		0.1	25/09/2018	funções básicas
+//				0.2	08/10/2018	funções de manipulação de lista de aresta
 // Propósito: 			Testa a integridade das funções de acesso
 //            			do módulo Vértice para com sua estrutura de dados,
 //            			baseando-se no modelo arquitetado.
@@ -242,4 +242,116 @@
 =percorreraresta 0 Strb Tras StrA OK
 =percorreraresta 0 Strc Frente StrA OK
 =percorreraresta 0 Strc Tras StrA OK
+=destruirvertice 0 OK
+
+== Obter aresta corrente de vértice inexistente
+=arestacorrente 0 Frente StrErro VerticeNaoExiste
+
+== Obter aresta corrente de vértice existente mas sem arestas
+=criarvertice 0 StrA OK
+=arestacorrente 0 Frente StrErro ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Obter aresta corrente de vértice existente de auto-aresta
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=arestacorrente 0 Frente StrA OK
+=destruirvertice 0 OK
+
+== Obter aresta corrente de vértice existente de aresta em que dest!=part
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=arestacorrente 0 Frente StrB OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Testar aresta corrente para aresta removida na deleção de vértice
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=destruirvertice 0 OK
+=arestacorrente 1 Tras StrErro ArestaNaoExiste
+=destruirvertice 1 OK
+
+== Obter aresta corrente de vértice com duas arestas
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 0 Stra OK
+=criararesta 0 1 Strb OK
+=arestacorrente 0 Frente StrB OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Testar avançar aresta corrente sobre vértice inexistente
+=avancararesta 0 Frente 1 VerticeNaoExiste
+
+== Testar avançar aresta corrente sobre vértice existente, mas sem arestas
+=criarvertice 0 StrA OK
+=avancararesta 0 Frente 1 ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Testar avançar aresta corrente sobre vértice existente, mas sem arestas no sentido especificado
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 1 0 Stra OK
+=avancararesta 0 Frente 1 ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Testar avançar aresta corrente somente para checar se vértice possui arestas (possui!)
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=avancararesta 0 Frente 0 OK
+=destruirvertice 0 OK
+
+== Testar avançar aresta corrente somente para checar se vértice possui arestas (não possui!)
+=criarvertice 0 StrA OK
+=avancararesta 0 Frente 0 ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Avançar aresta corrente, obtendo valores para certificar (3 vértices, 3 arestas)
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=criararesta 0 1 Stra OK
+=criararesta 0 2 Strb OK
+=arestacorrente 0 Frente StrC OK
+=avancararesta 0 Frente -1 OK
+=arestacorrente 0 Frente StrB OK
+=criararesta 2 1 Strc OK
+=arestacorrente 1 Tras StrC OK
+=avancararesta 1 Tras -1 OK
+=arestacorrente 1 Tras StrA OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+=destruirvertice 2 OK
+
+== Testar ir para início de lista de arestas de vértice inexistente
+=arestainicial 0 Frente VerticeNaoExiste
+
+== Testar ir para início de lista de arestas de vértice existente, mas sem arestas
+=criarvertice 0 StrA OK
+=arestainicial 0 Frente ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Testar ir para início de lista de arestas de vértice existente, mas sem aresta no sentido especificado
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 1 0 Stra OK
+=arestainicial 0 Frente ArestaNaoExiste
+=destruirvertice 0 OK
+
+== Testar ir para início de lista de arestas de vértice existente, com 3 arestas
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=arestacorrente 0 Tras StrErro ArestaNaoExiste
+=criararesta 1 0 Stra OK
+=arestacorrente 0 Tras StrB OK
+=criararesta 0 0 Strb OK
+=arestacorrente 0 Tras StrA OK
+=criararesta 2 0 Strc OK
+=arestacorrente 0 Tras StrC OK
+=arestainicial 0 Tras OK
+=arestacorrente 0 Tras StrB OK
 =destruirvertice 0 OK

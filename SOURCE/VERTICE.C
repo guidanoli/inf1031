@@ -16,6 +16,7 @@
 *     1.1     gui   21/09/2018  implementação das funções básicas de vértices
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *     1.3     gui   03/10/2018  assertivas de entrada e saída
+*     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
 *
 ***************************************************************************/
 
@@ -571,6 +572,150 @@
       return VER_CondRetArestaNaoExiste;
 
    } /* Fim função: VER  &Percorrer Aresta */
+
+/***************************************************************************
+*
+*  Função: VER  &Percorrer Aresta Corrente
+*  ****/
+
+   VER_tpCondRet VER_ObterArestaCorrente( VER_tppVertice pVerPartida,
+                                          VER_tppVertice * pVerDestino,
+                                          int Sentido )
+   {
+
+      LIS_tppLista pVertices;
+
+      if( pVerPartida == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( Sentido == 0 )
+      {
+         pVertices = pVerPartida->pAnt;
+      } /* if */
+      else
+      {
+         pVertices = pVerPartida->pSuc;
+      } /* else */
+
+      if( pVertices == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente(pVertices,0) == LIS_CondRetListaVazia )
+      {
+         return VER_CondRetArestaNaoExiste;
+      } /* if */
+      else
+      {
+         VER_tppAresta pArestaTemp = NULL;
+         pArestaTemp = (VER_tppAresta) LIS_ObterValor( pVertices );
+
+         if( pArestaTemp == NULL )
+         {
+            return VER_CondRetErroEstrutura;
+         } /* if */
+
+         if( Sentido == 0 )
+         {
+            *pVerDestino = pArestaTemp->pPart;
+         } /* if */
+         else
+         {
+            *pVerDestino = pArestaTemp->pDest;
+         } /* else */
+
+         return VER_CondRetOK;
+      } /* else */
+
+   } /* Fim função: VER  &Percorrer Aresta Corrente */
+
+/***************************************************************************
+*
+*  Função: VER  &Avançar aresta corrente
+*  ****/
+
+   VER_tpCondRet VER_AvancarArestaCorrente( VER_tppVertice pVertice ,
+                                            int Sentido ,
+                                            int numArestas )
+   {
+
+      LIS_tppLista pVertices;
+      LIS_tpCondRet RetLis;
+
+      if( pVertice == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( Sentido == 0 )
+      {
+         pVertices = pVertice->pAnt;
+      } /* if */
+      else
+      {
+         pVertices = pVertice->pSuc;
+      } /* else */
+
+      if( pVertices == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      RetLis = LIS_AvancarElementoCorrente( pVertices , numArestas );
+
+      if( RetLis == LIS_CondRetListaVazia )
+      {
+         return VER_CondRetArestaNaoExiste;
+      } /* if */
+
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Avançar aresta corrente */
+
+/***************************************************************************
+*
+*  Função: VER  &Ir ao início da lista de aresta
+*  ****/
+
+   VER_tpCondRet VER_IrInicioArestaCorrente( VER_tppVertice pVertice ,
+                                             int Sentido )
+   {
+
+      LIS_tppLista pVertices;
+      LIS_tpCondRet RetLis;
+
+      if( pVertice == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( Sentido == 0 )
+      {
+         pVertices = pVertice->pAnt;
+      } /* if */
+      else
+      {
+         pVertices = pVertice->pSuc;
+      } /* else */
+
+      if( pVertices == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente(pVertices,0) == LIS_CondRetListaVazia )
+      {
+         return VER_CondRetArestaNaoExiste;
+      } /* if */
+
+      IrInicioLista( pVertices );
+
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Ir ao início da lista de aresta */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

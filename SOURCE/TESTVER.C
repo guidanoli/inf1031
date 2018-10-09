@@ -20,6 +20,7 @@
 *     1       nag    26/09/18   Teste de todas funções menos 
 *                               destruiraresta e percorreraresta.
 *     2       nag    28/09/18   Implementação de todas as funções de acesso.
+*     3       gui    08/10/18   Funções adicionais necessárias para analizador léxico.
 *
 ***************************************************************************/
 
@@ -34,13 +35,15 @@
 
 #include    "VERTICE.H"
 
-
 #define CRIAR_VERTICE_CMD        "=criarvertice"
 #define DESTRUIR_VERTICE_CMD     "=destruirvertice"
 #define OBTER_VALOR_VERTICE_CMD  "=obtervalor"
 #define CRIAR_ARESTA_CMD         "=criararesta"
 #define DESTRUIR_ARESTA_CMD      "=destruiraresta"
 #define PERCORRER_ARESTA_CMD     "=percorreraresta"
+#define ARESTA_CORRENTE_CMD      "=arestacorrente"
+#define AVANCAR_ARESTA_CMD       "=avancararesta"
+#define ARESTA_INICIAL_CMD       "=arestainicial"
 
 #define TST_VER_TRUE  1
 #define TST_VER_FALSE 0
@@ -55,7 +58,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
    static int ValidarIndexVertice( int indexVertice ) ;
    static int ComparaStrings ( void * pa, void * pb ) ;
    static void CopiaStrings (void ** pDestino , void * pOrigem ) ;
-   static void ConcatenaStrings ( void ** pSaida , void * pValor ) ;
+   static void ConcatenaStrings ( void ** pSaida , void * pValor , int size ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -73,7 +76,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *	  =obtervalor					  inxVERTICE, ValorEsp
 *	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, CondRetEsp
 *	  =destruiraresta				  inxVERTICEPart, inxVERTICEDest, StringEsperadoAre, CondRetEsp
-*    =percorreraresta           inxVERTIVEPart, StringEsperadoAre, Sentido, StringEsperadoVerDestino, ConsRetEsp
+*    =percorreraresta           inxVERTICEPart, StringEsperadoAre, Sentido, StringEsperadoVerDestino, CondRetEsp
+*    =arestacorrente            inxVERTICE, Sentido, StringEsperado, CondRetEsp
+*    =avancararesta             inxVERTICE, Sentido, numArestas, CondRetEsp
+*    =arestainicial             inxVERTICE, Sentido, CondRetEsp
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -128,9 +134,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao destruir vertice");
 
-      } /*fim ativa: Testar destruirvertice*/
+      } /* fim ativa: Testar destruirvertice */
 
       /* Testar obtervalor*/
+
       if (strcmp(ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0) {
 
          numLidos = LER_LerParametros("is", &inxVERTICE, StringDado);
@@ -154,6 +161,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
       } /* fim ativa: Testar obtervalor */
 
       /* Testar criararesta*/
+
       if (strcmp(ComandoTeste, CRIAR_ARESTA_CMD) == 0) {
 
          numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringEsperado, &CondRetEsp);
@@ -175,9 +183,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar aresta");
 
-      } /* fim ativa: Testar criararesta*/
+      } /* fim ativa: Testar criararesta */
 
       /* Testar destruiraresta*/
+
       if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
          numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringEsperado, &CondRetEsp);
 
@@ -193,9 +202,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao destruir aresta");
 
-      } /* fim ativa: Testar destruiraresta*/
+      } /* fim ativa: Testar destruiraresta */
 
       /* Testar percorreraresta*/
+
       if (strcmp(ComandoTeste, PERCORRER_ARESTA_CMD) == 0) {
 
          char * pValorVerDestino = NULL;
@@ -229,8 +239,82 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          return TST_CompararString(StringEsperado2,StringEsperado,"Valor obtido nao corresponde ao esperado");
 
-      }/* fim ative: Testar percorreraresta*/
+      } /* fim ative: Testar percorreraresta */
 
+      /* Testar arestacorrente */
+
+      if( strcmp(ComandoTeste,ARESTA_CORRENTE_CMD) == 0 )
+      {
+
+         char * pValorVerDestino = NULL;
+         VER_tppVertice VerticeDestino = NULL;
+
+         numLidos = LER_LerParametros("iisi", &inxVERTICE, &sentido, StringEsperado2, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_ObterArestaCorrente(vtVertices[inxVERTICE],&VerticeDestino,sentido);
+
+         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao obter aresta corrente");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         pValorVerDestino = (char *) VER_ObterValor(VerticeDestino);
+
+         if( pValorVerDestino != NULL )
+         {
+            strcpy_s(StringEsperado,DIM_VALOR_VERTICE,pValorVerDestino);
+         } /* if */
+
+         return TST_CompararString(StringEsperado2,StringEsperado,"Valor obtido nao corresponde ao esperado");
+
+      } /* fim ativa: Testar arestacorrente */
+
+      /* Testar avancararesta */
+
+      if( strcmp(ComandoTeste,AVANCAR_ARESTA_CMD) == 0 )
+      {
+         int numAre;
+
+         numLidos = LER_LerParametros("iiii", &inxVERTICE, &sentido, &numAre, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_AvancarArestaCorrente(vtVertices[inxVERTICE],sentido,numAre);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao avancar aresta corrente");
+
+      } /* fim ativa: Testar avancararesta */
+
+      /* Testar arestainicial */
+
+      if( strcmp(ComandoTeste,ARESTA_INICIAL_CMD) == 0 )
+      {
+
+         numLidos = LER_LerParametros("iii", &inxVERTICE, &sentido, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_IrInicioArestaCorrente(vtVertices[inxVERTICE],sentido);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao avancar aresta corrente");
+
+      } /* fim ativa: Testar arestainicial */
 
       return TST_CondRetNaoConhec;
 
@@ -293,10 +377,10 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *
 ***********************************************************************/
 
-   void ConcatenaStrings ( void ** pSaida , void * pValor )
+   void ConcatenaStrings ( void ** pSaida , void * pValor , int size )
    {
 
-      strcat( (char *) *pSaida , (char *) pValor );
+      strcat_s( (char *) *pSaida , size , (char *) pValor );
 
    }
 

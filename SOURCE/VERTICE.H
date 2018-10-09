@@ -17,6 +17,7 @@
 *     1.1     gui   21/09/2018  definição das funções básicas
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *     1.3  cai,nag  03/10/2018  assertivas de entrada e saída
+*     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
 *
 *  $ED Descrição do módulo
 *     
@@ -260,8 +261,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
    VER_tpCondRet VER_CriarAresta(   VER_tppVertice pPartida ,
                                     VER_tppVertice pDestino ,
                                     void * pValorAresta ,
-                                    int (* ComparaValor) ( void * pA, void * pB),
-                                    void (* CopiaValor ) ( void ** pA, void * pB),
+                                    int (* ComparaValor) ( void * pA, void * pB) ,
+                                    void (* CopiaValor ) ( void ** pA, void * pB) ,
                                     void (* ExcluirValor) ( void* p)) ;
 
 
@@ -306,9 +307,9 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVerPartida,
-                                     VER_tppVertice pVerDestino,
-                                     void * pValor,
+   VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVerPartida ,
+                                     VER_tppVertice pVerDestino ,
+                                     void * pValor ,
                                      int (* ComparaValor) ( void * pA, void * pB) ) ;
 
 /***********************************************************************
@@ -337,7 +338,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para o vértice de partida
 *     pValor       - valor da aresta que deseja-se percorrer
-*     pVerDestino  - ponteiro para o vértice de destino
+*     pVerDestino  - endereço para ponteiro para o vértice de destino
 *     ComparaValor - ponteiro para função que compara valores do
 *                    tipo de pValorA e pValorB.
 *                    Retorno da função:
@@ -355,10 +356,126 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida,
-                                      void * pValor,
-                                      VER_tppVertice * pVerDestino,
-                                      int (* ComparaValor) ( void * pA, void * pB),
+   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida ,
+                                      void * pValor ,
+                                      VER_tppVertice * pVerDestino ,
+                                      int (* ComparaValor) ( void * pA, void * pB) ,
                                       int Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Percorrer aresta corrente
+*
+*  $ED Descrição da função
+*     Armazena em *pVerDestino o vértice no sentido fornecido em
+*     relação ao vértice fornecido.
+*
+*  $AE Assertivas de entrada
+*	   A função deve receber um ponteiro do vértice de partida ou NULO,
+*	   um ponteiro que referencia o vertice destino,
+*     que também pode ser nulo, e o sentido da aresta.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice não for nulo e o Sentido for 0 ou 1,
+*     a função deverá alterar o ponteiro do vértice destino *pVerDestino
+*     para apontar para o vértice destino caso o sentido seja 1, ou para
+*     o vértice de partida caso o valor seja 0 e retornar VER_CondRetOK.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com
+*     o erro obtido - e a estrutura interna não será manipulada.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     pVerDestino  - endereço para ponteiro para o vértice de destino
+*     Sentido      - 0 pra trás, 1 para frente
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - obteve com sucesso
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetErroEstrutura      - algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_ObterArestaCorrente( VER_tppVertice pVerPartida ,
+                                          VER_tppVertice * pVerDestino ,
+                                          int Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Avançar aresta corrente
+*
+*  $ED Descrição da função
+*     Altera a aresta corrente do vértice fornecido para a aresta
+*     numArestas passos afrente (ou atrás, caso seja negativo),
+*     de um determinado sentido.
+*
+*  $AE Assertivas de entrada
+*	   A função recebe um ponteiro que aponta para o vértice de partida/
+*     destino ou um ponteiro NULO, o sentido da aresta em relação ao
+*     vértice fornecido, e o número de passos.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice não for nulo e o Sentido for 0 ou 1,
+*     a função deverá alterar o ponteiro corrente da cabeça da lista de arestas correspondente
+*     ao Sentido fornecido (0 -> arestas antecesoras, 1-> arestas sucessoras) para a
+*     para a aresta numArestas depois (ou antes, caso for negativo) da atual.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido,
+*     não alterando a estrutura interna alguma.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Sentido      - 0 pra trás, 1 para frente
+*     numArestas   - número de passos
+*                    >> negativo, anda em direção ao início da lista
+*                    >> zero, checa apenas se há arestas no sentido
+*                    >> positivo, anda em direção ao fim da lista
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - avançou com sucesso
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetErroEstrutura      - algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_AvancarArestaCorrente( VER_tppVertice pVertice ,
+                                            int Sentido ,
+                                            int numArestas );
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Avançar aresta corrente
+*
+*  $ED Descrição da função
+*     Altera a aresta corrente do vértice para a primeira aresta
+*     inserida.
+*
+*  $AE Assertivas de entrada
+*	   A função recebe um ponteiro que aponta para o vértice de partida/
+*     destino ou um ponteiro NULO e o sentido da aresta em relação ao
+*     vértice fornecido.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice não for nulo, o Sentido for 0 ou 1,
+*     e a lista de arestas não for vazia,  a função alterará o ponteiro
+*     corrente da cabeça de lista de arestas correspondente ao sentido
+*     (0, para antecessores; 1, para sucessores) para o elemento origem.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido,
+*     não alterando a estrutura interna alguma.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Sentido      - 0 pra trás, 1 para frente
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - avançou com sucesso
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetErroEstrutura      - algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_IrInicioArestaCorrente( VER_tppVertice pVertice ,
+                                             int Sentido ) ;
 
 /********** Fim do módulo de definição: VER  Vértice **********/
