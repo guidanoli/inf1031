@@ -43,12 +43,14 @@
 #define OBTER_VALOR_CMD          "=obtervalor"
 #define TOGGLE_ORIGEM_CMD        "=toggleorigem"
 #define PROCURAR_VERTICE_CMD     "=procurarvertice"
+#define EXIBIR_GRAFO_CMD         "=exibirgrafo"
 
 #define TST_GRF_TRUE 1
 #define TST_GRF_FALSE 0
 
 #define DIM_VT_GRAFO 3
 #define DIM_STRINGS 10
+#define DIM_STRING_EXIBICAO 500
 
 /***** Variáveis globais do módulo *****/
 
@@ -59,7 +61,7 @@
    static int ValidaIndiceGrafo ( int indice ) ;
    static int ComparaStrings ( void * pa , void * pb ) ;
    static void CopiaStrings ( void ** pa , void * pb ) ;
-   static void ConcatenaStrings ( void ** pSaida , void * pValor ) ;
+   static int ConcatenaStrings ( char * pA , void * pB ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -81,7 +83,8 @@
 *    =caminhargrafo             indexGrafo ValorAresta Sentido CondRetEsperada
 *    =obtervalor                indexGrafo ValorEsperado CondRetEsperada
 *    =toggleorigem              indexGrafo CondRetEsperada
-*    =procurarvertice           indexGrafo ValorVertice CondRetEsperada
+*    =procurarvertice           indexGrafo ValorVertice OrigemBool CondRetEsperada
+*    =exibirgrafo               indexGrafo ValorOrigem StringEsperada CondRetEsperada
 *
 ***********************************************************************/
 
@@ -96,6 +99,8 @@
       TST_tpCondRet CondRetTST = TST_CondRetOK;
 
       char *pValorObtido = NULL;
+      char StringEsperada[GRF_STR_BUFFER_SIZE] = "";
+      char StringObtida[GRF_STR_BUFFER_SIZE] = "";
       char ValorDado[DIM_STRINGS] = "";
       char ValorDado2[DIM_STRINGS] = "!";
       char ValorDado3[DIM_STRINGS] = "";
@@ -118,6 +123,7 @@
                                           CopiaStrings ,
                                           NULL ,
                                           NULL ,
+                                          ConcatenaStrings ,
                                           &(pGrafo[indiceGrafo]) );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao criar grafo");
@@ -295,18 +301,45 @@
       if( strcmp(ComandoTeste,PROCURAR_VERTICE_CMD) == 0 )
       {
 
-         numParamLidos = LER_LerParametros("isi",&indiceGrafo,ValorDado,&CondRetEsperada);
+         int boolOrigem;
 
-         if( numParamLidos != 3 || !ValidaIndiceGrafo(indiceGrafo) )
+         numParamLidos = LER_LerParametros("isii",&indiceGrafo,ValorDado,&boolOrigem,&CondRetEsperada);
+
+         if( numParamLidos != 4 || !ValidaIndiceGrafo(indiceGrafo) )
          {
             return TST_CondRetParm;
          } /* if */
 
-         CondRetObtida = GRF_ProcurarVertice( pGrafo[indiceGrafo] , ValorDado );
+         CondRetObtida = GRF_ProcurarVertice( pGrafo[indiceGrafo] , ValorDado , boolOrigem );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao procurar vertice");
 
       } /* if */
+
+      /* Testar exibirgrafo */
+
+      if( strcmp(ComandoTeste,EXIBIR_GRAFO_CMD) == 0 )
+      {
+
+         numParamLidos = LER_LerParametros("issi",&indiceGrafo,ValorDado,StringEsperada,&CondRetEsperada);
+
+         if( numParamLidos != 4 || !ValidaIndiceGrafo(indiceGrafo) )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetObtida = GRF_ExibirGrafo( pGrafo[indiceGrafo] , ValorDado , StringObtida );
+
+         CondRetTST = TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao exibir grafo");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         return TST_CompararString(StringEsperada,StringObtida,"Exibicao esperada nao confere com obtida");
+
+      }
 
       return TST_CondRetNaoConhec;
 
@@ -348,11 +381,9 @@
 *
 ***********************************************************************/
 
-   void ConcatenaStrings ( void ** pSaida , void * pValor )
+   int ConcatenaStrings ( char * pA, void * pB )
    {
-
-      strcat( (char *) *pSaida , (char *) pValor );
-
+      return strcat_s( pA , DIM_STRING_EXIBICAO, (char *) pB );
    } /* Fim função: TGRF -Concatena Strings */
 
  /***********************************************************************

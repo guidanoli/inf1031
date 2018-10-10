@@ -39,7 +39,12 @@
 *        esta função deve promover a destruição (free) desse valor e
 *        de todos os dados nele ancorados.
 *
+*     Para funções que fazem uso da variável de caminhamento, o sentido
+*     padrão será sempre para FRENTE (VER_SentCamFrente).
+*
 ***************************************************************************/
+
+/* Definições de parâmetros */
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -75,6 +80,11 @@ typedef struct VER_tagAresta * VER_tppAresta;
          VER_CondRetArestaNaoExiste ,
                /* O ponteiro para a aresta é nulo */
 
+         VER_CondRetFimLista ,
+               /* Não é possível avançar o elemento corrente
+                  da lista pois o corrente está em um dos
+                  extremos da lista */
+
          VER_CondRetValorFornecidoNulo ,
                /* O valor fornecido é nulo */
 
@@ -88,6 +98,25 @@ typedef struct VER_tagAresta * VER_tppAresta;
                /* Faltou memória ao tentar criar um vértice */
 
    } VER_tpCondRet ;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: VER Sentido de caminhamento
+*
+*  $ED Descrição do tipo
+*     Sentido de caminhamento por arestas
+*
+***********************************************************************/
+
+   typedef enum {
+
+      VER_SentCamTras = 0 ,
+            /* Caminhando para trás */
+
+      VER_SentCamFrente = 1
+            /* Caminhando para frente */
+
+   } VER_tpSentCam ;
 
 /***********************************************************************
 *
@@ -325,14 +354,12 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *	  A função deve receber um ponteiro do vértice de partida,
 *	  o valor da aresta, um ponteiro que referencia o vertice destino,
 *     que também pode ser nulo, um ponteiro para a função que
-*     compara o valor de duas arestas e o sentido que irá andar
-*     ( 0 para trás ou 1 para frente).
+*     compara o valor de duas arestas e o sentido que irá andar.
 *  
 *  $AS Assertivas de saída
 *     Caso o ponteiro para vértice, valor e função não for nulo,
-*     o Sentido for 0 ou 1, a função deverá alterar o ponteiro do vértice destino *pVerDestino
-*     com o valor do Vértice destino caso o sentido seja 1, ou com o valor
-*     do vértice de partida caso o valor seja 0 e retornar VER_CondRetOK.
+*     o Sentido for válido, a função deverá alterar o ponteiro do vértice destino *pVerDestino
+*     com o valor do Vértice destino ou de partida (dependendo do sentido) e retornar VER_CondRetOK.
 *	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido.
 *
 *  $EP Parâmetros
@@ -344,7 +371,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                    Retorno da função:
 *                    >>> 0 caso pValorA == pValorB
 *                    >>> diferente de 0 caso contrário
-*     Sentido      - 0 pra trás, 1 para frente
+*     Sentido      - sentido de caminhamento da aresta
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
@@ -360,7 +387,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
                                       void * pValor ,
                                       VER_tppVertice * pVerDestino ,
                                       int (* ComparaValor) ( void * pA, void * pB) ,
-                                      int Sentido ) ;
+                                      VER_tpSentCam Sentido ) ;
 
 /***********************************************************************
 *
@@ -376,17 +403,17 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     que também pode ser nulo, e o sentido da aresta.
 *  
 *  $AS Assertivas de saída
-*     Caso o ponteiro para vértice não for nulo e o Sentido for 0 ou 1,
+*     Caso o ponteiro para vértice não for nulo e o Sentido for válido,
 *     a função deverá alterar o ponteiro do vértice destino *pVerDestino
-*     para apontar para o vértice destino caso o sentido seja 1, ou para
-*     o vértice de partida caso o valor seja 0 e retornar VER_CondRetOK.
+*     para apontar para o vértice destino ou de partida dependendo do
+*     sentido e retornar VER_CondRetOK.
 *	   Caso contrário, deverá retornar a condição de retorno de acordo com
 *     o erro obtido - e a estrutura interna não será manipulada.
 *
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para o vértice de partida
 *     pVerDestino  - endereço para ponteiro para o vértice de destino
-*     Sentido      - 0 pra trás, 1 para frente
+*     Sentido      - sentido de caminhamento da aresta corrente
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - obteve com sucesso
@@ -398,7 +425,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
    VER_tpCondRet VER_ObterArestaCorrente( VER_tppVertice pVerPartida ,
                                           VER_tppVertice * pVerDestino ,
-                                          int Sentido ) ;
+                                          VER_tpSentCam Sentido ) ;
 
 /***********************************************************************
 *
@@ -415,16 +442,15 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     vértice fornecido, e o número de passos.
 *  
 *  $AS Assertivas de saída
-*     Caso o ponteiro para vértice não for nulo e o Sentido for 0 ou 1,
+*     Caso o ponteiro para vértice não for nulo e o Sentido for válido,
 *     a função deverá alterar o ponteiro corrente da cabeça da lista de arestas correspondente
-*     ao Sentido fornecido (0 -> arestas antecesoras, 1-> arestas sucessoras) para a
-*     para a aresta numArestas depois (ou antes, caso for negativo) da atual.
+*     ao Sentido fornecido para a aresta numArestas depois (ou antes, caso for negativo) da atual.
 *	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido,
 *     não alterando a estrutura interna alguma.
 *
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para o vértice de partida
-*     Sentido      - 0 pra trás, 1 para frente
+*     Sentido      - sentido de caminhamento das arestas cuja lista será manipulada
 *     numArestas   - número de passos
 *                    >> negativo, anda em direção ao início da lista
 *                    >> zero, checa apenas se há arestas no sentido
@@ -434,21 +460,22 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     VER_CondRetOK                 - avançou com sucesso
 *     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
 *     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetFimLista           - aresta corrente é origem ou última da lista
 *     VER_CondRetErroEstrutura      - algum erro na estrutura interna
 *
 ***********************************************************************/
 
    VER_tpCondRet VER_AvancarArestaCorrente( VER_tppVertice pVertice ,
-                                            int Sentido ,
-                                            int numArestas );
+                                            VER_tpSentCam Sentido ,
+                                            int numArestas ) ;
 
 /***********************************************************************
 *
 *  $FC Função: VER  &Avançar aresta corrente
 *
 *  $ED Descrição da função
-*     Altera a aresta corrente do vértice para a primeira aresta
-*     inserida.
+*     Altera a aresta corrente do vértice no sentido fornecido para
+*     a primeira aresta inserida no vértice.
 *
 *  $AE Assertivas de entrada
 *	   A função recebe um ponteiro que aponta para o vértice de partida/
@@ -456,16 +483,16 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     vértice fornecido.
 *  
 *  $AS Assertivas de saída
-*     Caso o ponteiro para vértice não for nulo, o Sentido for 0 ou 1,
+*     Caso o ponteiro para vértice não for nulo, o Sentido for válido,
 *     e a lista de arestas não for vazia,  a função alterará o ponteiro
 *     corrente da cabeça de lista de arestas correspondente ao sentido
-*     (0, para antecessores; 1, para sucessores) para o elemento origem.
+*     para o elemento origem.
 *	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido,
 *     não alterando a estrutura interna alguma.
 *
 *  $EP Parâmetros
 *     pVerPartida  - ponteiro para o vértice de partida
-*     Sentido      - 0 pra trás, 1 para frente
+*     Sentido      - sentido do caminhamento das arestas cuja lista está manipulada
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - avançou com sucesso
@@ -476,6 +503,6 @@ typedef struct VER_tagAresta * VER_tppAresta;
 ***********************************************************************/
 
    VER_tpCondRet VER_IrInicioArestaCorrente( VER_tppVertice pVertice ,
-                                             int Sentido ) ;
+                                             VER_tpSentCam Sentido ) ;
 
 /********** Fim do módulo de definição: VER  Vértice **********/

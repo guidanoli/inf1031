@@ -500,11 +500,11 @@
 *  Função: VER  &Percorrer Aresta
 *  ****/
 
-   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida,
-                                      void * pValor,
-                                      VER_tppVertice * pVerDestino,
-                                      int (* ComparaValor) ( void * pA, void * pB),
-                                      int Sentido )
+   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida ,
+                                      void * pValor ,
+                                      VER_tppVertice * pVerDestino ,
+                                      int (* ComparaValor) ( void * pA, void * pB) ,
+                                      VER_tpSentCam Sentido )
    {
     
       LIS_tppLista listaAresta;
@@ -529,13 +529,13 @@
          return VER_CondRetErroEstrutura;
       } /* if */
 
-      if( Sentido == 1 )
+      if( Sentido == VER_SentCamTras )
       {
-         listaAresta = pVerPartida->pSuc;
+         listaAresta = pVerPartida->pAnt;
       } /* if */
       else
       {
-         listaAresta = pVerPartida->pAnt;
+         listaAresta = pVerPartida->pSuc;
       } /* else */
 
       if( LIS_AvancarElementoCorrente(listaAresta,0) != LIS_CondRetListaVazia )
@@ -551,13 +551,13 @@
 
             if( retorno == 0 )
             {
-               if( Sentido == 1 )
+               if( Sentido == VER_SentCamTras )
                {
-                  *pVerDestino = pArestaTemp->pDest;
+                  *pVerDestino = pArestaTemp->pPart;
                } /* if */
                else
                {
-                  *pVerDestino = pArestaTemp->pPart;
+                  *pVerDestino = pArestaTemp->pDest;
                } /* else */
 
                return VER_CondRetOK;
@@ -578,9 +578,9 @@
 *  Função: VER  &Percorrer Aresta Corrente
 *  ****/
 
-   VER_tpCondRet VER_ObterArestaCorrente( VER_tppVertice pVerPartida,
-                                          VER_tppVertice * pVerDestino,
-                                          int Sentido )
+   VER_tpCondRet VER_ObterArestaCorrente( VER_tppVertice pVerPartida ,
+                                          VER_tppVertice * pVerDestino ,
+                                          VER_tpSentCam Sentido )
    {
 
       LIS_tppLista pVertices;
@@ -590,7 +590,7 @@
          return VER_CondRetVerticeNaoExiste;
       } /* if */
 
-      if( Sentido == 0 )
+      if( Sentido == VER_SentCamTras )
       {
          pVertices = pVerPartida->pAnt;
       } /* if */
@@ -618,12 +618,22 @@
             return VER_CondRetErroEstrutura;
          } /* if */
 
-         if( Sentido == 0 )
+         if( Sentido == VER_SentCamTras )
          {
+            if( pArestaTemp->pPart == NULL )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
+
             *pVerDestino = pArestaTemp->pPart;
          } /* if */
          else
          {
+            if( pArestaTemp->pDest == NULL )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
+
             *pVerDestino = pArestaTemp->pDest;
          } /* else */
 
@@ -638,7 +648,7 @@
 *  ****/
 
    VER_tpCondRet VER_AvancarArestaCorrente( VER_tppVertice pVertice ,
-                                            int Sentido ,
+                                            VER_tpSentCam Sentido ,
                                             int numArestas )
    {
 
@@ -650,7 +660,7 @@
          return VER_CondRetVerticeNaoExiste;
       } /* if */
 
-      if( Sentido == 0 )
+      if( Sentido == VER_SentCamTras )
       {
          pVertices = pVertice->pAnt;
       } /* if */
@@ -671,6 +681,11 @@
          return VER_CondRetArestaNaoExiste;
       } /* if */
 
+      if( RetLis == LIS_CondRetFimLista )
+      {
+         return VER_CondRetFimLista;
+      } /* if */
+
       return VER_CondRetOK;
 
    } /* Fim função: VER  &Avançar aresta corrente */
@@ -681,18 +696,17 @@
 *  ****/
 
    VER_tpCondRet VER_IrInicioArestaCorrente( VER_tppVertice pVertice ,
-                                             int Sentido )
+                                             VER_tpSentCam Sentido )
    {
 
       LIS_tppLista pVertices;
-      LIS_tpCondRet RetLis;
 
       if( pVertice == NULL )
       {
          return VER_CondRetVerticeNaoExiste;
       } /* if */
 
-      if( Sentido == 0 )
+      if( Sentido == VER_SentCamTras )
       {
          pVertices = pVertice->pAnt;
       } /* if */

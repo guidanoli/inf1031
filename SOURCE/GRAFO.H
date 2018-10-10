@@ -29,6 +29,10 @@
 *
 ***************************************************************************/
 
+/* Limite da string de exibição de grafo */
+
+#define GRF_STR_BUFFER_SIZE 500
+
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um grafo */
@@ -138,6 +142,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
                                  void ( *CopiaValorVer ) ( void ** pA, void * pB) ,
                                  void ( *ExcluirValorVer ) ( void * pDado ) ,
                                  void ( *ExcluirValorAre ) ( void * pDado ) ,
+                                 int ( *ConcatenaValorVer) ( char * pA, void * pB ) ,
                                  GRF_tppGrafo * ppGrafoParam ) ;
 
 /***********************************************************************
@@ -481,18 +486,21 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $FC Função: GRF  -Procurar vértice em grafo
 *
 *  $ED Descrição da função
-*     Procura na lista de vértices de um grafo um vértice com dado valor
-*     fornecido, tornando-o vértice corrente, caso exista.
+*     Procura no grafo um vértice com dado valor fornecido,
+*     tornando-o vértice corrente, caso exista. Pode-se restringir
+*     o domínio dos vértices procurados para origens somente.
 *
 *  $AE Assertivas de entrada
-*     Recebe um ponteiro para um grafo ou NULO, e um ponteiro
+*     Recebe um ponteiro para um grafo ou NULO, um ponteiro
 *     para o valor do vértice a ser procurado - que deve
 *     apontar para uma estrutura de dados do tipo padrão
-*     de vértice do grafo fornecido.
+*     de vértice do grafo fornecido - e um booleano caso
+*     deseja-se procurar o vértice dentre todos os vértices
+*     ou somente entre origens.
 *
 *  $AS Assertivas de saída
-*     Se o grafo existir e não for vazio, e houver um vértice
-*     no grafo com o mesmo valor, o ponteiro de vértice corrente
+*     Se o grafo existir e não for vazio, e houver um vértice/origem
+*     no grafo com o mesmo valor, o ponteiro de vértice corrente do grafo
 *     agora apontará para o vértice com valor pValor e a função
 *     retornará GRF_CondRetOK. Caso contrário, o vértice corrente
 *     não mudará e a função retornará a condição de retorno
@@ -501,6 +509,9 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $EP Parâmetros
 *     pGrafo  - ponteiro para o grafo
 *     pValor  - ponteiro genérico para o valor do vértice procurado
+*     Origem  - booleano
+*               >> 0 - procura dentre todos os vértices
+*               >> 1 - procura dentre as origens
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK                 - o vértice foi encontrado
@@ -512,6 +523,29 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 ***********************************************************************/
 
    GRF_tpCondRet GRF_ProcurarVertice( GRF_tppGrafo pGrafo ,
-										        void * pValor ) ;
+										        void *pValor ,
+                                      int Origem ) ;
+
+/***********************************************************************
+*
+*  $FC Função: GRF  -Exibir grafo
+*
+*  $ED Descrição da função
+*
+*  $AE Assertivas de entrada
+*
+*  $AS Assertivas de saída
+*
+*  $EP Parâmetros
+*     pGrafo      - ponteiro para o grafo
+*     StringSaida - string de saída referenciada
+*
+*  $FV Valor retornado
+*
+***********************************************************************/
+
+   GRF_tpCondRet GRF_ExibirGrafo( GRF_tppGrafo pGrafo ,
+                                  void * pValorOrigem ,
+                                  char * StringSaida ) ;
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

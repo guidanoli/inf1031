@@ -36,6 +36,13 @@
 =declararparm  Tras    int 0
 =declararparm  Frente  int 1
 
+== Declarar os valores booleanos para procurarvertice
+=declararparm  TodosVertices  int 0
+=declararparm  OrigensApenas  int 1
+
+== Declarar string vazia
+=declararparm StrVazia string ""
+
 == Criar grafo
 =criargrafo 0 OK
 
@@ -358,23 +365,23 @@
 =destruirgrafo 0 OK
 
 == Testar procurar vértice em grafo inexistente
-=procurarvertice 0 StrA GrafoNaoExiste
+=procurarvertice 0 StrA TodosVertices GrafoNaoExiste
 
 == Testar procurar vértice em grafo vazio
 =criargrafo 0 OK
-=procurarvertice 0 StrA GrafoVazio
+=procurarvertice 0 StrA TodosVertices GrafoVazio
 =destruirgrafo 0 OK
 
 == Testar procurar vértice inexistente em grafo com vértices
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
-=procurarvertice 0 StrB VerticeNaoExiste
+=procurarvertice 0 StrB TodosVertices VerticeNaoExiste
 =destruirgrafo 0 OK
 
 == Procurar vértice existente
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
-=procurarvertice 0 StrA OK
+=procurarvertice 0 StrA TodosVertices OK
 =destruirgrafo 0 OK
 
 == Procurar vértice existente em outro grafo
@@ -383,7 +390,7 @@
 =criargrafo 1 OK
 =inserirvertice 0 StrA OK
 =inserirvertice 1 StrC OK
-=procurarvertice 1 StrA VerticeNaoExiste
+=procurarvertice 1 StrA TodosVertices VerticeNaoExiste
 =destruirgrafo 0 OK
 =destruirgrafo 1 OK
 
@@ -391,9 +398,9 @@
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
 =inserirvertice 0 StrB OK
-=procurarvertice 0 StrB OK
+=procurarvertice 0 StrB TodosVertices OK
 =toggleorigem 0 OK
-=procurarvertice 0 StrA OK
+=procurarvertice 0 StrA TodosVertices OK
 =toggleorigem 0 OK
 =destruirgrafo 0 OK
 
@@ -402,7 +409,7 @@
 =inserirvertice 0 StrA OK
 =inserirvertice 0 StrB OK
 =inserirvertice 0 StrC OK
-=procurarvertice 0 StrA OK
+=procurarvertice 0 StrA TodosVertices OK
 =removervertice 0 StrA UnicaOrigem
 =destruirgrafo 0 OK
 
@@ -427,12 +434,81 @@
 =inserirvertice 0 StrB OK
 =inserirvertice 0 StrC OK
 =inserirvertice 0 StrD OK
-=procurarvertice 0 StrA OK
+=procurarvertice 0 StrA TodosVertices OK
 =obtervalor 0 StrA OK
-=procurarvertice 0 StrB OK
+=procurarvertice 0 StrB TodosVertices OK
 =obtervalor 0 StrB OK
-=procurarvertice 0 StrC OK
+=procurarvertice 0 StrC TodosVertices OK
 =obtervalor 0 StrC OK
-=procurarvertice 0 StrD OK
+=procurarvertice 0 StrD TodosVertices OK
 =obtervalor 0 StrD OK
+=destruirgrafo 0 OK
+
+== Testar procurar origem apenas em grafo inexistente
+=procurarvertice 0 StrErro OrigensApenas GrafoNaoExiste
+
+== Testar procurar origem apenas em grafo vazio
+=criargrafo 0 OK
+=procurarvertice 0 StrA OrigensApenas GrafoVazio
+=destruirgrafo 0 OK
+
+== Testar procurar origem apenas em grafo com dois vértices (mas o procurado não é origem)
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=procurarvertice 0 StrB OrigensApenas VerticeNaoExiste
+=destruirgrafo 0 OK
+
+== Procurar origem em grafo com um vértice apenas (logo, origem)
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=procurarvertice 0 StrA OrigensApenas OK
+=destruirgrafo 0 OK
+
+== Testar exibir grafo inexistente
+=exibirgrafo 0 StrErro StrVazia GrafoNaoExiste
+
+== Testar exibir grafo vazio
+=criargrafo 0 OK
+=exibirgrafo 0 StrErro StrVazia GrafoVazio
+=destruirgrafo 0 OK
+
+== Testar exibir grafo a partir de vértice inexistente
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=exibirgrafo 0 StrB StrVazia VerticeNaoExiste
+=destruirgrafo 0 OK
+
+== Testar exibir grafo a partir de vértice existente que não é origem
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=exibirgrafo 0 StrB StrVazia VerticeNaoExiste
+=destruirgrafo 0 OK
+
+== Exibir grafo de um único vértice
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=exibirgrafo 0 StrA StrA OK
+=destruirgrafo 0 OK
+
+== Exibir grafo de um único vértice com uma aresta apontando para si mesmo
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inseriraresta 0 StrA StrA Stra OK
+=exibirgrafo 0 StrA StrA OK
+=destruirgrafo 0 OK
+
+== Exibir grafo com dois vértices disconexos
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=exibirgrafo 0 StrA StrA OK
+=destruirgrafo 0 OK
+
+== Exibir grafo A (origem) --a--> B
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=exibirgrafo 0 StrA "AB" OK
 =destruirgrafo 0 OK
