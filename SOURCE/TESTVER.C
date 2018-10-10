@@ -21,6 +21,7 @@
 *                               destruiraresta e percorreraresta.
 *     2       nag    28/09/18   Implementação de todas as funções de acesso.
 *     3       gui    08/10/18   Funções adicionais necessárias para analizador léxico.
+*     4       gui    10/10/18   Flags
 *
 ***************************************************************************/
 
@@ -44,9 +45,13 @@
 #define ARESTA_CORRENTE_CMD      "=arestacorrente"
 #define AVANCAR_ARESTA_CMD       "=avancararesta"
 #define ARESTA_INICIAL_CMD       "=arestainicial"
+#define MUDAR_FLAG_CMD           "=mudarflag"
+#define OBTER_FLAG_CMD           "=obterflag"
 
 #define TST_VER_TRUE  1
 #define TST_VER_FALSE 0
+
+#define TST_VER_FLAG_ERRO -1236
 
 #define DIM_VT_VERTICE 10
 #define DIM_VALOR_VERTICE 10
@@ -80,6 +85,9 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *    =arestacorrente            inxVERTICE, Sentido, StringEsperado, CondRetEsp
 *    =avancararesta             inxVERTICE, Sentido, numArestas, CondRetEsp
 *    =arestainicial             inxVERTICE, Sentido, CondRetEsp
+*    =mudarflag                 inxVERTICE, FlagDada, CondRetEsp
+*    =obterflag                 inxVERTICE, FlagEsperada, CondRetEsp
+*
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -221,7 +229,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &VerticeDestino, ComparaStrings, sentido);
+         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &VerticeDestino, ComparaStrings, (VER_tpSentCam)sentido);
 
          CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao percorrer aresta");
 
@@ -257,7 +265,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
             return TST_CondRetParm;
          } /* if */
 
-         CondRetVER = VER_ObterArestaCorrente(vtVertices[inxVERTICE],&VerticeDestino,sentido);
+         CondRetVER = VER_ObterArestaCorrente(vtVertices[inxVERTICE],&VerticeDestino,(VER_tpSentCam)sentido);
 
          CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao obter aresta corrente");
 
@@ -291,7 +299,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
             return TST_CondRetParm;
          } /* if */
 
-         CondRetVER = VER_AvancarArestaCorrente(vtVertices[inxVERTICE],sentido,numAre);
+         CondRetVER = VER_AvancarArestaCorrente(vtVertices[inxVERTICE],(VER_tpSentCam)sentido,numAre);
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao avancar aresta corrente");
 
@@ -310,11 +318,56 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
             return TST_CondRetParm;
          } /* if */
 
-         CondRetVER = VER_IrInicioArestaCorrente(vtVertices[inxVERTICE],sentido);
+         CondRetVER = VER_IrInicioArestaCorrente(vtVertices[inxVERTICE],(VER_tpSentCam)sentido);
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao avancar aresta corrente");
 
       } /* fim ativa: Testar arestainicial */
+
+      /* Testar mudarflag */
+
+      if( strcmp(ComandoTeste,MUDAR_FLAG_CMD) == 0 )
+      {
+         int FlagRecebida;
+
+         numLidos = LER_LerParametros("iii", &inxVERTICE, &FlagRecebida, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_MudarFlag(vtVertices[inxVERTICE],FlagRecebida);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao mudar flag");
+
+      } /* fim ativa: Testar mudarflag */
+
+      /* Testar mudarflag */
+
+      if( strcmp(ComandoTeste,OBTER_FLAG_CMD) == 0 )
+      {
+         int FlagObtida = TST_VER_FLAG_ERRO, FlagEsperada;
+
+         numLidos = LER_LerParametros("iii", &inxVERTICE, &FlagEsperada, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_ObterFlag(vtVertices[inxVERTICE],&FlagObtida);
+
+         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao obter flag");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         return TST_CompararInt(FlagEsperada,FlagObtida,"Flag obtida nao corresponde a esperada");
+
+      } /* fim ativa: Testar mudarflag */
 
       return TST_CondRetNaoConhec;
 

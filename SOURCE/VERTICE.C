@@ -17,6 +17,7 @@
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *     1.3     gui   03/10/2018  assertivas de entrada e saída
 *     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
+*     1.5     gui   10/10/2018  Flags
 *
 ***************************************************************************/
 
@@ -69,6 +70,9 @@
 
           LIS_tppLista pSuc;
                /* Ponteiro para a cabeça da lista de arestas que partem do vértice (sucessores) */
+
+          int Flag ;
+               /* Flag para caminhamento */
 
           void ( * ExcluirValor ) ( void * pDado ) ;
                /* Ponteiro para a função de destruição do valor */
@@ -145,6 +149,7 @@
       pNovoVertice->ExcluirValor = ExcluirValor;
       pNovoVertice->pAnt = pListaAnt;
       pNovoVertice->pSuc = pListaSuc;
+      pNovoVertice->Flag = 0;
 
       pNovoVertice->Valor = NULL;
       (* CopiaValor )(&(pNovoVertice->Valor),pValor);
@@ -730,6 +735,49 @@
       return VER_CondRetOK;
 
    } /* Fim função: VER  &Ir ao início da lista de aresta */
+
+/***************************************************************************
+*
+*  Função: VER  &Mudar flag
+*  ****/
+
+   VER_tpCondRet VER_MudarFlag( VER_tppVertice pVertice , int Flag )
+   {
+
+      if( pVertice == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      pVertice->Flag = Flag;
+
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Mudar Flag */
+
+/***************************************************************************
+*
+*  Função: VER  &Obter flag
+*  ****/
+
+   VER_tpCondRet VER_ObterFlag( VER_tppVertice pVertice , int * Flag ) 
+   {
+
+      if( pVertice == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( Flag == NULL )
+      {
+         return VER_CondRetValorFornecidoNulo;
+      } /* if */
+
+      *Flag = pVertice->Flag;
+
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Obter Flag */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

@@ -18,6 +18,7 @@
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *     1.3  cai,nag  03/10/2018  assertivas de entrada e saída
 *     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
+*     1.5     gui   10/10/2018  Flags
 *
 *  $ED Descrição do módulo
 *     
@@ -504,5 +505,61 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
    VER_tpCondRet VER_IrInicioArestaCorrente( VER_tppVertice pVertice ,
                                              VER_tpSentCam Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Mudar flag
+*
+*  $ED Descrição da função
+*     Altera a flag do vértice para a fornecida.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para vértice ou NULO, e uma flag.  
+*
+*  $AS Assertivas de saída
+*     Caso o vértice exista, a flag é atualizada, e retorna VER_CondRetOK.
+*     Caso contrário a função retornará VER_CondRetVerticeNaoExiste.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Flag         - inteiro que identifica o vértice num caminhamento
+*
+*  $FV Valor retornado
+*     VER_CondRetOK
+*     VER_CondRetVerticeNaoExiste
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_MudarFlag( VER_tppVertice pVertice , int Flag ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Obter flag
+*
+*  $ED Descrição da função
+*     Obtém por referência a flag do vértice fornecido.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para vértice ou NULO, e o endereço
+*     para um inteiro presente no módulo cliente.
+*
+*  $AS Assertivas de saída
+*     Caso o vértice exista e o ponteiro para flag não seja nulo,
+*     será armazenado em *Flag a flag do vértice.
+*     Caso contrário, uma condição de retorno adqueada ao erro
+*     será retornada.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Flag         - inteiro que identifica o vértice num caminhamento
+*
+*  $FV Valor retornado
+*     VER_CondRetOK
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice nulo
+*     VER_CondRetValorFornecidoNulo - ponteiro para flag nulo
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_ObterFlag( VER_tppVertice pVertice , int * Flag ) ;
 
 /********** Fim do módulo de definição: VER  Vértice **********/
