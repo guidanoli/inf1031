@@ -1,10 +1,9 @@
 // Script:    			TestaPilha.script
 // Autor:     			Guilherme Dantas 
 // Versionamento:		0.1	06/10/2018	criar e destruir pilha
-//				0.2 	07/10/2018	destruir pilha retorna cond. ret.
-//				0.3	07/10/2018	empilhar
-//				0.4	08/10/2018	desempilhar
-//				0.5	08/10/2018	pilhavazia
+//				0.1.1 	07/10/2018	destruir pilha retorna cond. ret.
+//				0.1.2	07/10/2018	empilhar
+//				0.1.3	08/10/2018	desempilhar
 // Propósito: 			Testa a integridade das funções de acesso
 //            			do módulo Pilha para com sua estrutura de dados,
 //            			baseando-se no modelo arquitetado.
@@ -18,7 +17,7 @@
 =declararparm  ErroEstrutura         int 4
 =declararparm  Memoria               int 5
 
-== Declarar valor nulo e com erro
+== Declarar valor nulo
 =declararparm  IntNulo               int -1234
 =declararparm  IntErro               int -1235
 

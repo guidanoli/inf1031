@@ -15,7 +15,3 @@
 09/10	1h			revisar script de teste		procuravertice agora recebe booleano
 09/10	2h			codificar módulo		exibirgrafo
 09/10	30min			redigir script de teste		exibirgrafo (incompleto)
-10/10	10min			revisar projeto			vértice necessita de flag para caminhamento
-10/10	30min			codificar módulo		mudarflag, obterflag e inicialização de flag
-								em criarvertice, e flag na struct de vertice
-10/10	5min			redigir script de teste		funções de flag de vertice

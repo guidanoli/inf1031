@@ -505,7 +505,6 @@
 =exibirgrafo 0 StrA StrA OK
 =destruirgrafo 0 OK
 
-//NAO FUNCIONA AINDA
 == Exibir grafo A (origem) --a--> B
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
