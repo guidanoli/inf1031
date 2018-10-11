@@ -81,10 +81,16 @@ typedef struct VER_tagAresta * VER_tppAresta;
          VER_CondRetArestaNaoExiste ,
                /* O ponteiro para a aresta é nulo */
 
+         VER_CondRetListaVazia ,
+               /* A lista está vazia */
+
          VER_CondRetFimLista ,
                /* Não é possível avançar o elemento corrente
                   da lista pois o corrente está em um dos
                   extremos da lista */
+
+         VER_CondRetFlagDiferente ,
+               /* Duas flags são distintas */
 
          VER_CondRetValorFornecidoNulo ,
                /* O valor fornecido é nulo */
@@ -561,5 +567,29 @@ typedef struct VER_tagAresta * VER_tppAresta;
 ***********************************************************************/
 
    VER_tpCondRet VER_ObterFlag( VER_tppVertice pVertice , int * Flag ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Compara flag dos vértices vizinhos (em um sentido)
+*
+*  $ED Descrição da função
+*
+*  $AE Assertivas de entrada
+*
+*  $AS Assertivas de saída
+*
+*  $EP Parâmetros
+*     pVertice     - ponteiro para o vértice de partida
+*     Flag         - inteiro que identifica o vértice num caminhamento
+*     Sentido      - sentido de caminhamento das arestas para os vértices
+*                    a serem analisados
+*
+*  $FV Valor retornado
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_ComparaFlagsVizinhos( VER_tppVertice pVertice ,
+                                           int Flag ,
+                                           VER_tpSentCam Sentido );
 
 /********** Fim do módulo de definição: VER  Vértice **********/

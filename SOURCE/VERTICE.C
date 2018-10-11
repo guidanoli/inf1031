@@ -779,6 +779,92 @@
 
    } /* Fim função: VER  &Obter Flag */
 
+/***************************************************************************
+*
+*  Função: VER  &Compara flag dos vértices vizinhos (em um sentido)
+*  ****/
+
+   VER_tpCondRet VER_ComparaFlagsVizinhos( VER_tppVertice pVertice ,
+                                           int Flag ,
+                                           VER_tpSentCam Sentido )
+   {
+
+      LIS_tppLista pArestas = NULL;
+      VER_tppAresta pArestaInicial = NULL;
+      LIS_tpCondRet RetLis;
+
+      if( pVertice == NULL )
+      {
+         return VER_CondRetVerticeNaoExiste;
+      } /* if */
+
+      if( Sentido == VER_SentCamTras )
+      {
+         pArestas = pVertice->pAnt;
+      } /* if */
+      else
+      {
+         pArestas = pVertice->pSuc;
+      } /* else */
+
+      if( pArestas == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente( pArestas, 0 ) == LIS_CondRetListaVazia )
+      {
+         return VER_CondRetListaVazia;
+      } /* if */
+
+      pArestaInicial = (VER_tppAresta) LIS_ObterValor(pArestas);
+      if( pArestaInicial == NULL )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      IrInicioLista(pArestas);
+      RetLis = LIS_CondRetOK;
+
+      while( RetLis == LIS_CondRetOK )
+      {
+         VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pArestas);
+         VER_tppVertice pVerticeTemp = NULL;
+
+         if( pArestaTemp == NULL )
+         {
+            return VER_CondRetErroEstrutura;
+         } /* if */
+
+         if( Sentido == VER_SentCamTras )
+         {
+            pVerticeTemp = pArestaTemp->pPart;
+         } /* if */
+         else
+         {
+            pVerticeTemp = pArestaTemp->pDest;
+         } /* else */
+
+         if( pVerticeTemp->Flag != Flag )
+         {
+            return VER_CondRetFlagDiferente;
+         } /* if */
+
+         RetLis = LIS_AvancarElementoCorrente( pArestas, 1 );
+
+      } /* while */
+
+      RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+
+      if( RetLis != LIS_CondRetOK )
+      {
+         return VER_CondRetErroEstrutura;
+      } /* if */
+
+      return VER_CondRetOK;
+
+   } /* Fim função: VER  &Compara flag dos vértices vizinhos (em um sentido) */
+
 /*****  Código das funções encapsuladas no módulo  *****/
 
 /***********************************************************************
