@@ -19,3 +19,5 @@
 10/10	30min			codificar módulo		mudarflag, obterflag e inicialização de flag
 								em criarvertice, e flag na struct de vertice
 10/10	5min			redigir script de teste		funções de flag de vertice
+11/10	2h			projetar			redesenhar algoritmo para loop de caminhamento
+								de grafo em pseudocódigo
