@@ -817,6 +817,8 @@
          return VER_CondRetListaVazia;
       } /* if */
 
+      /* AI: Lista de arestas não é vazia */
+
       pArestaInicial = (VER_tppAresta) LIS_ObterValor(pArestas);
       if( pArestaInicial == NULL )
       {
@@ -833,6 +835,11 @@
 
          if( pArestaTemp == NULL )
          {
+            RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+            if( RetLis != LIS_CondRetOK )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
             return VER_CondRetErroEstrutura;
          } /* if */
 
@@ -847,6 +854,11 @@
 
          if( pVerticeTemp->Flag != Flag )
          {
+            RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+            if( RetLis != LIS_CondRetOK )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
             return VER_CondRetFlagDiferente;
          } /* if */
 
@@ -855,6 +867,8 @@
       } /* while */
 
       RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+
+      /* AI: Ponteiro corrente aponta para aresta inicial agora */
 
       if( RetLis != LIS_CondRetOK )
       {

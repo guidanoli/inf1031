@@ -34,6 +34,9 @@
 #define GRF_TODOS_VERTICES 0
 #define GRF_ORIGENS_APENAS 1
 
+#define GRF_VERTICE_NAO_VISITADO 0
+#define GRF_VERTICE_VISITADO 1
+
 /***********************************************************************
 *
 *  $TC Tipo de dados: GRF Cabeça do grafo
@@ -946,7 +949,9 @@
       void * pValor = NULL;
 
       LIS_tppLista pVertices = NULL;
-      VER_tppVertice pVerticeTemp = NULL;
+      VER_tppVertice pVerticeTemp = NULL,
+                     pVerticeCorr = NULL;
+      PIL_tppPilha pPilha = NULL;
 
       if( StringSaida == NULL || pValorOrigem == NULL )
       {
@@ -1010,6 +1015,7 @@
                return GRF_CondRetErroEstrutura;
             } /* if */
 
+            VER_MudarFlag( pVerticeTemp , GRF_VERTICE_NAO_VISITADO );
             RetLis = LIS_AvancarElementoCorrente(pVertices,1);
 
          } /* while */
@@ -1040,64 +1046,65 @@
 
       while( 1 )
       {
-         pVerticeTemp = pGrafo->pVertCorr;
-         
-         if( pVerticeTemp == NULL )
+
+         int FlagRecebida = -1;
+         pVerticeCorr = pGrafo->pVertCorr;
+         pPilha = pGrafo->pPilhaReleitura;
+
+         if( pVerticeCorr == NULL ||
+             pPilha == NULL )
          {
             return GRF_CondRetErroEstrutura;
-         } /* if */ 
+         }
 
-         RetVer = VER_AvancarArestaCorrente( pVerticeTemp , VER_SentCamFrente , 1 );
-
-         if( RetVer == VER_CondRetFimLista || RetVer == VER_CondRetArestaNaoExiste )
+         if( VER_ObterFlag( pVerticeCorr , &FlagRecebida ) != VER_CondRetOK )
          {
-            /* O vértice não possui arestas saindo dele (folha) ou esta é a última aresta */
-            if( PIL_PilhaVazia( pGrafo->pPilhaReleitura ) == PIL_CondRetPilhaVazia )
+            return GRF_CondRetErroEstrutura;
+         }
+
+         if( FlagRecebida == GRF_VERTICE_VISITADO )
+         {
+            /* Vértice corrente já foi visitado */
+
+            RetVer = VER_ComparaFlagsVizinhos( pVerticeCorr ,
+                                               GRF_VERTICE_VISITADO ,
+                                               VER_SentCamFrente );
+
+            if( RetVer == VER_CondRetListaVazia ||
+                RetVer == VER_CondRetOK )
             {
-               pValor = VER_ObterValor( pVerticeTemp );
-               if( (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor ) == 1 )
+               /* Acabaram as arestas ou não há arestas */
+
+               RetPil = PIL_PilhaVazia( pPilha );
+
+               if( RetPil == PIL_CondRetPilhaVazia )
                {
-                  return GRF_CondRetFaltouMemoria;
-               } /* if */
-               break;
-            } /* if */
+                  /* Pilha de releitura vazia */
+                  break;
+               }
+               else
+               {
+                  /* Pilha de releitura não-vazia */
+                  pGrafo->pVertCorr = (VER_tppVertice) PIL_Desempilhar( pPilha );
+               }
+
+            }
             else
             {
-               pValor = VER_ObterValor( pVerticeTemp );
-               if( (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor ) == 1 )
+               /* Há arestas a serem visitadas ainda */
+               PIL_Empilhar( pPilha , pVerticeCorr );
+               pVerticeTemp = pVerticeCorr;
+               RetVer = VER_ObterArestaCorrente( pVerticeCorr ,
+                                                 &(pGrafo->pVertCorr) ,
+                                                 VER_SentCamFrente );
+               if( RetVer != VER_CondRetOK )
                {
-                  return GRF_CondRetFaltouMemoria;
-               } /* if */
-               pGrafo->pVertCorr = (VER_tppVertice) PIL_Desempilhar( pGrafo->pPilhaReleitura );
-            } /* else */
-         } /* else if */
-         else
-         {
-            void * pValor;
-            RetPil = PIL_Empilhar( pGrafo->pPilhaReleitura , pVerticeTemp );
+                  return GRF_CondRetErroEstrutura;;
+               }
+               RetVer = VER_AvancarArestaCorrente( pVerticeCorr , VER_SentCamFrente, 1 );
+            }
 
-            if( RetPil == PIL_CondRetFaltouMemoria )
-            {
-               return GRF_CondRetFaltouMemoria;
-            } /* if */
-            else if( RetPil != PIL_CondRetOK )
-            {
-               return GRF_CondRetErroEstrutura;
-            } /* else if */
-
-            pValor = VER_ObterValor( pVerticeTemp );
-
-            if( pValor == NULL )
-            {
-               return GRF_CondRetErroEstrutura;
-            } /* if */
-
-            if( (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor ) == 1 )
-            {
-               return GRF_CondRetFaltouMemoria;
-            } /* if */
-
-         } /* else */
+         }
 
       } /* while */
 
