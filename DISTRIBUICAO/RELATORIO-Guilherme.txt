@@ -21,5 +21,3 @@
 10/10	5min			redigir script de teste		funções de flag de vertice
 11/10	2h			projetar			redesenhar algoritmo para loop de caminhamento
 								de grafo em pseudocódigo
-12/10	4h			codificar módulo		copiarpilha, exibirgrafo
-12/10	1h			redigir script de teste		copiarpilha, exibirgrafo

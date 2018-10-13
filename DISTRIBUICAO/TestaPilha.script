@@ -103,7 +103,7 @@
 =vazia 0 OK
 =destruirpilha 0 OK
 
-== Testar copiar pilha inexistente
+== Copiar pilha inexistente
 =copiarpilha 0 1 PilhaNaoExiste
 
 == Copiar pilha vazia e verificar se ambas são vazia
@@ -139,7 +139,7 @@
 =destruirpilha 0 OK
 =destruirpilha 1 OK
 
-== Testar copiar pilha em si mesma
+== Copiar pilha em si mesma
 =criarpilha 0 OK
 =empilhar 0 5 OK
 =copiarpilha 0 0 OK
@@ -153,5 +153,5 @@
 =desempilhar 0 IntErro
 =destruirpilha 0 OK
 
-== Testar copiar pilha inexistente em si mesma
+== Copiar pilha inexistente em si mesma
 =copiarpilha 0 0 PilhaNaoExiste
