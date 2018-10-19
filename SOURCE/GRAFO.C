@@ -276,8 +276,8 @@
       } /* if */
 
       RetVer = VER_CriarVertice( pGrafo->ExcluirValorVer ,
-                                 pValor ,
                                  pGrafo->CopiaValorVer ,
+                                 pValor ,
                                  &pNovoVertice ) ;
       /* Cria uma novo vértice com a regra de exclusão e
          comparação padrões do grafo e o valor fornecido */

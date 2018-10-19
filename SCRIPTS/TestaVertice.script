@@ -13,11 +13,13 @@
 =declararparm  VerticeNaoExiste      int 1 
 =declararparm  ArestaExiste          int 2
 =declararparm  ArestaNaoExiste       int 3
-=declararparm  FimLista              int 4
-=declararparm  ValorFornecidoNulo    int 5
-=declararparm  FuncaoNula            int 6
-=declararparm  ErroEstrutura         int 7
-=declararparm  Memoria               int 8
+=declararparm  ListaVazia            int 4
+=declararparm  FimLista              int 5
+=declararparm  FlagDiferente         int 6
+=declararparm  ValorFornecidoNulo    int 7
+=declararparm  FuncaoNula            int 8
+=declararparm  ErroEstrutura         int 9
+=declararparm  Memoria               int 10
 
 == Declarar os valores dos vértices
 =declararparm  StrErro     string  "!"
@@ -406,3 +408,81 @@
 =mudarflag 0 1 OK
 =obterflag 0 1 OK
 =destruirvertice 0 OK
+
+== Comparar flag dos vizinhos de um vértice inexistente
+=cmpflags 0 1 Frente VerticeNaoExiste
+
+== Comparar flag dos vizinhos de um vértice sem vizinhos
+=criarvertice 0 StrA OK
+=cmpflags 0 1 Frente ListaVazia
+=destruirvertice 0 OK
+
+== Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag OK, frente)
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=mudarflag 0 1 OK
+=cmpflags 0 1 Frente OK
+=destruirvertice 0 OK
+
+== Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag OK, tras)
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=mudarflag 0 1 OK
+=cmpflags 0 1 Tras OK
+=destruirvertice 0 OK
+
+== Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag Diferente!, frente)
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=mudarflag 0 37 OK
+=cmpflags 0 1 Frente FlagDiferente
+=destruirvertice 0 OK
+
+== Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag Diferente!, tras)
+=criarvertice 0 StrA OK
+=criararesta 0 0 Stra OK
+=mudarflag 0 37 OK
+=cmpflags 0 1 Tras FlagDiferente
+=destruirvertice 0 OK
+
+== Comparar flags de vizinhos de vértice que tem relacionamento externo (Flag OK!, frente)
+//Prova que o vértice em si não precisa ter a flag
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=mudarflag 0 37 OK
+=mudarflag 1 1 OK
+=cmpflags 0 1 Frente OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Comparar flags de vizinhos de vértice que tem relacionamento externo (Flag OK!, tras)
+//Prova que o vértice em si não precisa ter a flag
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=mudarflag 0 1 OK
+=mudarflag 1 37 OK
+=cmpflags 1 1 Tras OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Comparar flags de vizinhos de vértice que tem relacionamento externo (Flag Diferente!, frente)
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=mudarflag 0 1 OK
+=mudarflag 1 37 OK
+=cmpflags 0 1 Frente FlagDiferente
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Comparar flags de vizinhos de vértice que tem relacionamento externo (Flag Diferente!, tras)
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra OK
+=mudarflag 0 37 OK
+=mudarflag 1 1 OK
+=cmpflags 1 1 Tras FlagDiferente
+=destruirvertice 0 OK
+=destruirvertice 1 OK

@@ -55,16 +55,12 @@
 *
 ***************************************************************************/
 
-/* Definições de parâmetros */
-
 /***** Declarações exportadas pelo módulo *****/
 
-/* Tipo referência para um grafo */
-
-/* ponteiro para estrutura de vértice */
+/* Ponteiro para estrutura de vértice */
 typedef struct VER_tagVertice * VER_tppVertice;
 
-/* ponteiro para estrutura de aresta */
+/* Ponteiro para estrutura de aresta */
 typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
