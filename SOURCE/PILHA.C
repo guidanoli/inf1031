@@ -24,7 +24,10 @@
 #include   <malloc.h>
 #include   <assert.h>
 
+#define PILHA_OWN
 #include "PILHA.H"
+#undef PILHA_OWN
+
 #include "LISTA.H"
 
 /***********************************************************************

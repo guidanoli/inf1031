@@ -21,3 +21,5 @@ senão
 		>> proxAresta ( pVertAnt )
 
 Fim Loop
+
+acabaram arestas( pVertice , Flag ) -> CondRet

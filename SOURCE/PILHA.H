@@ -1,3 +1,5 @@
+#if ! defined( PILHA_ )
+#define PILHA_
 /***************************************************************************
 *
 *  $MCD Módulo de definição: PIL  Pilha genérica
@@ -35,6 +37,12 @@
 *        como queira.
 *
 ***************************************************************************/
+
+#if defined( PILHA_OWN )
+   #define PILHA_EXT
+#else
+   #define PILHA_EXT extern
+#endif
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -238,4 +246,9 @@
 
    PIL_tpCondRet PIL_PilhaVazia( PIL_tppPilha pPilha ) ;
 
+#undef PILHA_EXT
+
 /********** Fim do módulo de definição: PIL  Pilha genérica **********/
+
+#else
+#endif
