@@ -34,6 +34,9 @@
 #define GRF_TODOS_VERTICES 0
 #define GRF_ORIGENS_APENAS 1
 
+#define GRF_VERTICE_NAO_VISITADO 0
+#define GRF_VERTICE_VISITADO 1
+
 /***********************************************************************
 *
 *  $TC Tipo de dados: GRF Cabeça do grafo
@@ -84,7 +87,7 @@
 
          int ( *ConcatenaValorVer) ( char * pA, void * pB ) ;
                /* Ponteiro para função que concatena o valor de pB
-                  no final de *pA
+                  no final da string pA
                   RETORNA:
                   >> 0 caso a concatenação ocorreu com sucesso
                   >> 1 caso *pA não tenha mais espaço */
@@ -273,8 +276,8 @@
       } /* if */
 
       RetVer = VER_CriarVertice( pGrafo->ExcluirValorVer ,
-                                 pValor ,
                                  pGrafo->CopiaValorVer ,
+                                 pValor ,
                                  &pNovoVertice ) ;
       /* Cria uma novo vértice com a regra de exclusão e
          comparação padrões do grafo e o valor fornecido */
@@ -946,7 +949,9 @@
       void * pValor = NULL;
 
       LIS_tppLista pVertices = NULL;
-      VER_tppVertice pVerticeTemp = NULL;
+      VER_tppVertice pVerticeTemp = NULL,
+                     pVerticeCorr = NULL;
+      PIL_tppPilha pPilha = NULL;
 
       if( StringSaida == NULL || pValorOrigem == NULL )
       {
@@ -1010,6 +1015,7 @@
                return GRF_CondRetErroEstrutura;
             } /* if */
 
+            VER_MudarFlag( pVerticeTemp , GRF_VERTICE_NAO_VISITADO );
             RetLis = LIS_AvancarElementoCorrente(pVertices,1);
 
          } /* while */
@@ -1038,65 +1044,109 @@
          
       } /* while */
 
+      /* Loop de caminhamento */
       while( 1 )
       {
-         pVerticeTemp = pGrafo->pVertCorr;
-         
-         if( pVerticeTemp == NULL )
+
+         int FlagRecebida = -1;
+         pVerticeCorr = pGrafo->pVertCorr;
+         pPilha = pGrafo->pPilhaReleitura;
+
+         if( pVerticeCorr == NULL ||
+             pPilha == NULL )
          {
+            strcpy_s( StringSaida , 2 , "" );
             return GRF_CondRetErroEstrutura;
-         } /* if */ 
+         } /* if */
 
-         RetVer = VER_AvancarArestaCorrente( pVerticeTemp , VER_SentCamFrente , 1 );
-
-         if( RetVer == VER_CondRetFimLista || RetVer == VER_CondRetArestaNaoExiste )
+         if( VER_ObterFlag( pVerticeCorr , &FlagRecebida ) != VER_CondRetOK )
          {
-            /* O vértice não possui arestas saindo dele (folha) ou esta é a última aresta */
-            if( PIL_PilhaVazia( pGrafo->pPilhaReleitura ) == PIL_CondRetPilhaVazia )
+            strcpy_s( StringSaida , 2 , "" );
+            return GRF_CondRetErroEstrutura;
+         } /* if */
+
+         if( FlagRecebida == GRF_VERTICE_VISITADO )
+         {
+            /* Vértice corrente visitado */
+
+            RetVer = VER_ComparaFlagsVizinhos( pVerticeCorr ,
+                                               GRF_VERTICE_VISITADO ,
+                                               VER_SentCamFrente );
+
+            if( RetVer == VER_CondRetListaVazia ||
+                RetVer == VER_CondRetOK )
             {
-               pValor = VER_ObterValor( pVerticeTemp );
-               if( (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor ) == 1 )
+               /* Acabaram as arestas ou não há arestas */
+
+               RetPil = PIL_PilhaVazia( pPilha );
+
+               if( RetPil == PIL_CondRetPilhaVazia )
                {
-                  return GRF_CondRetFaltouMemoria;
+                  /* Pilha de releitura vazia */
+                  break;
                } /* if */
-               break;
+               else
+               {
+                  /* Pilha de releitura não-vazia */
+                  pGrafo->pVertCorr = (VER_tppVertice) PIL_Desempilhar( pPilha );
+               } /* else */
+
             } /* if */
             else
             {
-               pValor = VER_ObterValor( pVerticeTemp );
-               if( (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor ) == 1 )
+               /* Há arestas a serem visitadas ainda */
+               PIL_Empilhar( pPilha , pVerticeCorr );
+               pVerticeTemp = pVerticeCorr;
+               RetVer = VER_ObterArestaCorrente( pVerticeCorr ,
+                                                 &(pGrafo->pVertCorr) ,
+                                                 VER_SentCamFrente );
+               if( RetVer != VER_CondRetOK )
                {
-                  return GRF_CondRetFaltouMemoria;
+                  strcpy_s( StringSaida , 2 , "" );
+                  return GRF_CondRetErroEstrutura;;
                } /* if */
-               pGrafo->pVertCorr = (VER_tppVertice) PIL_Desempilhar( pGrafo->pPilhaReleitura );
+               RetVer = VER_AvancarArestaCorrente( pVerticeTemp , VER_SentCamFrente, 1 );
             } /* else */
-         } /* else if */
+
+         } /* if */
          else
          {
-            void * pValor;
-            RetPil = PIL_Empilhar( pGrafo->pPilhaReleitura , pVerticeTemp );
+            int RetInt;
+            /* Vértice corrente não visitado */
+            pValor = VER_ObterValor( pVerticeCorr );
+            RetInt = (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor );
 
-            if( RetPil == PIL_CondRetFaltouMemoria )
+            if( RetInt == 1 )
             {
+               strcpy_s( StringSaida , 2 , "" );
                return GRF_CondRetFaltouMemoria;
             } /* if */
-            else if( RetPil != PIL_CondRetOK )
+
+            VER_MudarFlag( pVerticeCorr , GRF_VERTICE_VISITADO );
+            RetVer = VER_AvancarArestaCorrente( pVerticeCorr , VER_SentCamFrente , 0 );
+
+            if( RetVer == VER_CondRetErroEstrutura )
             {
+               strcpy_s( StringSaida , 2 , "" );
                return GRF_CondRetErroEstrutura;
+            } /* if */
+            else if( RetVer != VER_CondRetArestaNaoExiste )
+            {
+               /* Vértice corrente possui arestas */
+               PIL_Empilhar( pPilha , pVerticeCorr );
+               pVerticeTemp = pVerticeCorr;
+               RetVer = VER_ObterArestaCorrente( pVerticeCorr ,
+                                                 &(pGrafo->pVertCorr) ,
+                                                 VER_SentCamFrente );
+               if( RetVer != VER_CondRetOK )
+               {
+                  strcpy_s( StringSaida , 2 , "" );
+                  return GRF_CondRetErroEstrutura;;
+               } /* if */
+
+               RetVer = VER_AvancarArestaCorrente( pVerticeTemp , VER_SentCamFrente, 1 );
+
             } /* else if */
-
-            pValor = VER_ObterValor( pVerticeTemp );
-
-            if( pValor == NULL )
-            {
-               return GRF_CondRetErroEstrutura;
-            } /* if */
-
-            if( (*(pGrafo->ConcatenaValorVer))( StringSaida , pValor ) == 1 )
-            {
-               return GRF_CondRetFaltouMemoria;
-            } /* if */
-
          } /* else */
 
       } /* while */

@@ -11,6 +11,7 @@
 *     Versão  Autor    Data     Observações
 *     0       gui   06/10/2018  Início do desenvolvimento
 *     1       gui   08/10/2018  Criar, destruir, empilhar, desempilhar e vazia
+*     2       gui   12/10/2018  Copiar
 *
 *  $ED Descrição do módulo
 *     Implementa o conceito de pilha a partir do módulo lista,
@@ -216,5 +217,78 @@
       } /* else */
 
    } /* Fim função: PIL  &Pilha vazia */
+
+/***************************************************************************
+*
+*  Função: PIL  &Copiar pilha
+*  ******/
+
+   PIL_tpCondRet PIL_CopiarPilha( PIL_tppPilha * pFonte ,
+                                  PIL_tppPilha * pDestino )
+   {
+
+      PIL_tpCondRet RetPil;
+      LIS_tpCondRet RetLis;
+      
+      if( pFonte == NULL || pDestino == NULL )
+      {
+         return PIL_CondRetValorFornecidoNulo;
+      } /* if */
+
+      if( *pFonte == NULL )
+      {
+         return PIL_CondRetPilhaNaoExiste;
+      } /* if */
+
+      if( *pFonte == *pDestino )
+      {
+         return PIL_CondRetOK;
+      } /* if */
+
+      RetPil = PIL_CriarPilha(pDestino);
+      if( RetPil != PIL_CondRetOK )
+      {
+         return RetPil;
+      } /* if */
+
+      if( (*pFonte)->pLista == NULL )
+      {
+         return PIL_CondRetErroEstrutura;
+      } /* if */
+
+      if( LIS_AvancarElementoCorrente( (*pFonte)->pLista , 0 ) != LIS_CondRetListaVazia )
+      {
+         IrInicioLista( (*pFonte)->pLista );
+         RetLis = LIS_CondRetOK;
+
+         while( RetLis == LIS_CondRetOK )
+         {
+
+            void * pValor = NULL;
+            pValor = LIS_ObterValor( (*pFonte)->pLista );
+            
+            if( pValor == NULL )
+            {
+               IrFinalLista( (*pFonte)->pLista );
+               return PIL_CondRetErroEstrutura;
+            } /* if */
+
+            RetPil = PIL_Empilhar( *pDestino , pValor );
+
+            if( RetPil != PIL_CondRetOK )
+            {
+               IrFinalLista( (*pFonte)->pLista );
+               return RetPil;
+            } /* if */
+
+            RetLis = LIS_AvancarElementoCorrente( (*pFonte)->pLista , 1 );
+
+         } /* while */
+
+      } /* if */
+
+      return PIL_CondRetOK;
+
+   } /* Fim função: PIL  &Copiar pilha */
 
 /********** Fim do módulo de implementação: PIL  Pilha genérica **********/

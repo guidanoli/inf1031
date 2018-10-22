@@ -47,6 +47,7 @@
 #define ARESTA_INICIAL_CMD       "=arestainicial"
 #define MUDAR_FLAG_CMD           "=mudarflag"
 #define OBTER_FLAG_CMD           "=obterflag"
+#define CMP_FLAG_VIZ_CMD         "=cmpflags"
 
 #define TST_VER_TRUE  1
 #define TST_VER_FALSE 0
@@ -87,6 +88,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *    =arestainicial             inxVERTICE, Sentido, CondRetEsp
 *    =mudarflag                 inxVERTICE, FlagDada, CondRetEsp
 *    =obterflag                 inxVERTICE, FlagEsperada, CondRetEsp
+*    =flagvizinhos              inxVERTICE, FlagDada, Sentido, CondRetEsp
 *
 ***********************************************************************/
 
@@ -120,7 +122,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-         CondRetVER = VER_CriarVertice(NULL, pDado, CopiaStrings, &vtVertices[inxVERTICE]);
+         CondRetVER = VER_CriarVertice(NULL, CopiaStrings, pDado, &vtVertices[inxVERTICE]);
 
           return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar vertice");
 
@@ -368,6 +370,25 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
          return TST_CompararInt(FlagEsperada,FlagObtida,"Flag obtida nao corresponde a esperada");
 
       } /* fim ativa: Testar mudarflag */
+
+      /* Testar flagvizinhos */
+
+      if( strcmp(ComandoTeste,CMP_FLAG_VIZ_CMD) == 0 )
+      {
+         int FlagRecebida;
+
+         numLidos = LER_LerParametros("iiii", &inxVERTICE, &FlagRecebida, &sentido, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_ComparaFlagsVizinhos(vtVertices[inxVERTICE],FlagRecebida,(VER_tpSentCam)sentido);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao comparar flag de vizinhos");
+
+      }
 
       return TST_CondRetNaoConhec;
 

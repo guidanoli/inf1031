@@ -10,6 +10,7 @@
 *     Versão  Autor    Data     Observações
 *     0       gui   06/10/2018  Início do desenvolvimento
 *     1       gui   08/10/2018  Criar, destruir, empilhar, desempilhar e vazia
+*     2       gui   12/10/2018  Copiar
 *
 ***************************************************************************/
 
@@ -29,6 +30,7 @@
 #define EMPILHAR_CMD             "=empilhar"
 #define DESEMPILHAR_CMD          "=desempilhar"
 #define VAZIA_CMD                "=vazia"
+#define COPIAR_PILHA_CMD         "=copiarpilha"
 
 #define TST_PIL_TRUE  1
 #define TST_PIL_FALSE 0
@@ -51,12 +53,16 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 *  $FC Função: TPIL &Testar pilha
 *
 *  $ED Descrição da função
-*     Podem ser criadas até 10 pilhas, identificadas pelos índices 0 a 9 (inclusive)
+*     Podem ser criadas até 3 pilhas, identificadas pelos índices 0 a 2 (inclusive)
 *
 *     Comandos disponíveis:
 *    =criarpilha                indexPilha, CondRetEsp
 *    =destruirvertice			  indexPilha, CondRetEsp
-*    =empilhar                  indexPilha, IntDado
+*    =empilhar                  indexPilha, IntDado, CondRetEsp
+*    =desempilhar               indexPilha, IntEsperado
+*    =vazia                     indexPilha, CondRetEsp
+*    =copiarpilha               indexFonte, indexDestino, CondRetEsp
+*
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
@@ -74,7 +80,7 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 
       /* Testar criarpilha */
 
-      if (strcmp(ComandoTeste, CRIAR_PILHA_CMD) == 0)
+      if( strcmp(ComandoTeste, CRIAR_PILHA_CMD) == 0 )
       {
          numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
 
@@ -91,7 +97,7 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 
       /* Testar destruirpilha */
 
-      if (strcmp(ComandoTeste, DESTRUIR_PILHA_CMD) == 0)
+      if( strcmp(ComandoTeste, DESTRUIR_PILHA_CMD) == 0 )
       {
          numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
 
@@ -108,7 +114,7 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 
       /* Testar empilhar */
 
-      if (strcmp(ComandoTeste, EMPILHAR_CMD) == 0)
+      if( strcmp(ComandoTeste, EMPILHAR_CMD) == 0 )
       {
          numLidos = LER_LerParametros("iii", &indexPilha, &IntDado, &CondRetEsp);
 
@@ -142,7 +148,7 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 
       /* Testar desempilhar */
 
-      if (strcmp(ComandoTeste, DESEMPILHAR_CMD) == 0)
+      if( strcmp(ComandoTeste, DESEMPILHAR_CMD) == 0 )
       {
          numLidos = LER_LerParametros("ii", &indexPilha, &IntEsperado); 
 
@@ -164,7 +170,7 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 
       /* Testar vazia */
 
-      if (strcmp(ComandoTeste, VAZIA_CMD) == 0)
+      if( strcmp(ComandoTeste, VAZIA_CMD) == 0 )
       {
          numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp); 
 
@@ -179,13 +185,31 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 
       } /*fim ativa: Testar vazia*/
 
+      /* Testar copiarpilha */
+
+      if( strcmp(ComandoTeste, COPIAR_PILHA_CMD) == 0 )
+      {
+         int indexPilha2;
+
+         numLidos = LER_LerParametros("iii", &indexPilha, &indexPilha2, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexPilha(indexPilha))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetPIL = PIL_CopiarPilha( &vtPilhas[indexPilha] , &vtPilhas[indexPilha2] );
+
+         return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao copiar pilha");
+
+      } /*fim ativa: Testar copiarpilha*/
+
       return TST_CondRetNaoConhec;
 
    } /* Fim função: TPIL &Testar pilha */
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
-
 
 /***********************************************************************
 *

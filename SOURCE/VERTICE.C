@@ -17,7 +17,7 @@
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *     1.3     gui   03/10/2018  assertivas de entrada e saída
 *     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
-*     1.5     gui   10/10/2018  Flags
+*     1.5     gui   10/10/2018  funções para flags
 *
 ***************************************************************************/
 
@@ -91,9 +91,9 @@
 *  Função: VER  &Criar vértice
 *  ****/
 
-   VER_tpCondRet VER_CriarVertice(  void   ( * ExcluirValor ) ( void * pDado ) ,
-                                    void * pValor ,
+   VER_tpCondRet VER_CriarVertice(  void ( * ExcluirValor ) ( void * pDado ) ,
                                     void (* CopiaValor ) ( void ** pA, void * pB) ,
+                                    void * pValor ,
                                     VER_tppVertice *ppVerticeParm )
    {
       VER_tpCondRet RetVer;
@@ -817,6 +817,8 @@
          return VER_CondRetListaVazia;
       } /* if */
 
+      /* AI: Lista de arestas não é vazia */
+
       pArestaInicial = (VER_tppAresta) LIS_ObterValor(pArestas);
       if( pArestaInicial == NULL )
       {
@@ -833,6 +835,11 @@
 
          if( pArestaTemp == NULL )
          {
+            RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+            if( RetLis != LIS_CondRetOK )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
             return VER_CondRetErroEstrutura;
          } /* if */
 
@@ -847,6 +854,11 @@
 
          if( pVerticeTemp->Flag != Flag )
          {
+            RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+            if( RetLis != LIS_CondRetOK )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
             return VER_CondRetFlagDiferente;
          } /* if */
 
@@ -855,6 +867,8 @@
       } /* while */
 
       RetLis = LIS_ProcurarValor( pArestas, pArestaInicial );
+
+      /* AI: Ponteiro corrente aponta para aresta inicial agora */
 
       if( RetLis != LIS_CondRetOK )
       {

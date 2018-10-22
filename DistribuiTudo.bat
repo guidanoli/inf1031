@@ -2,5 +2,7 @@ REM Copia apenas os arquivos importantes para a distruibuição na pasta DISTRIBUI
 
 if not exist DISTRIBUICAO mkdir DISTRIBUICAO
 call LimpaDistribuicao.bat
+copy TEXTO\*.txt DISTRIBUICAO
+copy SOURCE\* DISTRIBUICAO
 copy SCRIPTS\* DISTRIBUICAO
 copy ..\*.exe DISTRIBUICAO

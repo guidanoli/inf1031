@@ -5,6 +5,7 @@
 //				0.3	07/10/2018	empilhar
 //				0.4	08/10/2018	desempilhar
 //				0.5	08/10/2018	pilhavazia
+//				0.6	12/10/2018	copiarpilha
 // Propósito: 			Testa a integridade das funções de acesso
 //            			do módulo Pilha para com sua estrutura de dados,
 //            			baseando-se no modelo arquitetado.
@@ -101,3 +102,56 @@
 =empilhar 0 1 OK
 =vazia 0 OK
 =destruirpilha 0 OK
+
+== Testar copiar pilha inexistente
+=copiarpilha 0 1 PilhaNaoExiste
+
+== Copiar pilha vazia e verificar se ambas são vazia
+=criarpilha 0 OK
+=copiarpilha 0 1 OK
+=desempilhar 0 IntErro
+=desempilhar 1 IntErro
+=destruirpilha 0 OK
+=destruirpilha 1 OK
+
+== Copiar pilha com um elemento e verificar ambas
+=criarpilha 0 OK
+=empilhar 0 5 OK
+=copiarpilha 0 1 OK
+=desempilhar 0 5
+=desempilhar 1 5
+=desempilhar 0 IntErro
+=desempilhar 1 IntErro
+=destruirpilha 0 OK
+=destruirpilha 1 OK
+
+== Copiar pilha em pilha já existente e com outros elementos
+=criarpilha 0 OK
+=criarpilha 1 OK
+=empilhar 0 5 OK
+=empilhar 1 23 OK
+=empilhar 1 -1 OK
+=copiarpilha 0 1 OK
+=desempilhar 0 5
+=desempilhar 1 5
+=desempilhar 0 IntErro
+=desempilhar 1 IntErro
+=destruirpilha 0 OK
+=destruirpilha 1 OK
+
+== Testar copiar pilha em si mesma
+=criarpilha 0 OK
+=empilhar 0 5 OK
+=copiarpilha 0 0 OK
+=desempilhar 0 5
+=desempilhar 0 IntErro
+=destruirpilha 0 OK
+
+== Copiar pilha vazia em si mesma
+=criarpilha 0 OK
+=copiarpilha 0 0 OK
+=desempilhar 0 IntErro
+=destruirpilha 0 OK
+
+== Testar copiar pilha inexistente em si mesma
+=copiarpilha 0 0 PilhaNaoExiste

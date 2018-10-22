@@ -13,6 +13,7 @@
 *     Versão  Autor    Data     Observações
 *     0       gui   06/10/2018  Início do desenvolvimento
 *     1       gui   08/10/2018  Criar, destruir, empilhar, desempilhar e vazia
+*     2       gui   12/10/2018  Copiar
 *
 *  $ED Descrição do módulo
 *     Implementa pilhas genéricas a partir do módulo lista,
@@ -34,7 +35,7 @@
 *     ter acesso aos valores referenciados pelos elementos.
 *        Cabe ao módulo cliente esvaziar a pilha, desempilhando elemento
 *        por elemento, para então tratar de liberá-los ou manipulá-los
-*        como queira.
+*        como queira, caso queira.
 *
 ***************************************************************************/
 
@@ -245,6 +246,42 @@
 ***********************************************************************/
 
    PIL_tpCondRet PIL_PilhaVazia( PIL_tppPilha pPilha ) ;
+
+/***********************************************************************
+*
+*  $FC Função: PIL  &Copiar pilha
+*
+*  $ED Descrição da função
+*     Copia os elementos de uma pilha para outra
+*
+*  $AE Assertivas de Entrada
+*     Recebe o endereço para ponteiro que aponta para a pilha que
+*     será copiada, e o endereço de ponteiro que aponta para a
+*     a pilha que receberá os elementos da pilha fonte.
+*
+*  $AS Assertivas de Saída
+*     Se a pilha fonte existir, não tiver erros de estrutura,
+*     e não faltar memória, a pilha será copiada para o destino,
+*     sem alterar a estrutura da pilha fonte.
+*     Caso contrário, pode-se resultar em pilha com erro
+*     de estrutura. A função retornará a condição de retorno
+*     apropriada para o estado das pilhas.
+*
+*  $EP Parâmetros
+*     pFonte   - endereço de ponteiro para pilha a ser copiada.
+*     pDestino - endereço de ponteiro para pilha nova
+*
+*  $FV Valor retornado
+*     PIL_CondRetOK                 - copiou com sucesso
+*     PIL_CondRetPilhaNaoExiste     - ponteiro para pilha não existe
+*     PIL_CondRetValorFornecidoNulo - algum dos endereços não existe
+*     PIL_CondRetErroEstrutura      - há erros na estrutura interna da pilha
+*     PIL_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PIL_tpCondRet PIL_CopiarPilha( PIL_tppPilha * pFonte ,
+                                  PIL_tppPilha * pDestino ) ;
 
 #undef PILHA_EXT
 

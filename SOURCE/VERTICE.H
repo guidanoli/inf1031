@@ -18,7 +18,7 @@
 *     1.2     gui   25/09/2018  implementação das funções básicas de arestas
 *     1.3  cai,nag  03/10/2018  assertivas de entrada e saída
 *     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
-*     1.5     gui   10/10/2018  Flags
+*     1.5     gui   11/10/2018  funções para flags
 *
 *  $ED Descrição do módulo
 *     
@@ -40,21 +40,27 @@
 *        esta função deve promover a destruição (free) desse valor e
 *        de todos os dados nele ancorados.
 *
+*     A função de comparação recebe dois valores do mesmo tipo.
+*     e retorna:
+*        >>> 0 caso os valores forem iguais
+*        >>> diferente de 0 caso contrário
+*
+*     A função de cópia recebe um ponteiro para o valor aonde será
+*     copiado o valor do segundo parâmetro. É essencial para estruturas de dados
+*     que trabalham com ponteiros, como string e structs. O espaço referenciado
+*     deverá ser alocado dinamicamente.
+*
 *     Para funções que fazem uso da variável de caminhamento, o sentido
 *     padrão será sempre para FRENTE (VER_SentCamFrente).
 *
 ***************************************************************************/
 
-/* Definições de parâmetros */
-
 /***** Declarações exportadas pelo módulo *****/
 
-/* Tipo referência para um grafo */
-
-/* ponteiro para estrutura de vértice */
+/* Ponteiro para estrutura de vértice */
 typedef struct VER_tagVertice * VER_tppVertice;
 
-/* ponteiro para estrutura de aresta */
+/* Ponteiro para estrutura de aresta */
 typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
@@ -148,17 +154,9 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     necessáriamente vazias.
 *
 *  $EP Parâmetros
-*     ExcluirValor  - ponteiro para a função que processa a
-*                     exclusão do valor referenciado pelo elemento
-*                     a ser excluído.
-*                     Ver descrição do módulo.
+*     ExcluirValor  - Ver descrição do módulo.
+*     CopiaValor    - Ver descrição do módulo.
 *     pValor        - ponteiro genérico para o valor do vértice procurado
-*     CopiaValor   -  ponteiro para função que copia o valor de
-*                     pB para *pA. Essencial para estruturas de dados
-*                     que trabalham com ponteiros, como string.
-*                     O espaço referenciado por *pA é inicialmente nulo
-*                     e a função deve alocado dinamicamente este ponteiro
-*                     com o tipo de estrutura de dados apropriado.
 *     ppVerticeParm - endereço do ponteiro para vértice a ser criado
 *
 *  $FV Valor retornado
@@ -171,8 +169,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
 ***********************************************************************/
 
    VER_tpCondRet VER_CriarVertice(  void ( * ExcluirValor ) ( void * pDado ) ,
-                                    void * pValor ,
                                     void (* CopiaValor ) ( void ** pA, void * pB) ,
+                                    void * pValor ,
                                     VER_tppVertice *ppVerticeParm ) ;
 
 /***********************************************************************
@@ -264,21 +262,9 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     pPartida -      ponteiro para vértice de partida da aresta
 *     pDestino -      ponteiro para vértice de destino da aresta
 *     pAresta  -      ponteiro para valor da aresta
-*     ComparaValor -  ponteiro para função que compara valores do
-*                     tipo de pValorA e pValorB.
-*                     Retorno da função:
-*                     >>> 0 caso pValorA == pValorB
-*                     >>> diferente de 0 caso contrário
-*     CopiaValor   -  ponteiro para função que copia o valor de
-*                     pB para *pA. Essencial para estruturas de dados
-*                     que trabalham com ponteiros, como string.
-*                     O espaço referenciado por *pA é inicialmente nulo
-*                     e a função deve alocado dinamicamente este ponteiro
-*                     com o tipo de estrutura de dados apropriado.
-*     ExcluirValor  - ponteiro para a função que processa a
-*                     exclusão do valor referenciado pelo elemento
-*                     a ser excluído.
-*                     Ver descrição do módulo.
+*     ComparaValor -  Ver descrição do módulo.
+*     CopiaValor   -  Ver descrição do módulo.
+*     ExcluirValor  - Ver descrição do módulo.
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - criou sem problemas
@@ -328,11 +314,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     pVerPartida  - ponteiro para vértice de partida da aresta
 *     pVerDestino  - ponteiro para vértice de origem da aresta
 *     pValor       - ponteiro para valor armazenado na aresta
-*     ComparaValor - ponteiro para função que compara valores do
-*                    tipo de pValorA e pValorB.
-*                    Retorno da função:
-*                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contrário
+*     ComparaValor - Ver descrição do módulo.
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
@@ -373,11 +355,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     pVerPartida  - ponteiro para o vértice de partida
 *     pValor       - valor da aresta que deseja-se percorrer
 *     pVerDestino  - endereço para ponteiro para o vértice de destino
-*     ComparaValor - ponteiro para função que compara valores do
-*                    tipo de pValorA e pValorB.
-*                    Retorno da função:
-*                    >>> 0 caso pValorA == pValorB
-*                    >>> diferente de 0 caso contrário
+*     ComparaValor - Ver descrição do módulo.
 *     Sentido      - sentido de caminhamento da aresta
 *
 *  $FV Valor retornado
@@ -573,10 +551,18 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *  $FC Função: VER  &Compara flag dos vértices vizinhos (em um sentido)
 *
 *  $ED Descrição da função
+*     Certifica se todos os vértices que estão conectados a um dado
+*     vértice por arestas em um dado sentido têm uma dada flag.
 *
 *  $AE Assertivas de entrada
+*     Recebe um ponteiro apontando para vértice ou NULO, uma flag,
+*     e um sentido de caminhamento.
 *
 *  $AS Assertivas de saída
+*     Não modifica a estrutura interna dos vértice ou arestas.
+*     (a aresta corrente permanece a mesma e nenhum vértice ou
+*     aresta é modificado)
+*     Retorna a condição de retorno condizente com a análise.
 *
 *  $EP Parâmetros
 *     pVertice     - ponteiro para o vértice de partida
@@ -585,6 +571,12 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *                    a serem analisados
 *
 *  $FV Valor retornado
+*     VER_CondRetOK                 - todos os vértices conectados tem a flag
+*     VER_CondRetVerticeNaoExiste   - o ponteiro para o vértice é nulo
+*     VER_CondRetListaVazia         - o vértice não tem nenhuma aresta no sentido dado
+*     VER_CondRetFlagDiferente      - há ao menos uma aresta no sentido
+*                                     dado que possui flag diferente
+*     VER_CondRetErroEstrutura      - há algum erro na estrutura interna
 *
 ***********************************************************************/
 

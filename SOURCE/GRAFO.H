@@ -18,6 +18,7 @@
 *     1.2     gui     25/09/2018  implementação das funções básicas de vértices e arestas
 *     1.3     gui     02/10/2018  implementação da lista de origens e funções auxiliares
 *     1.4   gui,cai   03/10/2018  assertivas de entrada e saída
+*     1.5     gui     12/10/2018  exibir grafo
 *
 *  $ED Descrição do módulo
 *     
@@ -26,6 +27,35 @@
 *     O grafo possui uma cabeça que contém uma referência para uma lista de vértices,
 *     um lista de origens e um vértice corrente.
 *     O nó corrente será nulo se e somente se o grafo estiver vazio.
+*     
+*     As funções específicas para o valor armazenado em arestas e vertices
+*     ou "hotspots" são os seguintes:
+*
+*     ComparaValorAre   - Ponteiro para função de comparação de valores de aresta
+*                         Retorna 0 caso forem iguais, e diferente de 0 caso contrário
+*
+*     ComparaValorVer   - Ponteiro para função de comparação de valores de vértice
+*                         Retorna 0 caso forem iguais, e diferente de 0 caso contrário
+*
+*     CopiaValorAre     - Ponteiro para função que copia valores de aresta
+*                         Copia o valor de pb para *pA
+*
+*     CopiaValorVer     - Ponteiro para função que copia valores de vértice
+*                         Copia o valor de pb para *pA
+*
+*     ExcluirValorVer   - ponteiro para a função que processa a
+*                         exclusão do valor referenciado pelo vértice
+*                         Ver descrição do módulo.
+*
+*     ExcluirValorAre   - ponteiro para a função que processa a
+*                         exclusão do valor referenciado pela aresta
+*                         Ver descrição do módulo.
+*
+*     ConcatenaValorVer - Ponteiro para função que concatena o valor de pB
+*                         no final da string pA
+*                         RETORNA:
+*                         >> 0 caso a concatenação ocorreu com sucesso
+*                         >> 1 caso *pA não tenha mais espaço
 *
 ***************************************************************************/
 
@@ -112,20 +142,13 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     GRF_CondRetOK.
 *
 *  $EP Parâmetros
-*     ComparaValorAre   - Ponteiro para função de comparação de valores de aresta
-*                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contrário
-*     ComparaValorVer   - Ponteiro para função de comparação de valores de vértice
-*                         Retorna 0 caso *pa == *pB, e diferente de 0 caso contrário
-*     CopiaValorAre     - Ponteiro para função que copia valores de aresta
-*                         Copia o valor de pb para *pA
-*     CopiaValorVer     - Ponteiro para função que copia valores de vértice
-*                         Copia o valor de pb para *pA
-*     ExcluirValorVer   - ponteiro para a função que processa a
-*                         exclusão do valor referenciado pelo vértice
-*                         Ver descrição do módulo.
-*     ExcluirValorAre   - ponteiro para a função que processa a
-*                         exclusão do valor referenciado pela aresta
-*                         Ver descrição do módulo.
+*     ComparaValorAre   - Ver descrição do módulo
+*     ComparaValorVer   - Ver descrição do módulo
+*     CopiaValorAre     - Ver descrição do módulo
+*     CopiaValorVer     - Ver descrição do módulo
+*     ExcluirValorVer   - Ver descrição do módulo
+*     ExcluirValorAre   - Ver descrição do módulo
+*     ConcatenaValorVer - Ver descrição do módulo
 *     ppGrafoParam      - Endereço para ponteiro de grafo que será criado
 *                         Caso não for possível criar o grafo, *ppGrafoParam = NULL
 *
@@ -531,16 +554,39 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *  $FC Função: GRF  -Exibir grafo
 *
 *  $ED Descrição da função
+*     Exibe grafo, caminhando a partir de uma origem, pelas arestas
+*     mais "antigas" primeiro.
 *
 *  $AE Assertivas de entrada
+*     Recebe um ponteiro que aponta para grafo, um ponteiro para
+*     o valor armazenado no vértice origem, e uma string de
+*     saída aonde será armazenada a exibição.
+*     É recomendável que a string passada tenha tamanho
+*     igual à constante GRF_STR_BUFFER_SIZE, para poucos vértices.
 *
 *  $AS Assertivas de saída
+*     Se nenhum dos ponteiros for nulo, a string de saída tiver
+*     capacidade para armazenar toda a exibição, e a estrutura
+*     do grafo não apresentar erros, a função armazenará corretamente
+*     a exibição do grafo na string de saída.
+*     Se nenhum dos ponteiros for nulo, a string é esvaziada mesmo que
+*     no meio da execução da função haja algum problema.
+*     Se os parâmetros e a estrutura interna estiverem íntegros, a
+*     pilha de releitura será esvaziada antes do caminhamento.
 *
 *  $EP Parâmetros
-*     pGrafo      - ponteiro para o grafo
-*     StringSaida - string de saída referenciada
+*     pGrafo       - ponteiro para o grafo
+*     pValorOrigem - valor da origem
+*     StringSaida  - string de saída referenciada
 *
 *  $FV Valor retornado
+*     GRF_CondRetOK
+*     GRF_CondRetGrafoNaoExiste
+*     GRF_CondRetGrafoVazio
+*     GRF_CondRetVerticeNaoExiste
+*     GRF_CondRetValorFornecidoNulo
+*     GRF_CondRetErroEstrutura
+*     GRF_CondRetFaltouMemoria
 *
 ***********************************************************************/
 

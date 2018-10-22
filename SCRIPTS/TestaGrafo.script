@@ -26,6 +26,8 @@
 =declararparm  StrB        string  "B"
 =declararparm  StrC        string  "C"
 =declararparm  StrD        string  "D"
+=declararparm  StrE        string  "E"
+=declararparm  StrF        string  "F"
 
 == Declarar os valores das arestas
 =declararparm  Stra        string  "a"
@@ -505,11 +507,153 @@
 =exibirgrafo 0 StrA StrA OK
 =destruirgrafo 0 OK
 
-//NAO FUNCIONA AINDA
-== Exibir grafo A (origem) --a--> B
+//***********************************************************************
+//
+//	Notação de grafo dirigido em texto
+//	[A]		A é origem
+//	--a-->		aresta a
+//	B		vértice B
+//	[A] --a--> B	aresta a sai da origem A e vai para vértice B
+//	
+//	As conexões são separadas por |
+//
+//***********************************************************************
+
+== Exibir grafo [A] --a--> B
 =criargrafo 0 OK
 =inserirvertice 0 StrA OK
 =inserirvertice 0 StrB OK
 =inseriraresta 0 StrA StrB Stra OK
 =exibirgrafo 0 StrA "AB" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> [A]
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrA Stra OK
+=exibirgrafo 0 StrA "AB" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> B
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrB Stra OK
+=exibirgrafo 0 StrA "AB" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> [A] | B --a--> B | [A] --a--> [A]
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrA Stra OK
+=inseriraresta 0 StrB StrB Stra OK
+=inseriraresta 0 StrA StrA Stra OK
+=exibirgrafo 0 StrA "AB" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | [A] --b--> B | [A] --c--> B
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrA StrB Strb OK
+=inseriraresta 0 StrA StrB Strc OK
+=exibirgrafo 0 StrA "AB" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | [A] --a--> C
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrA StrC Stra OK
+=exibirgrafo 0 StrA "ABC" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> C
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrC Stra OK
+=exibirgrafo 0 StrA "ABC" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> C | [A] --a--> C
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrC Stra OK
+=inseriraresta 0 StrA StrC Stra OK
+=exibirgrafo 0 StrA "ABC" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> C | C --a--> [A]
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrC Stra OK
+=inseriraresta 0 StrC StrA Stra OK
+=exibirgrafo 0 StrA "ABC" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> [B] | [B] --a--> [A]
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=toggleorigem 0 OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrA Stra OK
+=exibirgrafo 0 StrA "AB" OK
+=exibirgrafo 0 StrB "BA" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> [B]
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=toggleorigem 0 OK
+=inseriraresta 0 StrA StrB Stra OK
+=exibirgrafo 0 StrA "AB" OK
+=exibirgrafo 0 StrB "B" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> B | B --a--> C | C --a--> E | E --a--> F | C --a--> D | D --a--> B | B --a--> F
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inserirvertice 0 StrD OK
+=inserirvertice 0 StrE OK
+=inserirvertice 0 StrF OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrC Stra OK
+=inseriraresta 0 StrC StrE Stra OK
+=inseriraresta 0 StrE StrF Stra OK
+=inseriraresta 0 StrC StrD Stra OK
+=inseriraresta 0 StrD StrB Stra OK
+=inseriraresta 0 StrB StrF Stra OK
+=exibirgrafo 0 StrA "ABCEFD" OK
+=destruirgrafo 0 OK
+
+== Exibir grafo [A] --a--> C | [A] --a--> B | B --a--> C
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=inserirvertice 0 StrC OK
+=inseriraresta 0 StrA StrC Stra OK
+=inseriraresta 0 StrA StrB Stra OK
+=inseriraresta 0 StrB StrC Stra OK
+=exibirgrafo 0 StrA "ACB" OK
 =destruirgrafo 0 OK
