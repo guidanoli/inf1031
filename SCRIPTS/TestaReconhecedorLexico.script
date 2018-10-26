@@ -1,0 +1,86 @@
+// Script:    			TestaReconhecedorLexico.script
+// Autor:     			Guilherme Dantas 
+// Versionamento:		0.1	26/10/2018	criarlexrec, destruirlexrec
+// Propósito: 			Testa a integridade das funções de acesso
+//            			do módulo Reconhecedor Léxico para com sua estrutura de dados,
+//            			baseando-se no modelo arquitetado.
+//
+
+== Declarar as condicoes de retorno
+=declararparm  OK                    int 0
+=declararparm  RecLexNaoExiste       int 1 
+=declararparm  RecLexVazio           int 2
+=declararparm  EstadoExiste          int 3
+=declararparm  EstadoNaoExiste       int 4
+=declararparm  ValorFornecidoNulo    int 5
+=declararparm  TransicaoExiste       int 6
+=declararparm  TransicaoNaoExiste    int 7
+=declararparm  UnicaOrigem           int 8
+=declararparm  FuncNula	             int 9
+=declararparm  ErroEstrutura         int 10
+=declararparm  Memoria               int 11
+
+== Declarar Tipos de Estados
+=declararparm  EstadoFinal           int 0
+=declararparm  EstadoIntermediario   int 1
+
+== Declarar Nomes para Estados
+=declararparm  NomeDummy             string "Nome dummy"
+
+== Criar Reconhecedor Léxico
+=criarlexrec OK
+
+== Destruir Reconhecedor Léxico
+=destruirlexrec OK
+
+== Testar destruir Reconhecedor Léxico inexistente
+=destruirlexrec RecLexNaoExiste
+
+== Inserir Estado em Reconhecedor Léxico inexistente
+=inserirestado 0 NomeDummy EstadoFinal RecLexNaoExiste
+
+== Inserir Estado com tipo de Estado inválido e recuperar
+=inserirestado 0 NomeDummy 37 RecLexNaoExiste
+=recuperar
+
+== Inserir Estado e destruir Reconhecedor Léxico ainda com o Estado existente
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=destruirlexrec OK
+
+== Testar inserir dois Estados com mesmo id no mesmo Reconhecedor Léxico
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirestado 0 NomeDummy EstadoFinal EstadoExiste
+=destruirlexrec OK
+
+== Testar remover Estado de Reconhecedor Léxico inexistente
+=removerestado 0 RecLexNaoExiste
+
+== Testar remover Estado de Reconhecedor Léxico vazio
+=criarlexrec OK
+=removerestado 0 RecLexVazio
+=destruirlexrec OK
+
+== Testar remover Estado inexistente de Reconhecedor Léxico
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=removerestado 1 EstadoNaoExiste
+=destruirlexrec OK
+
+== Testar remover Estado origem de Reconhecedor Léxico com mais de um Estado
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirestado 1 NomeDummy EstadoFinal OK
+=removerestado 0 UnicaOrigem
+=removerestado 1 OK
+=removerestado 0 OK
+=destruirlexrec OK
+
+== Remover Estado de Reconhecedor Léxico
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=removerestado 0 OK
+=destruirlexrec OK
+
+
