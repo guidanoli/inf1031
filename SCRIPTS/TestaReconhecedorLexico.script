@@ -24,8 +24,15 @@
 =declararparm  EstadoFinal           int 0
 =declararparm  EstadoIntermediario   int 1
 
-== Declarar Nomes para Estados
+== Declarar Nomes de Estados
 =declararparm  NomeDummy             string "Nome dummy"
+
+== Declarar Rótulos
+=declararparm  FimFluxo              string "\\f"
+=declararparm  Decimais	             string "\\d"
+=declararparm  Letras                string "\\l"
+=declararparm  Espacamento           string "\\b"
+=declararparm  Outros                string "\\o"
 
 == Criar Reconhecedor Léxico
 =criarlexrec OK
@@ -83,4 +90,71 @@
 =removerestado 0 OK
 =destruirlexrec OK
 
+== Testar inserir Transição em Reconhecedor Léxico inexistente
+=inserirtransicao 0 0 Letras RecLexNaoExiste
 
+== Testar inserir Transição entre Estados inexistentes em Reconhecedor Léxico
+=criarlexrec OK
+=inserirtransicao 0 0 Letras EstadoNaoExiste
+=destruirlexrec OK
+
+== Inserir Transição entre Estados existentes em um Reconhecedor Léxico
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirtransicao 0 0 Letras OK
+=destruirlexrec OK
+
+== Testar inserir Transição já existente em um Reconhecedor Léxico
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirtransicao 0 0 Letras OK
+=inserirtransicao 0 0 Letras TransicaoExiste
+=destruirlexrec OK
+
+== Inserir Transição com mesmo Rótulo indo para Estados diferentes
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirestado 1 NomeDummy EstadoIntermediario OK
+=inserirestado 2 NomeDummy EstadoFinal OK
+=inserirtransicao 0 0 Letras OK
+=inserirtransicao 0 1 Letras OK
+=inserirtransicao 0 2 Letras OK
+=inserirtransicao 1 0 Letras OK
+=destruirlexrec OK
+
+== Inserir Transição com Rótulos diferentes entre os mesmos Estados
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirestado 1 NomeDummy EstadoIntermediario OK
+=inserirtransicao 0 1 Letras OK
+=inserirtransicao 0 1 Decimais OK
+=inserirtransicao 0 1 Outros OK
+=destruirlexrec OK
+
+== Testar remover Transição de Reconhecedor Léxico inexistente
+=removertransicao 0 0 Letras RecLexNaoExiste
+
+== Testar remover Transição de Reconhecedor Léxico vazio
+=criarlexrec OK
+=removertransicao 0 0 Letras RecLexVazio
+=destruirlexrec OK
+
+== Remover Transição de Reconhecedor Léxico
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirtransicao 0 0 Letras OK
+=removertransicao 0 0 Letras OK
+=destruirlexrec OK
+
+== Testar remover Transição inexistente
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=inserirtransicao 0 0 Letras OK
+=removertransicao 0 0 Decimais TransicaoNaoExiste
+=destruirlexrec OK
+
+== Testar remover Transição entre Estados inexistentes
+=criarlexrec OK
+=inserirestado 0 NomeDummy EstadoFinal OK
+=removertransicao 1 1 Decimais EstadoNaoExiste
+=destruirlexrec OK

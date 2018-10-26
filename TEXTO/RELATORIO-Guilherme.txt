@@ -24,5 +24,8 @@
 12/10	4h			codificar módulo		copiarpilha, exibirgrafo
 12/10	1h			redigir script de teste		copiarpilha, exibirgrafo
 22/10	1h			revisar código do módulo	pré-compiladores de pilha, biblioteca estática
-26/10	4h			codificar módulo		criar, destruir rec.lex e estado
-26/10	4h			redigir script de teste		criar, destruir rec.lex e estado
+26/10	2h			codificar módulo		criar, destruir rec.lex e estado
+26/10	2h			redigir script de teste		criar, destruir rec.lex e estado
+26/10	1h			revisar código do módulo	erro no código de VERTICE.C, acesso a ponteiro nulo
+26/10	1h			codificar módulo		ins./remov. aresta
+26/10	1h			redigir script de teste		ins./remov. aresta

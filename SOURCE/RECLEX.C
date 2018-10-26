@@ -108,7 +108,7 @@
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
-/***********************************************************************
+/**************************************************************************************
 *
 *  $FC Função: RLEX &Reconhecer comandos
 *
@@ -123,11 +123,11 @@
 *    =destruirestado            idEstado     RetEsperado
 *     //a ser implementado VVVV
 *    =inserirtransicao          idEstadoPart idEstadoDest   Rotulo      RetEsperado
-*    =removertransicao          idEstadoPart Rotulo         RetEsperado
+*    =removertransicao          idEstadoPart idEstadoDest   Rotulo      RetEsperado
 *    =reconhecerString          String       RetEsperado
 *    =reconhecerArquivo         CaminhoArq   RetEsperado
 *
-***********************************************************************/
+**************************************************************************************/
 
    TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
 
@@ -212,6 +212,8 @@
 
       } /* if */
 
+      /* Comando =removerestado */
+
       if( strcmp(ComandoTeste,REMOVER_ESTADO_CMD) == 0 )
       {
          int idEstado = -1;
@@ -228,11 +230,86 @@
          /* A função ComparaEstados compara apenas os ids, portanto os
             outros campos são fantasiosos e não serão levados em conta */
 
+         if( pEstado == NULL )
+         {
+            return TST_CondRetMemoria;
+         } /* if */
+
          CondRetObtida = GRF_RemoverVertice( pRec , pEstado );
 
          LiberaEstado( pEstado );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao remover estado");
+
+      } /* if */
+
+      /* Comando =inserirtransicao */
+
+      if( strcmp(ComandoTeste,INSERIR_TRANSICAO_CMD) == 0 )
+      {
+         int idEstadoPartida = -1 , idEstadoDestino = -1;
+         RLEX_tpEstado pEstadoPartida = NULL , pEstadoDestino = NULL;
+
+         char Rotulo[DIM_ROTULO] = "";
+
+         numParamLidos = LER_LerParametros("iisi",&idEstadoPartida,&idEstadoDestino,Rotulo,&CondRetEsperada);
+
+         if( numParamLidos != 4 || strcmp(Rotulo,"") == 0 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         pEstadoPartida = CriarEstado( idEstadoPartida , "" , RLEX_tpEstadoFinal );
+         pEstadoDestino = CriarEstado( idEstadoDestino , "" , RLEX_tpEstadoFinal );
+
+         if( pEstadoPartida == NULL || pEstadoDestino == NULL )
+         {
+            LiberaEstado( pEstadoPartida );
+            LiberaEstado( pEstadoDestino );
+            return TST_CondRetMemoria;
+         } /* if */
+
+         CondRetObtida = GRF_InserirAresta( pRec , pEstadoPartida , pEstadoDestino , Rotulo );
+
+         LiberaEstado( pEstadoPartida );
+         LiberaEstado( pEstadoDestino );
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao inserir transicao");
+
+      } /* if */
+
+      /* Comando =removertransicao */
+
+      if( strcmp(ComandoTeste,REMOVER_TRANSICAO_CMD) == 0 )
+      {
+         int idEstadoPartida = -1 , idEstadoDestino = -1;
+         RLEX_tpEstado pEstadoPartida = NULL , pEstadoDestino = NULL;
+
+         char Rotulo[DIM_ROTULO] = "";
+
+         numParamLidos = LER_LerParametros("iisi",&idEstadoPartida,&idEstadoDestino,Rotulo,&CondRetEsperada);
+
+         if( numParamLidos != 4 || strcmp(Rotulo,"") == 0 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         pEstadoPartida = CriarEstado( idEstadoPartida , "" , RLEX_tpEstadoFinal );
+         pEstadoDestino = CriarEstado( idEstadoDestino , "" , RLEX_tpEstadoFinal );
+
+         if( pEstadoPartida == NULL || pEstadoDestino == NULL )
+         {
+            LiberaEstado( pEstadoPartida );
+            LiberaEstado( pEstadoDestino );
+            return TST_CondRetMemoria;
+         } /* if */
+
+         CondRetObtida = GRF_RemoverAresta( pRec , pEstadoPartida , pEstadoDestino , Rotulo );
+
+         LiberaEstado( pEstadoPartida );
+         LiberaEstado( pEstadoDestino );
+
+         return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao remover transicao");
 
       } /* if */
 
@@ -314,7 +391,10 @@
 
    void LiberaEstado ( void * pa )
    {
-      free(pa);
+      if( pa != NULL )
+      {
+         free(pa);
+      } /* if */
 
    } /* Fim função: RLEX -Libera Estado */
 

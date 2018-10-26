@@ -254,7 +254,7 @@
    {
 
       LIS_tpCondRet RetLis;
-      VER_tppAresta pAresta;
+      VER_tppAresta pAresta = NULL;
       LIS_tppLista pListaDestino, pListaPartida;
       VER_tppVertice pDestino, pPartida;
 
@@ -307,6 +307,11 @@
          return VER_CondRetArestaNaoExiste;
       } /* else */
       
+      if( pAresta == NULL )
+      {
+         return VER_CondRetArestaNaoExiste;
+      } /* if */
+
       pDestino = pAresta->pDest;
       pPartida = pAresta->pPart;
 
