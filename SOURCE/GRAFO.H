@@ -273,6 +273,9 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     o elemento que aponta pro vértice da lista de origem.
 *     A função retorna GRF_CondRetOK se foi removido o vértice sem
 *     problemas, e a condição de retorno apropriada caso contrário.
+*     Caso o vértice tenha sido removido com sucesso, o vértice corrente
+*     é nulo (caso o grafo tenha ficado vazio) ou aponta para a primeira
+*     origem definida.
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
@@ -593,5 +596,53 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
    GRF_tpCondRet GRF_ExibirGrafo( GRF_tppGrafo pGrafo ,
                                   void * pValorOrigem ,
                                   char * StringSaida ) ;
+
+/***********************************************************************
+*
+*  $FC Função: GRF  -Obter o número de vértices
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro que aponta para grafo ou NULO.
+*
+*  $AS Assertivas de saída
+*     Se o grafo existir, e não houver erro de estrutura, a função
+*     retornará o número de vértices no grafo.
+*     Caso contrário, será retornado -1.
+*     A função não altera a estrutura interna do grafo.
+*
+*  $EP Parâmetros
+*     pGrafo       - ponteiro para o grafo
+*
+*  $FV Valor retornado
+*     Número de vértices ou -1 ( para grafo inexistente ou com erros
+*     na estrutura internaa ).
+*
+***********************************************************************/
+
+   int GRF_ObterNumVertices( GRF_tppGrafo pGrafo );
+
+/***********************************************************************
+*
+*  $FC Função: GRF  -Obter o número de vértices
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro que aponta para grafo ou NULO.
+*
+*  $AS Assertivas de saída
+*     Se o grafo existir, e não houver erro de estrutura, a função
+*     retornará o número de origens no grafo.
+*     Caso contrário, será retornado -1.
+*     A função não altera a estrutura interna do grafo.
+*
+*  $EP Parâmetros
+*     pGrafo       - ponteiro para o grafo
+*
+*  $FV Valor retornado
+*     Número de origens ou -1 ( para grafo inexistente ou com erros
+*     na estrutura internaa ).
+*
+***********************************************************************/
+
+   int GRF_ObterNumOrigens( GRF_tppGrafo pGrafo );
 
 /********** Fim do módulo de definição: GRF  Grafo **********/

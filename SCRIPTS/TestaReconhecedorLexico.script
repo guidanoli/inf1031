@@ -21,8 +21,9 @@
 =declararparm  Memoria               int 11
 
 == Declarar Tipos de Estados
-=declararparm  EstadoFinal           int 0
+=declararparm  EstadoInicial         int 0
 =declararparm  EstadoIntermediario   int 1
+=declararparm  EstadoFinal           int 2
 
 == Declarar Nomes de Estados
 =declararparm  NomeDummy             string "Nome dummy"

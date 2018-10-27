@@ -27,5 +27,10 @@
 26/10	2h			codificar módulo		criar, destruir rec.lex e estado
 26/10	2h			redigir script de teste		criar, destruir rec.lex e estado
 26/10	1h			revisar código do módulo	erro no código de VERTICE.C, acesso a ponteiro nulo
-26/10	1h			codificar módulo		ins./remov. aresta
-26/10	1h			redigir script de teste		ins./remov. aresta
+26/10	1h			codificar módulo		ins./remov. transicao
+26/10	1h			redigir script de teste		ins./remov. transicao
+27/10	1h			revisar código do módulo	erro no código de GRAFO.C, contador de origens
+27/10	1h			codificar código do módulo	contador de origens e vértices c/ funções de acesso
+27/10	30min			redigir script de teste		contador de origens e vértices c/ funções de acesso
+27/10	2h			redigir código do módulo	função que permite caminhar pelo reclex apenas
+								passando o caracter do fluxo de entrada

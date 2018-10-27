@@ -149,8 +149,6 @@
 *  $FV Valor retornado
 *     PIL_CondRetOK
 *     PIL_CondRetPilhaNaoExiste
-*     PIL_CondRetErroEstrutura
-*     PIL_CondRetFaltouMemoria
 *
 ***********************************************************************/
 

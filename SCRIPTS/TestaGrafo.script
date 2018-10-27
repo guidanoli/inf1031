@@ -45,6 +45,9 @@
 == Declarar string vazia
 =declararparm StrVazia string ""
 
+== Declarar erro ao obter número de vértices/origens
+=declararparm ErroObterNum int -1
+
 == Criar grafo
 =criargrafo 0 OK
 
@@ -656,4 +659,89 @@
 =inseriraresta 0 StrA StrB Stra OK
 =inseriraresta 0 StrB StrC Stra OK
 =exibirgrafo 0 StrA "ACB" OK
+=destruirgrafo 0 OK
+
+== Obter número de vértices de grafo inexistente
+=obternumvert 0 ErroObterNum
+
+== Obter número de vértices de grafo vazio
+=criargrafo 0 OK
+=obternumvert 0 0
+=destruirgrafo 0 OK
+
+== Obter número de vértices de grafo com um vértice
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=obternumvert 0 1
+=destruirgrafo 0 OK
+
+== Obter número de vértices de grafo com dois vértices
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=obternumvert 0 2
+=destruirgrafo 0 OK
+
+== Obter número de vértices de grafo com n vértices (enquanto insere/remove)
+=criargrafo 0 OK
+=obternumvert 0 0
+=inserirvertice 0 StrA OK
+=obternumvert 0 1
+=inserirvertice 0 StrB OK
+=obternumvert 0 2
+=inserirvertice 0 StrC OK
+=obternumvert 0 3
+=inserirvertice 0 StrD OK
+=obternumvert 0 4
+=removervertice 0 StrD OK
+=obternumvert 0 3
+=removervertice 0 StrC OK
+=obternumvert 0 2
+=removervertice 0 StrB OK
+=obternumvert 0 1
+=removervertice 0 StrA OK
+=obternumvert 0 0
+=destruirgrafo 0 OK
+
+== Obter número de origens de grafo inexistente
+=obternumorig 0 ErroObterNum
+
+== Obter número de origens de grafo vazio
+=criargrafo 0 OK
+=obternumorig 0 0
+=destruirgrafo 0 OK
+
+== Obter número de origens de grafo com um vértice
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=obternumorig 0 1
+=destruirgrafo 0 OK
+
+== Obter número de origens de grafo com dois vértices
+=criargrafo 0 OK
+=inserirvertice 0 StrA OK
+=inserirvertice 0 StrB OK
+=obternumorig 0 1
+=destruirgrafo 0 OK
+
+== Obter número de origens de grafo com n vértices (enquanto insere/remove)
+=criargrafo 0 OK
+=obternumorig 0 0
+=inserirvertice 0 StrA OK
+=obternumorig 0 1
+=inserirvertice 0 StrB OK
+=obternumorig 0 1
+=inserirvertice 0 StrC OK
+=obternumorig 0 1
+=inserirvertice 0 StrD OK
+=obternumorig 0 1
+=removervertice 0 StrD OK
+=obternumorig 0 1
+=removervertice 0 StrC OK
+=obternumorig 0 1
+=removervertice 0 StrB OK
+=obternumorig 0 1
+=removervertice 0 StrA OK
+=obternumvert 0 0
+=obternumorig 0 0
 =destruirgrafo 0 OK

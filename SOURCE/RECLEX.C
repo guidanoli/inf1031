@@ -16,7 +16,9 @@
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
 *     0       gui   19/10/2018  Início do desenvolvimento (baseado em TSTGRF.c)
-*     0.1     gui   26/10/2018  criar e destruir rec.lex., inserir e remover estado
+*     0.1     gui   26/10/2018  criar e destruir rec.lex.
+*     0.2     gui   26/10/2018  inserir e remover estado
+*     0.3     gui   26/10/2018  inserir e remover transições
 *
 ***************************************************************************/
 
@@ -30,6 +32,7 @@
 #include    "LerParm.h"
 
 #include    "GRAFO.H"
+#include    "PILHA.H"
 
 #define CRIAR_RLEX_CMD           "=criarlexrec"
 #define DESTRUIR_RLEX_CMD        "=destruirlexrec"
@@ -41,12 +44,32 @@
 #define RECONHECER_ARQUIVO_CMD   "=reconhecerarquivo"
 
 #define DIM_NOME_ESTADO    30
-#define DIM_ROTULO         10
+#define DIM_ROTULO         30
 #define TAMANHO_BUFFER_STR 500
 
 /* Ponteiro para estado */
 
-   typedef struct tagEstado * RLEX_tpEstado;
+   typedef struct tagEstado * RLEX_tppEstado;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: RLEX Condição de retorno do módulo de Rec.Lex.
+*
+*
+***********************************************************************/
+
+   typedef enum {
+
+      RLEX_CondRetOK,
+         /* Ok! */
+
+      RLEX_CondRetLexRecNaoExiste,
+         /* O reconhecedor léxico não existe */
+
+      RLEX_CondRetErroEstrutura
+         /* Há um erro na estrutura do reconhecedor léxico */
+
+   } RLEX_tpCondRet;
 
 /***********************************************************************
 *
@@ -57,10 +80,10 @@
 
    typedef enum {
 
-      RLEX_tpEstadoFinal = 0 ,
+      RLEX_tppEstadoFinal = 0 ,
          /* Estado final */
 
-      RLEX_tpEstadoIntermediario = 1
+      RLEX_tppEstadoIntermediario = 1 
          /* Estado intermediário */
 
    } RLEX_tpTipoEstado;
@@ -84,27 +107,39 @@
          /* Tipo do Estado
             Ver definição da enumeração RLEX_tpTipoEstado */
 
-   } RLEX_tagEstado ;
+   } RLEX_tpEstado ;
 
 /***** Variáveis globais do módulo *****/
 
+   int numElementos = 0;
+   RLEX_tppEstado pOrigem = NULL;
    GRF_tppGrafo pRec = NULL ;
+   PIL_tppPilha pPilhaReleitura = NULL ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static RLEX_tpEstado CriarEstado ( int idEstado ,
-                                      char nomeEstado[DIM_NOME_ESTADO] , 
-                                      RLEX_tpTipoEstado tipoEstado );
-
-   static void LiberaEstado ( void * pa );
-
-   static int ValidarTipoEstado ( int Estado );
-
-   static int ComparaEstados ( void * pa , void * pb );
-   static void CopiaEstados ( void ** pa , void * pb );
-   static int ConcatenaEstados ( char * pa , void * pb );
-   static int ComparaStrings ( void * pa , void * pb ) ;
+   static int ComparaEstados ( void * pa , void * pb ) ;
+   static void CopiaEstados ( void ** pa , void * pb ) ;
+   static int ConcatenaEstados ( char * pa , void * pb ) ;
+   static int ComparaRotulos ( void * pa , void * pb ) ;
    static void CopiaStrings ( void ** pa , void * pb ) ;
+
+   //WIP
+   static char * ReconheceStr ( char * Str ) ;
+
+   //WIP
+   static char * ReconheceArq ( char * Path ) ;
+   
+   //WIP
+   static RLEX_tpCondRet ReconheceChar ( char c ) ;
+
+   static char * TraduzCaractere ( char c ) ;
+
+   static int ValidarTipoEstado ( int Estado ) ;
+   static void LiberaEstado ( void * pa ) ;
+   static RLEX_tppEstado CriarEstado ( int idEstado ,
+                                      char nomeEstado[DIM_NOME_ESTADO] , 
+                                      RLEX_tpTipoEstado tipoEstado ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -119,13 +154,13 @@
 *
 *    =criarlexrec               RetEsperado
 *    =destruirlexrec            RetEsperado
-*    =inserirestado             idEstado     nomeEstado     tipoEstado  RetEsperado
+*    =inserirestado             idEstado     nomeEstado        tipoEstado  RetEsperado
 *    =destruirestado            idEstado     RetEsperado
+*    =inserirtransicao          idEstadoPart idEstadoDest      Rotulo      RetEsperado
+*    =removertransicao          idEstadoPart idEstadoDest      Rotulo      RetEsperado
 *     //a ser implementado VVVV
-*    =inserirtransicao          idEstadoPart idEstadoDest   Rotulo      RetEsperado
-*    =removertransicao          idEstadoPart idEstadoDest   Rotulo      RetEsperado
-*    =reconhecerString          String       RetEsperado
-*    =reconhecerArquivo         CaminhoArq   RetEsperado
+*    =reconhecerstring          String       LexemasEsperados
+*    =reconhecerarquivo         CaminhoArq   RetEsperado
 *
 **************************************************************************************/
 
@@ -135,6 +170,7 @@
 
       GRF_tpCondRet CondRetEsperada = GRF_CondRetOK;
       GRF_tpCondRet CondRetObtida = GRF_CondRetFaltouMemoria;
+      PIL_tpCondRet RetPil = PIL_CondRetFaltouMemoria;
 
       /* Comando =criarlexrec */
 
@@ -147,7 +183,7 @@
             return TST_CondRetParm;
          } /* if */
 
-         CondRetObtida = GRF_CriarGrafo( ComparaStrings ,
+         CondRetObtida = GRF_CriarGrafo( ComparaRotulos ,
                                   ComparaEstados ,
                                   CopiaStrings ,
                                   CopiaEstados ,
@@ -155,6 +191,19 @@
                                   NULL ,
                                   ConcatenaEstados ,
                                   &pRec ) ;
+
+         if( CondRetObtida == GRF_CondRetOK )
+         {
+            numElementos = 0;
+            RetPil = PIL_CriarPilha(&pPilhaReleitura);
+
+            if( RetPil != PIL_CondRetOK )
+            {
+               GRF_DestruirGrafo(&pRec);
+               return TST_CondRetMemoria;
+            } /* if */
+
+         } /* if */
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao criar reconhecedor lexico");
 
@@ -173,6 +222,12 @@
 
          CondRetObtida = GRF_DestruirGrafo( &pRec );
 
+         if( CondRetObtida == GRF_CondRetOK )
+         {
+            numElementos = 0;
+            PIL_DestruirPilha(&pPilhaReleitura);
+         } /* if */
+
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao destruir reconhecedor lexico");
 
       } /* if */
@@ -185,7 +240,7 @@
          char nomeEstado[DIM_NOME_ESTADO] = "";
          int tipoEstado = -1;
 
-         RLEX_tpEstado pEstado = NULL;
+         RLEX_tppEstado pEstado = NULL;
 
          numParamLidos = LER_LerParametros("isii",&idEstado,nomeEstado,&tipoEstado,&CondRetEsperada);
 
@@ -207,6 +262,15 @@
          {
             LiberaEstado( pEstado );
          } /* if */
+         else
+         {
+            if( numElementos == 0 )
+            {
+               pOrigem = pEstado;
+            } /* if */
+
+            numElementos = GRF_ObterNumVertices(pRec);
+         } /* else */
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao inserir estado");
 
@@ -217,7 +281,7 @@
       if( strcmp(ComandoTeste,REMOVER_ESTADO_CMD) == 0 )
       {
          int idEstado = -1;
-         RLEX_tpEstado pEstado = NULL;
+         RLEX_tppEstado pEstado = NULL;
 
          numParamLidos = LER_LerParametros("ii",&idEstado,&CondRetEsperada);
 
@@ -226,7 +290,7 @@
             return TST_CondRetParm;
          } /* if */
 
-         pEstado = CriarEstado( idEstado , "" , RLEX_tpEstadoFinal );
+         pEstado = CriarEstado( idEstado , "" , RLEX_tppEstadoFinal );
          /* A função ComparaEstados compara apenas os ids, portanto os
             outros campos são fantasiosos e não serão levados em conta */
 
@@ -238,6 +302,12 @@
          CondRetObtida = GRF_RemoverVertice( pRec , pEstado );
 
          LiberaEstado( pEstado );
+         numElementos = GRF_ObterNumVertices(pRec);
+
+         if( numElementos == 0 )
+         {
+            pOrigem = NULL;
+         } /* if */
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao remover estado");
 
@@ -248,7 +318,7 @@
       if( strcmp(ComandoTeste,INSERIR_TRANSICAO_CMD) == 0 )
       {
          int idEstadoPartida = -1 , idEstadoDestino = -1;
-         RLEX_tpEstado pEstadoPartida = NULL , pEstadoDestino = NULL;
+         RLEX_tppEstado pEstadoPartida = NULL , pEstadoDestino = NULL;
 
          char Rotulo[DIM_ROTULO] = "";
 
@@ -259,8 +329,8 @@
             return TST_CondRetParm;
          } /* if */
 
-         pEstadoPartida = CriarEstado( idEstadoPartida , "" , RLEX_tpEstadoFinal );
-         pEstadoDestino = CriarEstado( idEstadoDestino , "" , RLEX_tpEstadoFinal );
+         pEstadoPartida = CriarEstado( idEstadoPartida , "" , RLEX_tppEstadoFinal );
+         pEstadoDestino = CriarEstado( idEstadoDestino , "" , RLEX_tppEstadoFinal );
 
          if( pEstadoPartida == NULL || pEstadoDestino == NULL )
          {
@@ -283,7 +353,7 @@
       if( strcmp(ComandoTeste,REMOVER_TRANSICAO_CMD) == 0 )
       {
          int idEstadoPartida = -1 , idEstadoDestino = -1;
-         RLEX_tpEstado pEstadoPartida = NULL , pEstadoDestino = NULL;
+         RLEX_tppEstado pEstadoPartida = NULL , pEstadoDestino = NULL;
 
          char Rotulo[DIM_ROTULO] = "";
 
@@ -294,8 +364,8 @@
             return TST_CondRetParm;
          } /* if */
 
-         pEstadoPartida = CriarEstado( idEstadoPartida , "" , RLEX_tpEstadoFinal );
-         pEstadoDestino = CriarEstado( idEstadoDestino , "" , RLEX_tpEstadoFinal );
+         pEstadoPartida = CriarEstado( idEstadoPartida , "" , RLEX_tppEstadoFinal );
+         pEstadoDestino = CriarEstado( idEstadoDestino , "" , RLEX_tppEstadoFinal );
 
          if( pEstadoPartida == NULL || pEstadoDestino == NULL )
          {
@@ -310,6 +380,48 @@
          LiberaEstado( pEstadoDestino );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao remover transicao");
+
+      } /* if */
+
+      /* Comando =reconhecerstring */
+
+      if( strcmp(ComandoTeste,RECONHECER_STRING_CMD) == 0 )
+      {
+         char String[TAMANHO_BUFFER_STR] = "";
+         char LexemasEsperados[TAMANHO_BUFFER_STR] = "";
+         char LexemasObtidos[TAMANHO_BUFFER_STR] = "";
+
+         numParamLidos = LER_LerParametros("ss",String,LexemasEsperados);
+
+         if( numParamLidos != 2 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(LexemasObtidos,TAMANHO_BUFFER_STR,ReconheceStr(String));
+
+         return TST_CompararString(LexemasEsperados,LexemasObtidos,"Lexemas esperados nao correspondem aos obtidos em string");
+
+      } /* if */
+
+      /* Comando =reconhecerarquivo */
+
+      if( strcmp(ComandoTeste,RECONHECER_ARQUIVO_CMD) == 0 )
+      {
+         char Caminho[TAMANHO_BUFFER_STR] = "";
+         char LexemasEsperados[TAMANHO_BUFFER_STR] = "";
+         char LexemasObtidos[TAMANHO_BUFFER_STR] = "";
+
+         numParamLidos = LER_LerParametros("ss",Caminho,LexemasEsperados);
+
+         if( numParamLidos != 2 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(LexemasObtidos,TAMANHO_BUFFER_STR,ReconheceStr(Caminho));
+
+         return TST_CompararString(LexemasEsperados,LexemasObtidos,"Lexemas esperados nao correspondem aos obtidos em arquivo");
 
       } /* if */
 
@@ -328,8 +440,8 @@
 
    int ComparaEstados ( void *pa, void *pb )
    {
-      RLEX_tpEstado pEstA = (RLEX_tpEstado) pa;
-      RLEX_tpEstado pEstB = (RLEX_tpEstado) pb;
+      RLEX_tppEstado pEstA = (RLEX_tppEstado) pa;
+      RLEX_tppEstado pEstB = (RLEX_tppEstado) pb;
 
       if( pEstA == NULL || pEstB == NULL )
       {
@@ -348,8 +460,8 @@
 
    void CopiaEstados ( void ** pa , void * pb )
    {
-      RLEX_tpEstado pEstA = (RLEX_tpEstado) malloc( sizeof(RLEX_tagEstado) );
-      RLEX_tpEstado pEstB = (RLEX_tpEstado) pb;
+      RLEX_tppEstado pEstA = (RLEX_tppEstado) malloc( sizeof(RLEX_tpEstado) );
+      RLEX_tppEstado pEstB = (RLEX_tppEstado) pb;
 
       if( pEstA == NULL || pEstB == NULL )
       {
@@ -372,7 +484,7 @@
 
    int ConcatenaEstados ( char * pa , void * pb )
    {
-      RLEX_tpEstado pEstB = (RLEX_tpEstado) pb;
+      RLEX_tppEstado pEstB = (RLEX_tppEstado) pb;
 
       if( pEstB == NULL )
       {
@@ -400,14 +512,70 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Compara Strings
+*  $FC Função: RLEX -Compara Rotulos
 *
 ***********************************************************************/
 
-   int ComparaStrings (void *pa, void *pb)
+   int ComparaRotulos (void *pa, void *pb)
    {
 
-      return strcmp( (char*)pa, (char*)pb );
+      int i;
+      int j = 0;
+      int pa_size = strlen((char*)pa);
+
+      char el[DIM_ROTULO] = "";
+
+      for ( i = 0 ; i < pa_size ; i++ )
+      {
+         char c[2] = "";
+         sprintf_s(c,2,"%c",*((char *)pa+i));
+
+         if( c[0] == ' ' && i != j )
+         {
+            if( strlen(el) == 1 )
+            {
+               if( strcmp((char *)pb,el) == 0 )
+               {
+                  return 0;
+               } /* if */
+            } /* if */
+            else
+            {
+               if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+               {
+                  return 0;
+               } /* if */
+            } /* else */
+
+            strcpy_s(el,DIM_ROTULO,"");
+            j = i + 1;
+         } /* if */
+         else
+         {
+            strcat_s(el,DIM_ROTULO,c);
+         } /* else */
+
+         if( i == pa_size - 1 )
+         {
+            if( strlen(el) == 1 )
+            {
+               if( strcmp((char *)pb,el) == 0 )
+               {
+                  return 0;
+               } /* if */
+            } /* if */
+            else
+            {
+               if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+               {
+                  return 0;
+               } /* if */
+            } /* else */
+         } /* if */
+
+      } /* for */
+
+      return 1;
 
    } /* Fim função: RLEX -Compara Strings */
 
@@ -448,14 +616,14 @@
 *
 ***********************************************************************/
 
-   RLEX_tpEstado CriarEstado ( int idEstado ,
+   RLEX_tppEstado CriarEstado ( int idEstado ,
                                char nomeEstado[DIM_NOME_ESTADO] , 
                                RLEX_tpTipoEstado tipoEstado )
    {
 
-      RLEX_tpEstado pEstado = NULL;
+      RLEX_tppEstado pEstado = NULL;
 
-      pEstado = (RLEX_tpEstado) malloc( sizeof(RLEX_tagEstado) );
+      pEstado = (RLEX_tppEstado) malloc( sizeof(RLEX_tpEstado) );
 
       if( pEstado == NULL )
       {
@@ -469,6 +637,141 @@
       return pEstado;
 
    } /* Fim função: RLEX -Criar Estado */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Traduz caractere para Rótulo correspondente
+*
+***********************************************************************/
+
+   char * TraduzCaractere ( char c )
+   {
+
+      if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') )
+      {
+         return "\\l";
+      } /* if */
+
+      if( c >= '0' && c <= '9' )
+      {
+         return "\\d";
+      } /* if */
+
+      if( c == ' ' || c == '\t' || c == '\n' || c == '\r' )
+      {
+         return "\\b";
+      } /* if */
+
+      return "\\o";
+
+   } /* Fim função: RLEX -Traduz caractere para Rótulo correspondente */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Reconhece String
+*
+***********************************************************************/
+
+   char * ReconheceStr ( char * Str )
+   {
+      char Buffer[TAMANHO_BUFFER_STR] = "";
+      char * p = Str;
+      RLEX_tpCondRet Ret;
+
+      while ( *p != '\0' )
+      {
+
+         Ret = ReconheceChar(*p);
+
+         if( Ret != RLEX_CondRetOK )
+         {
+            return "";
+         } /* if */
+
+         //WIP
+         //Tratar da condição de retorno
+
+         p++;
+
+      } /* while */
+
+      return Buffer;
+
+   } /* Fim função: RLEX -Reconhece String */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Reconhece Arquivo
+*
+***********************************************************************/
+
+   char * ReconheceArq ( char * Path )
+   {
+      char Buffer[TAMANHO_BUFFER_STR] = "";
+      FILE *f  = fopen(Path,"r");
+      char c;
+      RLEX_tpCondRet Ret;
+
+      if( f == NULL )
+      {
+         /* Não foi possível abrir o arquivo */
+         return "";
+      } /* if */
+
+      do
+      {
+         
+         c = fgetc(f);
+
+         /* Caso o arquivo tenha chegado ao final */
+         if( feof(f) )
+            break;
+
+         Ret = ReconheceChar(c);
+
+         if( Ret != RLEX_CondRetOK )
+         {
+            return "";
+         } /* if */
+
+         //WIP
+         //Tratar da condição de retorno
+
+      } while( 1 ); /* do-while */
+
+      if( fclose(f) != 0 )
+      {
+         /* Não foi possível fechar o arquivo */
+         return "";
+      }
+
+      return Buffer;
+
+   } /* Fim função: RLEX -Reconhece Arquivo */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Reconhece Caractere
+*
+***********************************************************************/
+
+   RLEX_tpCondRet ReconheceChar ( char c )
+   {
+
+      if( pRec == NULL )
+      {
+         return RLEX_CondRetLexRecNaoExiste;
+      } /* if */
+
+      if( pPilhaReleitura == NULL )
+      {
+         return RLEX_CondRetErroEstrutura;
+      } /* if */
+
+      //WIP
+
+      return RLEX_CondRetOK;
+   } /* Fim função: RLEX -Reconhece Caractere */
 
 /********** Fim do módulo de implementação: RLEX Reconhecedor Léxico **********/
 

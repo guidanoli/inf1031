@@ -128,7 +128,10 @@
       PIL_tppPilha pPilha = NULL;
       PIL_tpCondRet RetPil;
 
-      *ppGrafoParam = NULL;
+      if( *ppGrafoParam != NULL )
+      {
+         GRF_DestruirGrafo(ppGrafoParam);
+      } /* if */
 
       if( ComparaValorAre     == NULL ||
           ComparaValorVer     == NULL ||
@@ -338,7 +341,9 @@
          LIS_tpCondRet RetLis = LIS_CondRetNaoAchou,
                        RetLis2 = LIS_CondRetNaoAchou;
          GRF_tpCondRet RetGrf;
-         VER_tppVertice pVertice = NULL;
+         VER_tppVertice pVertice = NULL, pVertCorrTemp;
+
+         /* Validando entrada de argumentos */
 
          if( pValor == NULL )
          {
@@ -353,10 +358,14 @@
          pListaVer = pGrafo->pVerticesGrafo;
          pListaOrig = pGrafo->pOrigensGrafo;
 
+         /* Validando estrutura interna do grafo */
+
          if( pListaVer == NULL || pListaOrig == NULL )
          {
             return GRF_CondRetErroEstrutura;
          } /* if */
+
+         /* O vértice existe? Se sim, pVertice aponta para ele. Caso contrário, retorna erro */
 
          if ( LIS_AvancarElementoCorrente(pListaVer,0) != LIS_CondRetListaVazia )
          {
@@ -401,19 +410,34 @@
             return GRF_CondRetVerticeNaoExiste;
          } /* if */
 
+         /* O vértice é origem? Se sim, o faça não-origem. Se não for possível, retorne erro */
+          
          if ( LIS_AvancarElementoCorrente(pListaOrig,0) != LIS_CondRetListaVazia )
          {
             IrInicioLista(pListaOrig);
             RetLis2 = LIS_ProcurarValor(pListaOrig,pVertice);          
                         
-            if( RetLis2 == LIS_CondRetOK && pGrafo->numVertices > 1 )
+            if( RetLis2 == LIS_CondRetOK )
             {
+               pVertCorrTemp = pGrafo->pVertCorr;
+
                pGrafo->pVertCorr = pVertice;
                RetGrf = GRF_ToggleOrigem( pGrafo );
 
-               if( RetGrf != GRF_CondRetOK )
-               {
+               pGrafo->pVertCorr = pVertCorrTemp;
+
+               if( RetGrf != GRF_CondRetOK && (pGrafo->numVertices > 1 ))
+               {  
                   return RetGrf;
+               } /* if */
+
+               /* OBS: Abrimos uma exceção aqui porque dentro da função GRF_ToggleOrigem
+                  caso o vértice for a única origem, ele não irá decrementar o contador
+                  de origens. Então o fazemos manualmente */
+
+               if( RetGrf == GRF_CondRetUnicaOrigem )
+               {
+                  (pGrafo->numOrigens)--;
                } /* if */
 
             } /* if */
@@ -424,12 +448,18 @@
             return GRF_CondRetErroEstrutura;
          } /* else */
 
+         /* Por fim, exclua o elemento da lista de vértices. Caso haja algum erro, retorne-o */
+
          RetLis = LIS_ExcluirElemento(pListaVer);
 
          if( RetLis != LIS_CondRetOK )
          {
             return GRF_CondRetErroEstrutura;
          } /* if */
+
+         /* Altere o vértice corrente do grafo para a primeira origem, caso exista, para que não
+            haja erro de estrutura (lista não-vazia e com vértice corrente apontando para nada).
+            Caso o grafo é vazio agora, o vértice corrente é nulo. Caso haja algum erro, retorne-o.*/
 
          if( LIS_AvancarElementoCorrente(pListaOrig,0) != LIS_CondRetListaVazia )
          {
@@ -451,6 +481,8 @@
             pGrafo->pVertCorr = NULL;
 
          } /* else */
+
+         /* Por fim, decremente a contagem de vértices */
 
          (pGrafo->numVertices)--;
 
@@ -1154,6 +1186,38 @@
       return GRF_CondRetOK;
 
    } /* Fim da função: GRF  &Exibir grafo */
+
+/***************************************************************************
+*
+*  Função: GRF  &Obter o número de vértices
+*  ****/
+
+   int GRF_ObterNumVertices( GRF_tppGrafo pGrafo )
+   {
+      if( pGrafo == NULL )
+      {
+         return -1;
+      } /* if */
+
+      return pGrafo->numVertices;
+
+   } /* Fim da função: GRF  &Obter o número de vértices */
+
+/***************************************************************************
+*
+*  Função: GRF  &Obter o número de origens
+*  ****/
+
+   int GRF_ObterNumOrigens( GRF_tppGrafo pGrafo )
+   {
+      if( pGrafo == NULL )
+      {
+         return -1;
+      } /* if */
+
+      return pGrafo->numOrigens;
+
+   } /* Fim da função: GRF  &Obter o número de vértices */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

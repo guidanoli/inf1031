@@ -19,6 +19,7 @@
 *                               de Arndt Von Staa.
 *     1.0     gui    30/09/18   Início da implementação do módulo
 *     2.0     gui    01/10/18   Opera com três grafos com todas as funções
+*     2.1     gui    27/10/18   Funções p/ obter número de vértices e origens
 *
 ***************************************************************************/
 
@@ -44,6 +45,8 @@
 #define TOGGLE_ORIGEM_CMD        "=toggleorigem"
 #define PROCURAR_VERTICE_CMD     "=procurarvertice"
 #define EXIBIR_GRAFO_CMD         "=exibirgrafo"
+#define NUM_VERT_CMD             "=obternumvert"
+#define NUM_ORIG_CMD             "=obternumorig"
 
 #define TST_GRF_TRUE 1
 #define TST_GRF_FALSE 0
@@ -85,6 +88,8 @@
 *    =toggleorigem              indexGrafo CondRetEsperada
 *    =procurarvertice           indexGrafo ValorVertice OrigemBool CondRetEsperada
 *    =exibirgrafo               indexGrafo ValorOrigem StringEsperada CondRetEsperada
+*    =obternumvert              indexGrafo ValorEsperado
+*    =obternumorig              indexGrafo ValorEsperado
 *
 ***********************************************************************/
 
@@ -339,7 +344,45 @@
 
          return TST_CompararString(StringEsperada,StringObtida,"Exibicao esperada nao confere com obtida");
 
-      }
+      } /* if */
+
+      /* Testar obternumvert */
+
+      if( strcmp(ComandoTeste,NUM_VERT_CMD) == 0 )
+      {
+         int ValorEsperado, ValorObtido;
+
+         numParamLidos = LER_LerParametros("ii",&indiceGrafo,&ValorEsperado);
+
+         if( numParamLidos != 2 || !ValidaIndiceGrafo(indiceGrafo) )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         ValorObtido = GRF_ObterNumVertices( pGrafo[indiceGrafo] );
+
+         return TST_CompararInt(ValorEsperado,ValorObtido,"Numero de vertices esperado nao corresponde ao obtido");
+
+      } /* if */
+
+      /* Testar obternumorig */
+
+      if( strcmp(ComandoTeste,NUM_ORIG_CMD) == 0 )
+      {
+         int ValorEsperado, ValorObtido;
+
+         numParamLidos = LER_LerParametros("ii",&indiceGrafo,&ValorEsperado);
+
+         if( numParamLidos != 2 || !ValidaIndiceGrafo(indiceGrafo) )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         ValorObtido = GRF_ObterNumOrigens( pGrafo[indiceGrafo] );
+
+         return TST_CompararInt(ValorEsperado,ValorObtido,"Numero de origens esperado nao corresponde ao obtido");
+
+      } /* if */
 
       return TST_CondRetNaoConhec;
 

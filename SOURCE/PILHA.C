@@ -105,12 +105,10 @@
          return PIL_CondRetPilhaNaoExiste;
       } /* if */
 
-      if( (*ppPilhaParam)->pLista == NULL )
+      if( (*ppPilhaParam)->pLista != NULL )
       {
-         return PIL_CondRetErroEstrutura;
+         LIS_DestruirLista( (*ppPilhaParam)->pLista );
       } /* if */
-
-      LIS_DestruirLista( (*ppPilhaParam)->pLista );
 
       free( *ppPilhaParam );
 
