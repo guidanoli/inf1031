@@ -525,57 +525,68 @@
 
       char el[DIM_ROTULO] = "";
 
-      for ( i = 0 ; i < pa_size ; i++ )
+      if( strlen((char *)pb) > 1 )
       {
-         char c[2] = "";
-         sprintf_s(c,2,"%c",*((char *)pa+i));
+         /* pb é um Rótulo */
+         return strcmp((char *)pa,(char *)pb);
 
-         if( c[0] == ' ' && i != j )
+      } /* if */
+      else
+      {
+         /* pb é um caractere do fluxo de entrada */
+         for ( i = 0 ; i < pa_size ; i++ )
          {
-            if( strlen(el) == 1 )
+            char c[2] = "";
+            sprintf_s(c,2,"%c",*((char *)pa+i));
+
+            if( c[0] == ' ' && i != j )
             {
-               if( strcmp((char *)pb,el) == 0 )
+               if( strlen(el) == 1 )
                {
-                  return 0;
+                  if( strcmp((char *)pb,el) == 0 )
+                  {
+                     return 0;
+                  } /* if */
                } /* if */
+               else
+               {
+                  if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+                  {
+                     return 0;
+                  } /* if */
+               }
+
+               strcpy_s(el,DIM_ROTULO,"");
+               j = i + 1;
             } /* if */
             else
             {
-               if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
-               {
-                  return 0;
-               } /* if */
+               strcat_s(el,DIM_ROTULO,c);
             } /* else */
 
-            strcpy_s(el,DIM_ROTULO,"");
-            j = i + 1;
-         } /* if */
-         else
-         {
-            strcat_s(el,DIM_ROTULO,c);
-         } /* else */
-
-         if( i == pa_size - 1 )
-         {
-            if( strlen(el) == 1 )
+            if( i == pa_size - 1 )
             {
-               if( strcmp((char *)pb,el) == 0 )
+               if( strlen(el) == 1 )
                {
-                  return 0;
+                  if( strcmp((char *)pb,el) == 0 )
+                  {
+                     return 0;
+                  } /* if */
                } /* if */
-            } /* if */
-            else
-            {
-               if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+               else
                {
-                  return 0;
-               } /* if */
-            } /* else */
-         } /* if */
+                  if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+                  {
+                     return 0;
+                  } /* if */
+               }
+            }
 
-      } /* for */
+         } /* for */
 
-      return 1;
+         return 1;
+
+      } /* else */
 
    } /* Fim função: RLEX -Compara Strings */
 
@@ -721,7 +732,7 @@
       do
       {
          
-         c = fgetc(f);
+         fread(Buffer,sizeof(char),1,f);
 
          /* Caso o arquivo tenha chegado ao final */
          if( feof(f) )

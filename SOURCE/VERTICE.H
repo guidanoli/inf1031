@@ -45,6 +45,15 @@
 *        >>> 0 caso os valores forem iguais
 *        >>> diferente de 0 caso contrário
 *
+*     A função de percurso de aresta recebe dois valores:
+*        >>> pA, o valor armazenado na aresta
+*        >>> pB, a entrada do usuário
+*     E retorna a prioridade de se percorrer tal aresta, e zero caso não deve-se
+*     percorrer tal aresta. Quanto maior o valor retornado, maior a prioridade 
+*     de se percorrer tal aresta. A aresta com maior prioridade será percorrida.
+*     Se duas arestas possuem a mesma prioridade, a primeira a ser identificada
+*     será percorrida. Idealmente deseja-se que não hajam colisões de prioridade.
+*
 *     A função de cópia recebe um ponteiro para o valor aonde será
 *     copiado o valor do segundo parâmetro. É essencial para estruturas de dados
 *     que trabalham com ponteiros, como string e structs. O espaço referenciado
@@ -346,17 +355,20 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     compara o valor de duas arestas e o sentido que irá andar.
 *  
 *  $AS Assertivas de saída
-*     Caso o ponteiro para vértice, valor e função não for nulo,
-*     o Sentido for válido, a função deverá alterar o ponteiro do vértice destino *pVerDestino
+*     Caso o ponteiro para vértice, valor e função não for nulo, não houver erro na estrutura,
+*     e o Sentido for válido, a função deverá alterar o ponteiro do vértice destino *pVerDestino
 *     com o valor do Vértice destino ou de partida (dependendo do sentido) e retornar VER_CondRetOK.
-*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido e o ponteiro de
+*     vértice apontado por *pVerDestino não será modificado.
+*     Como consta da descrição do módulo, a função deverá caminhar pela primeira aresta que tenha
+*     prioridade > 0 no dado sentido, caso exista.
 *
 *  $EP Parâmetros
-*     pVerPartida  - ponteiro para o vértice de partida
-*     pValor       - valor da aresta que deseja-se percorrer
-*     pVerDestino  - endereço para ponteiro para o vértice de destino
-*     ComparaValor - Ver descrição do módulo.
-*     Sentido      - sentido de caminhamento da aresta
+*     pVerPartida     - ponteiro para o vértice de partida
+*     pValor          - valor da aresta que deseja-se percorrer
+*     pVerDestino     - endereço para ponteiro para o vértice de destino
+*     PercorrerAresta - Ver descrição do módulo.
+*     Sentido         - sentido de caminhamento da aresta
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - destruiu sem problemas
@@ -371,7 +383,7 @@ typedef struct VER_tagAresta * VER_tppAresta;
    VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida ,
                                       void * pValor ,
                                       VER_tppVertice * pVerDestino ,
-                                      int (* ComparaValor) ( void * pA, void * pB) ,
+                                      int (* PercorrerAresta) ( void * pA, void * pB) ,
                                       VER_tpSentCam Sentido ) ;
 
 /***********************************************************************

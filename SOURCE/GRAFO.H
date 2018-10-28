@@ -57,6 +57,19 @@
 *                         >> 0 caso a concatenação ocorreu com sucesso
 *                         >> 1 caso *pA não tenha mais espaço
 *
+*     PercorreAresta    - Ponteiro para função que define a prioridade de
+*                         se percorrer uma determinada aresta. Quanto maior
+*                         o inteiro retornado, maior a prioridade. Será per-
+*                         corrida a aresta de maior prioridade dado um vértice
+*                         e um sentido. Caso duas arestas tenham a mesma prioridade,
+*                         será escolhida a primeiro a ser identificada.
+*                         RECEBE:
+*                         pA -- valor armazenado numa aresta
+*                         pB -- entrada do usuário
+*                         RETORNA:
+*                         >> 0 caso a aresta não deve ser percorrida
+*                         >> maior que 0, caso deve-se percorrê-la
+*
 ***************************************************************************/
 
 /* Limite da string de exibição de grafo */
@@ -166,6 +179,7 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
                                  void ( *ExcluirValorVer ) ( void * pDado ) ,
                                  void ( *ExcluirValorAre ) ( void * pDado ) ,
                                  int ( *ConcatenaValorVer) ( char * pA, void * pB ) ,
+                                 int ( *PercorreAresta ) ( void * pA , void * pB ) ,
                                  GRF_tppGrafo * ppGrafoParam ) ;
 
 /***********************************************************************

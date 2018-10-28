@@ -34,3 +34,11 @@
 27/10	30min			redigir script de teste		contador de origens e vértices c/ funções de acesso
 27/10	2h			redigir código do módulo	função que permite caminhar pelo reclex apenas
 								passando o caracter do fluxo de entrada
+28/10	1h			revisar código do módulo	Adicionada a função PercorreAresta na cabeça
+								do grafo no módulo GRAFO.C, e adaptadas as funções
+								CriarGrafo e CaminharGrafo com a adição desta
+								função. Além disso, atualizada a função
+								PercorrerAresta do módulo VERTICE.C com a função
+								que leva em consideração prioridade de percurso.
+								Alterado tbm o módulo TSTGRF.C. Todos os testes
+								rodam com sucesso.

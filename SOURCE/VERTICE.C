@@ -513,13 +513,15 @@
    VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida ,
                                       void * pValor ,
                                       VER_tppVertice * pVerDestino ,
-                                      int (* ComparaValor) ( void * pA, void * pB) ,
+                                      int (* PercorrerAresta) ( void * pA, void * pB) ,
                                       VER_tpSentCam Sentido )
    {
     
       LIS_tppLista listaAresta;
 
-      if( ComparaValor == NULL )
+      /* Validando argumentos */
+
+      if( PercorrerAresta == NULL )
       {
          return VER_CondRetFuncaoNula;
       } /* if */
@@ -534,10 +536,14 @@
          return VER_CondRetValorFornecidoNulo;
       } /* if */
 
+      /* Validando estrutura */
+
       if( pVerPartida->pSuc == NULL || pVerPartida->pAnt == NULL )
       {
          return VER_CondRetErroEstrutura;
       } /* if */
+
+      /* Avaliando sentido */
 
       if( Sentido == VER_SentCamTras )
       {
@@ -545,11 +551,16 @@
       } /* if */
       else
       {
+         /* O padrão para o sentido é para frente */
          listaAresta = pVerPartida->pSuc;
       } /* else */
 
+      /* Percorrer todas as arestas que saem/vão ao encontro do vértice */
+
       if( LIS_AvancarElementoCorrente(listaAresta,0) != LIS_CondRetListaVazia )
       {
+         int max_prioridade = 0;
+         VER_tppAresta pArestaCandidata = NULL;
 
          LIS_tpCondRet Ret = LIS_CondRetOK;
          IrInicioLista( listaAresta );
@@ -557,27 +568,53 @@
          while( Ret == LIS_CondRetOK )
          {
             VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(listaAresta);
-            int retorno = (* ComparaValor) (pArestaTemp->Valor,pValor);
+            int retorno = (* PercorrerAresta) (pArestaTemp->Valor,pValor);
 
-            if( retorno == 0 )
+            if( retorno > max_prioridade )
             {
-               if( Sentido == VER_SentCamTras )
-               {
-                  *pVerDestino = pArestaTemp->pPart;
-               } /* if */
-               else
-               {
-                  *pVerDestino = pArestaTemp->pDest;
-               } /* else */
-
-               return VER_CondRetOK;
+               /* prioridades iguais a zero nunca serão aceitas */
+               max_prioridade = retorno;
+               pArestaCandidata = pArestaTemp;
             } /* if */
 
             Ret = LIS_AvancarElementoCorrente(listaAresta,1);
 
          } /* while */
 
+         /* Alguma aresta com prioridade > 0 foi encontrada? */
+
+         if( pArestaCandidata != NULL )
+         {
+            /* Sim */
+
+            /* Validando estrutura da aresta encontrada */
+
+            if( pArestaCandidata->pPart == NULL ||
+                pArestaCandidata->pDest == NULL )
+            {
+               return VER_CondRetErroEstrutura;
+            } /* if */
+
+            /* Avaliando sentido */
+
+            if( Sentido == VER_SentCamTras )
+            {
+               *pVerDestino = pArestaCandidata->pPart;
+            } /* if */
+            else
+            {
+               *pVerDestino = pArestaCandidata->pDest;
+            } /* else */
+
+            /* Por fim, retorna OK */
+
+            return VER_CondRetOK;
+
+         } /* else */
+
       } /* if */
+      
+      /* Nenhuma aresta foi percorrida */
 
       return VER_CondRetArestaNaoExiste;
 

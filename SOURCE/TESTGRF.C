@@ -65,6 +65,7 @@
    static int ComparaStrings ( void * pa , void * pb ) ;
    static void CopiaStrings ( void ** pa , void * pb ) ;
    static int ConcatenaStrings ( char * pA , void * pB ) ;
+   static int PercorreAresta ( void * pA , void * pB ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -129,6 +130,7 @@
                                           NULL ,
                                           NULL ,
                                           ConcatenaStrings ,
+                                          PercorreAresta ,
                                           &(pGrafo[indiceGrafo]) );
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao criar grafo");
@@ -428,6 +430,17 @@
    {
       return strcat_s( pA , DIM_STRING_EXIBICAO, (char *) pB );
    } /* Fim função: TGRF -Concatena Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TGRF -Percorre aresta
+*
+***********************************************************************/
+
+   int PercorreAresta ( void * pA , void * pB )
+   {
+      return !ComparaStrings(pA,pB);
+   } /* Fim função: TGRF -Percorre aresta */
 
  /***********************************************************************
 *
