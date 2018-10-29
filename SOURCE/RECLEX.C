@@ -72,14 +72,20 @@
       RLEX_CondRetLexRecVazio ,
          /* O reconhecedor léxico está vazio */
 
+      RLEX_CondRetTransicaoNaoExiste ,
+         /* Não há transição pela qual se pode percorrer */
+
       RLEX_CondRetValorFornecidoNulo ,
          /* Valor fornecido nulo */
 
       RLEX_CondRetErroArquivo ,
          /* Não foi possível abrir ou fechar um arquivo */
 
-      RLEX_CondRetErroEstrutura
+      RLEX_CondRetErroEstrutura ,
          /* Há um erro na estrutura do reconhecedor léxico */
+
+      RLEX_CondRetMemoria
+         /* Faltou memória para alocar espaço de dados dinamicamente */
 
    } RLEX_tpCondRet;
 
@@ -644,8 +650,13 @@
    RLEX_tpCondRet ReconheceStr ( char * Str , char StrSaida[TAMANHO_BUFFER_STR] )
    {
       char Buffer[TAMANHO_BUFFER_STR] = "";
-      char * p = Str;
+      char * p = Str, * b = Str;
       RLEX_tpCondRet Ret;
+      PIL_tpCondRet RetPil;
+      GRF_tpCondRet RetGrf;
+      RLEX_tppEstado pEstadoCorr = NULL;
+
+      PIL_tppPilha pPilhaCaminhamento = NULL;
 
       if( StrSaida == NULL || Str == NULL )
       {
@@ -661,21 +672,144 @@
          return Ret;
       } /* if */
 
-      while ( *p != '\0' )
+      RetPil = PIL_CriarPilha(&pPilhaCaminhamento);
+
+      if( RetPil != PIL_CondRetOK )
+      {
+         return RLEX_CondRetMemoria;
+      } /* if */
+
+      while ( 1 )
       {
 
-         Ret = ReconheceChar(*p);
-
-         if( Ret != RLEX_CondRetOK )
+         if( PIL_PilhaVazia( pPilhaReleitura ) != PIL_CondRetOK )
          {
-            strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
-            return Ret;
+
          } /* if */
 
-         //WIP
-         //Tratar da condição de retorno
+         RetGrf = GRF_ObterValor( pRec , (void **) &pEstadoCorr );
+         RetPil = PIL_Empilhar( pPilhaCaminhamento , pEstadoCorr );
 
-         p++;
+         if( RetGrf != GRF_CondRetOK || RetPil != PIL_CondRetOK )
+         {
+            return RLEX_CondRetErroEstrutura;
+         } /* if */
+
+         if( *p == '\0' )
+         {
+            Ret = ReconheceChar('\f');
+         } /* if */
+         else
+         {
+            Ret = ReconheceChar(*p);
+         } /* else */
+
+         if( Ret == RLEX_CondRetTransicaoNaoExiste )
+         {
+            /* "Se o estado não for terminal, precisa-se retroceder sobre o caminho percorrido,
+               até que se chegue ou a um estado final ou ao estado inicial." */
+
+            while( PIL_PilhaVazia( pPilhaCaminhamento ) == PIL_CondRetOK )
+            {
+
+               /* "Os caracteres do fluxo percorridos nesse trajeto inverso devem ser empilhados
+                  na pilha de releitura." */
+
+               pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar( pPilhaCaminhamento );
+               RetPil = PIL_Empilhar( pPilhaReleitura, p );
+
+               if( RetPil == PIL_CondRetFaltouMemoria )
+               {
+                  return RLEX_CondRetMemoria;
+               } /* if */
+               else if( RetPil != PIL_CondRetOK )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* else if */
+
+               if( pEstadoCorr == NULL )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+               if( pEstadoCorr->tipoEstado == RLEX_tppEstadoFinal )
+               {
+                  break;
+               } /* if */
+
+            } /* while */
+
+            if( PIL_PilhaVazia( pPilhaCaminhamento ) == PIL_CondRetPilhaVazia )
+            {
+               /* "Caso, ao retroceder, tenha-se chegado ao estado inicial, encontrou-se um erro 
+                  de dados de entrada, mais especificamente, o caractere no topo da pilha de releitura
+                  não leva a um estado final. Neste caso elimina-se o caractere no topo da pilha, emite-se
+                  uma mensagem de erro e reinicia-se o reconhecimento." */
+
+               char topo[2];
+
+               if( strcpy_s(topo,2,(char *)PIL_Desempilhar( pPilhaReleitura )) != 0 )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+               if( strcat_s( StrSaida , TAMANHO_BUFFER_STR , "Erro, " ) != 0 )
+               {
+                  return RLEX_CondRetMemoria;
+               } /* if */
+
+            } /* if */
+            else
+            {
+               /* "Caso, ao retroceder, tenha-se chegado a um estado final, esse corresponderá ao
+                  lexema encontrado." */
+
+               if( strcat_s( StrSaida , TAMANHO_BUFFER_STR , pEstadoCorr->nomeEstado ) != 0 )
+               {
+                  return RLEX_CondRetMemoria;
+               } /* if */
+
+               if( strcat_s( StrSaida , TAMANHO_BUFFER_STR , ", " ) != 0 )
+               {
+                  return RLEX_CondRetMemoria;
+               } /* if */
+
+               RetPil = PIL_DestruirPilha( &pPilhaCaminhamento );
+               
+               if( RetPil != PIL_CondRetOK )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+               RetPil = PIL_CriarPilha( &pPilhaCaminhamento );
+
+               if( RetPil == PIL_CondRetFaltouMemoria )
+               {
+                  return RLEX_CondRetMemoria;
+               } /* if */
+               else if( RetPil == PIL_CondRetErroEstrutura )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* else-if */
+
+               Ret = IrOrigem();
+
+               if( Ret != RLEX_CondRetOK )
+               {
+                  return Ret;
+               } /* if */
+
+            } /* else */
+
+         } /* if */
+         else if( Ret == RLEX_CondRetOK )
+         {
+            p++;
+         } /* if */
+         else
+         {
+            return Ret;
+         } /* if */
 
       } /* while */
 
@@ -746,6 +880,9 @@
    RLEX_tpCondRet ReconheceChar ( char c )
    {
 
+      GRF_tpCondRet RetGrf;
+      char Str[2] = "";
+
       if( pRec == NULL )
       {
          return RLEX_CondRetLexRecNaoExiste;
@@ -756,9 +893,35 @@
          return RLEX_CondRetErroEstrutura;
       } /* if */
 
-      //WIP
+      sprintf_s(Str,2,"%c",c);
+      RetGrf = GRF_CaminharGrafo( pRec , Str , 1 );
 
-      return RLEX_CondRetOK;
+      if( RetGrf == GRF_CondRetArestaNaoExiste )
+      {
+         return RLEX_CondRetTransicaoNaoExiste;
+      } /* if */
+
+      switch( RetGrf )
+      {
+      case GRF_CondRetOK:
+         return RLEX_CondRetOK;
+
+      case GRF_CondRetArestaNaoExiste:
+         return RLEX_CondRetTransicaoNaoExiste;
+
+      case GRF_CondRetGrafoVazio:
+         return RLEX_CondRetLexRecVazio;
+
+      default:
+         /*
+         GRF_CondRetGrafoNaoExiste
+         GRF_CondRetValorFornecidoNulo
+         GRF_CondRetErroEstrutura
+         GRF_CondRetFuncaoNula
+         */
+         return RLEX_CondRetErroEstrutura;
+      } /* switch */
+
    } /* Fim função: RLEX -Reconhece Caractere */
 
 /***********************************************************************
@@ -776,7 +939,7 @@
 
       char el[DIM_ROTULO] = "";
 
-      if( strcmp((char *)pa,"\o") == 0 )
+      if( strcmp((char *)pa,"\\o") == 0 )
       {
          /* Rótulo engloba outros
             >> prioridade 1 */
