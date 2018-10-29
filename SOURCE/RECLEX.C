@@ -47,6 +47,9 @@
 #define DIM_ROTULO         30
 #define TAMANHO_BUFFER_STR 500
 
+#define RLEX_TRUE  1
+#define RLEX_FALSE 0
+
 /* Ponteiro para estado */
 
    typedef struct tagEstado * RLEX_tppEstado;
@@ -63,8 +66,17 @@
       RLEX_CondRetOK,
          /* Ok! */
 
-      RLEX_CondRetLexRecNaoExiste,
+      RLEX_CondRetLexRecNaoExiste ,
          /* O reconhecedor léxico não existe */
+
+      RLEX_CondRetLexRecVazio ,
+         /* O reconhecedor léxico está vazio */
+
+      RLEX_CondRetValorFornecidoNulo ,
+         /* Valor fornecido nulo */
+
+      RLEX_CondRetErroArquivo ,
+         /* Não foi possível abrir ou fechar um arquivo */
 
       RLEX_CondRetErroEstrutura
          /* Há um erro na estrutura do reconhecedor léxico */
@@ -122,19 +134,22 @@
    static void CopiaEstados ( void ** pa , void * pb ) ;
    static int ConcatenaEstados ( char * pa , void * pb ) ;
    static int ComparaRotulos ( void * pa , void * pb ) ;
+   static int PercorreTransicao ( void * pa , void * pb ) ;
    static void CopiaStrings ( void ** pa , void * pb ) ;
+   static RLEX_tpCondRet IrOrigem( );
 
    //WIP
-   static char * ReconheceStr ( char * Str ) ;
+   static RLEX_tpCondRet ReconheceStr ( char * Str ,
+                                        char StrSaida[TAMANHO_BUFFER_STR] ) ;
 
    //WIP
-   static char * ReconheceArq ( char * Path ) ;
+   static RLEX_tpCondRet ReconheceArq ( char * Path ,
+                                        char StrSaida[TAMANHO_BUFFER_STR] ) ;
    
    //WIP
    static RLEX_tpCondRet ReconheceChar ( char c ) ;
 
    static char * TraduzCaractere ( char c ) ;
-
    static int ValidarTipoEstado ( int Estado ) ;
    static void LiberaEstado ( void * pa ) ;
    static RLEX_tppEstado CriarEstado ( int idEstado ,
@@ -171,6 +186,7 @@
       GRF_tpCondRet CondRetEsperada = GRF_CondRetOK;
       GRF_tpCondRet CondRetObtida = GRF_CondRetFaltouMemoria;
       PIL_tpCondRet RetPil = PIL_CondRetFaltouMemoria;
+      RLEX_tpCondRet RetRLex = RLEX_CondRetErroEstrutura;
 
       /* Comando =criarlexrec */
 
@@ -184,13 +200,14 @@
          } /* if */
 
          CondRetObtida = GRF_CriarGrafo( ComparaRotulos ,
-                                  ComparaEstados ,
-                                  CopiaStrings ,
-                                  CopiaEstados ,
-                                  LiberaEstado ,
-                                  NULL ,
-                                  ConcatenaEstados ,
-                                  &pRec ) ;
+                                         ComparaEstados ,
+                                         CopiaStrings ,
+                                         CopiaEstados ,
+                                         LiberaEstado ,
+                                         NULL ,
+                                         ConcatenaEstados ,
+                                         PercorreTransicao ,
+                                         &pRec ) ;
 
          if( CondRetObtida == GRF_CondRetOK )
          {
@@ -391,14 +408,19 @@
          char LexemasEsperados[TAMANHO_BUFFER_STR] = "";
          char LexemasObtidos[TAMANHO_BUFFER_STR] = "";
 
-         numParamLidos = LER_LerParametros("ss",String,LexemasEsperados);
+         numParamLidos = LER_LerParametros("ssi",String,LexemasEsperados);
 
          if( numParamLidos != 2 )
          {
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(LexemasObtidos,TAMANHO_BUFFER_STR,ReconheceStr(String));
+         RetRLex = ReconheceStr(String,LexemasObtidos);
+
+         if( RetRLex != RLEX_CondRetOK )
+         {
+            return TST_CondRetErro;
+         } /* if */
 
          return TST_CompararString(LexemasEsperados,LexemasObtidos,"Lexemas esperados nao correspondem aos obtidos em string");
 
@@ -419,7 +441,12 @@
             return TST_CondRetParm;
          } /* if */
 
-         strcpy_s(LexemasObtidos,TAMANHO_BUFFER_STR,ReconheceStr(Caminho));
+         RetRLex = ReconheceArq(Caminho,LexemasObtidos);
+
+         if( RetRLex != RLEX_CondRetOK )
+         {
+            return TST_CondRetErro;
+         } /* if */
 
          return TST_CompararString(LexemasEsperados,LexemasObtidos,"Lexemas esperados nao correspondem aos obtidos em arquivo");
 
@@ -518,76 +545,7 @@
 
    int ComparaRotulos (void *pa, void *pb)
    {
-
-      int i;
-      int j = 0;
-      int pa_size = strlen((char*)pa);
-
-      char el[DIM_ROTULO] = "";
-
-      if( strlen((char *)pb) > 1 )
-      {
-         /* pb é um Rótulo */
-         return strcmp((char *)pa,(char *)pb);
-
-      } /* if */
-      else
-      {
-         /* pb é um caractere do fluxo de entrada */
-         for ( i = 0 ; i < pa_size ; i++ )
-         {
-            char c[2] = "";
-            sprintf_s(c,2,"%c",*((char *)pa+i));
-
-            if( c[0] == ' ' && i != j )
-            {
-               if( strlen(el) == 1 )
-               {
-                  if( strcmp((char *)pb,el) == 0 )
-                  {
-                     return 0;
-                  } /* if */
-               } /* if */
-               else
-               {
-                  if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
-                  {
-                     return 0;
-                  } /* if */
-               }
-
-               strcpy_s(el,DIM_ROTULO,"");
-               j = i + 1;
-            } /* if */
-            else
-            {
-               strcat_s(el,DIM_ROTULO,c);
-            } /* else */
-
-            if( i == pa_size - 1 )
-            {
-               if( strlen(el) == 1 )
-               {
-                  if( strcmp((char *)pb,el) == 0 )
-                  {
-                     return 0;
-                  } /* if */
-               } /* if */
-               else
-               {
-                  if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
-                  {
-                     return 0;
-                  } /* if */
-               }
-            }
-
-         } /* for */
-
-         return 1;
-
-      } /* else */
-
+      return strcmp((char *)pa,(char *)pb);
    } /* Fim função: RLEX -Compara Strings */
 
  /***********************************************************************
@@ -683,11 +641,25 @@
 *
 ***********************************************************************/
 
-   char * ReconheceStr ( char * Str )
+   RLEX_tpCondRet ReconheceStr ( char * Str , char StrSaida[TAMANHO_BUFFER_STR] )
    {
       char Buffer[TAMANHO_BUFFER_STR] = "";
       char * p = Str;
       RLEX_tpCondRet Ret;
+
+      if( StrSaida == NULL || Str == NULL )
+      {
+         return RLEX_CondRetValorFornecidoNulo;
+      } /* if */
+
+      strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
+
+      Ret = IrOrigem();
+
+      if( Ret != RLEX_CondRetOK )
+      {
+         return Ret;
+      } /* if */
 
       while ( *p != '\0' )
       {
@@ -696,7 +668,8 @@
 
          if( Ret != RLEX_CondRetOK )
          {
-            return "";
+            strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
+            return Ret;
          } /* if */
 
          //WIP
@@ -706,7 +679,8 @@
 
       } /* while */
 
-      return Buffer;
+      strcpy_s(StrSaida,TAMANHO_BUFFER_STR,Buffer);
+      return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Reconhece String */
 
@@ -716,17 +690,17 @@
 *
 ***********************************************************************/
 
-   char * ReconheceArq ( char * Path )
+   RLEX_tpCondRet ReconheceArq ( char * Path , char StrSaida[TAMANHO_BUFFER_STR] )
    {
       char Buffer[TAMANHO_BUFFER_STR] = "";
-      FILE *f  = fopen(Path,"r");
-      char c;
+      FILE *f;
       RLEX_tpCondRet Ret;
 
-      if( f == NULL )
+      if( fopen_s(&f,Path,"rb") != 0 || f == NULL )
       {
          /* Não foi possível abrir o arquivo */
-         return "";
+         strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
+         return RLEX_CondRetErroArquivo;
       } /* if */
 
       do
@@ -738,11 +712,12 @@
          if( feof(f) )
             break;
 
-         Ret = ReconheceChar(c);
+         Ret = ReconheceChar(Buffer[0]);
 
          if( Ret != RLEX_CondRetOK )
          {
-            return "";
+            strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
+            return Ret;
          } /* if */
 
          //WIP
@@ -753,10 +728,12 @@
       if( fclose(f) != 0 )
       {
          /* Não foi possível fechar o arquivo */
-         return "";
-      }
+         strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
+         return RLEX_CondRetErroArquivo;
+      } /* if */
 
-      return Buffer;
+      strcpy_s(StrSaida,TAMANHO_BUFFER_STR,Buffer);
+      return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Reconhece Arquivo */
 
@@ -783,6 +760,127 @@
 
       return RLEX_CondRetOK;
    } /* Fim função: RLEX -Reconhece Caractere */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Percorre Transicao
+*
+***********************************************************************/
+
+   int PercorreTransicao ( void * pa , void * pb )
+   {
+
+      int i;
+      int j = 0;
+      int pa_size = strlen((char*)pa);
+
+      char el[DIM_ROTULO] = "";
+
+      if( strcmp((char *)pa,"\o") == 0 )
+      {
+         /* Rótulo engloba outros
+            >> prioridade 1 */
+         return 1;
+      } /* if */
+
+      for ( i = 0 ; i < pa_size ; i++ )
+      {
+         char c[2] = "";
+         sprintf_s(c,2,"%c",*((char *)pa+i));
+
+         if( c[0] == ' ' && i != j )
+         {
+            if( strlen(el) == 1 )
+            {
+               if( strcmp((char *)pb,el) == 0 )
+               {
+                  /* Rótulo possui caractere
+                     >> prioridade 3 */
+                  return 3;
+               } /* if */
+            } /* if */
+            else
+            {
+               if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+               {
+                  /* Rótulo possui conjunto que engloba caractere 
+                     >> prioridade 2 */
+                  return 2;
+               } /* if */
+            }
+
+            strcpy_s(el,DIM_ROTULO,"");
+            j = i + 1;
+         } /* if */
+         else
+         {
+            strcat_s(el,DIM_ROTULO,c);
+         } /* else */
+
+         if( i == pa_size - 1 )
+         {
+            if( strlen(el) == 1 )
+            {
+               if( strcmp((char *)pb,el) == 0 )
+               {
+                  /* Rótulo possui caractere
+                     >> prioridade 3 */
+                  return 3;
+               } /* if */
+            } /* if */
+            else
+            {
+               if( strcmp(TraduzCaractere(*((char *)pb)),el) == 0 )
+               {
+                  /* Rótulo possui conjunto que engloba caractere 
+                     >> prioridade 2 */
+                  return 2;
+               } /* if */
+            }
+         }
+
+      } /* for */
+
+      /* Rótulo não representa transição "percorrível"
+         >> prioridade 0 */
+      return 0;
+
+   } /* Fim função: RLEX -Percorre Transicao */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Ir à origem do reconhecedor léxico
+*
+***********************************************************************/
+
+   RLEX_tpCondRet IrOrigem( )
+   {
+      GRF_tpCondRet RetGrf;
+
+      RetGrf = GRF_ProcurarVertice( pRec , pOrigem , RLEX_TRUE );
+
+      switch( RetGrf )
+      {
+
+      case GRF_CondRetOK:
+         return RLEX_CondRetOK;
+
+      case GRF_CondRetGrafoNaoExiste:
+         return RLEX_CondRetLexRecNaoExiste;
+
+      case GRF_CondRetGrafoVazio:
+         return RLEX_CondRetLexRecVazio;
+
+      default:
+         /*
+         GRF_CondRetErroEstrutura
+         GRF_CondRetVerticeNaoExiste - pOrigem não aponta para origem
+         */
+         return RLEX_CondRetErroEstrutura;
+
+      } /* switch */
+
+   } /* Fim função: RLEX -Ir à origem do reconhecedor léxico */
 
 /********** Fim do módulo de implementação: RLEX Reconhecedor Léxico **********/
 

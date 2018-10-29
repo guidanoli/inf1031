@@ -42,3 +42,13 @@
 								que leva em consideração prioridade de percurso.
 								Alterado tbm o módulo TSTGRF.C. Todos os testes
 								rodam com sucesso.
+28/10	1h			projetar			Percebe-se necessário estabelecer uma prioridade
+								entre as arestas em relação ao caminhamento ou não
+								dessas dado um caracter. Esta decisão é feita
+								na função PercorreAresta. As prioridades estabele-
+								cidas são: 3 (Rótulo possui o caractere), 2 (Rótulo
+								possui o conjunto que contém o caractere), 1
+								(Rótulo possui '\o', ou seja, outros caracteres),
+								0 (Rótulo não se aplica a nenhum dos critérios).
+28/10	30min			revisar código do módulo	Adaptada a função PercorreAresta segundo os cri-
+								térios esclarecidos anteriormente.

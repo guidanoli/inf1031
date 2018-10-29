@@ -160,8 +160,11 @@
 =destruirlexrec OK
 
 == Testar conflito de rótulos
+// Graças à função PercorreAresta, separada de ComparaRotulos, pode-se inserir uma
+// aresta cujo valor pertence ao conjunto armazenado no Rótulo de outra transição
 =criarlexrec OK
 =inserirestado 0 NomeDummy EstadoFinal OK
 =inserirtransicao 0 0 Outros OK
 =inserirtransicao 0 0 "*" OK
 =destruirlexrec OK
+
