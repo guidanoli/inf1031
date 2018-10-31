@@ -133,6 +133,7 @@
    RLEX_tppEstado pOrigem = NULL;
    GRF_tppGrafo pRec = NULL ;
    PIL_tppPilha pPilhaReleitura = NULL ;
+   PIL_tppPilha pPilhaCaminhamento = NULL ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -226,6 +227,15 @@
                return TST_CondRetMemoria;
             } /* if */
 
+            RetPil = PIL_CriarPilha(&pPilhaCaminhamento);
+
+            if( RetPil != PIL_CondRetOK )
+            {
+               PIL_DestruirPilha(&pPilhaReleitura);
+               GRF_DestruirGrafo(&pRec);
+               return TST_CondRetMemoria;
+            } /* if */
+
          } /* if */
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao criar reconhecedor lexico");
@@ -249,6 +259,7 @@
          {
             numElementos = 0;
             PIL_DestruirPilha(&pPilhaReleitura);
+            PIL_DestruirPilha(&pPilhaCaminhamento);
          } /* if */
 
          return TST_CompararInt(CondRetEsperada,CondRetObtida,"Retorno errado ao destruir reconhecedor lexico");
@@ -649,74 +660,123 @@
 
    RLEX_tpCondRet ReconheceStr ( char * Str , char StrSaida[TAMANHO_BUFFER_STR] )
    {
-      char Buffer[TAMANHO_BUFFER_STR] = "";
-      char * p = Str, * b = Str;
-      RLEX_tpCondRet Ret;
-      PIL_tpCondRet RetPil;
-      GRF_tpCondRet RetGrf;
+      char *p = Str , *ant = Str, c_corr;
       RLEX_tppEstado pEstadoCorr = NULL;
 
-      PIL_tppPilha pPilhaCaminhamento = NULL;
+      char SmallStr[2] = "";
 
-      if( StrSaida == NULL || Str == NULL )
+      GRF_tpCondRet RetGrf;
+      PIL_tpCondRet RetPil;
+
+      /* Validando ponteiros */
+
+      if( pRec == NULL )
+      {
+         return RLEX_CondRetLexRecNaoExiste;
+      } /* if */
+
+      if( pPilhaReleitura == NULL || pPilhaCaminhamento == NULL )
+      {
+         return RLEX_CondRetErroEstrutura;
+      } /* if */
+
+      if( Str == NULL || StrSaida == NULL )
       {
          return RLEX_CondRetValorFornecidoNulo;
       } /* if */
 
-      strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"");
+      /* Limpando string de saída */
 
-      Ret = IrOrigem();
-
-      if( Ret != RLEX_CondRetOK )
+      if( strcpy_s(StrSaida,TAMANHO_BUFFER_STR,"") != 0 )
       {
-         return Ret;
+         return RLEX_CondRetErroEstrutura;
       } /* if */
 
-      RetPil = PIL_CriarPilha(&pPilhaCaminhamento);
+      /* Laço principal */
 
-      if( RetPil != PIL_CondRetOK )
-      {
-         return RLEX_CondRetMemoria;
-      } /* if */
-
-      while ( 1 )
+      while( 1 )
       {
 
-         if( PIL_PilhaVazia( pPilhaReleitura ) != PIL_CondRetOK )
+         /* Obter caractere corrente */
+
+         if( PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetPilhaVazia )
          {
-
+            c_corr = *p;
          } /* if */
+         else
+         {
+            char *pChar = (char *) PIL_Desempilhar(pPilhaReleitura);
+            
+            if( pChar == NULL )
+            {
+               return RLEX_CondRetErroEstrutura;
+            } /* if */
 
-         RetGrf = GRF_ObterValor( pRec , (void **) &pEstadoCorr );
-         RetPil = PIL_Empilhar( pPilhaCaminhamento , pEstadoCorr );
+            c_corr = *pChar;
+         } /* else */
 
-         if( RetGrf != GRF_CondRetOK || RetPil != PIL_CondRetOK )
+         /* Empilha na pilha de caminhamento o estado corrente */
+
+         RetGrf = GRF_ObterValor( pRec , (void**) &pEstadoCorr );
+
+         if( pEstadoCorr == NULL )
          {
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
-         if( *p == '\0' )
+         if( RetGrf == GRF_CondRetGrafoVazio )
          {
-            Ret = ReconheceChar('\f');
+            return RLEX_CondRetLexRecVazio;
          } /* if */
-         else
+         else if( RetGrf != GRF_CondRetOK )
          {
-            Ret = ReconheceChar(*p);
-         } /* else */
+            return RLEX_CondRetErroEstrutura;
+         } /* else-if */
 
-         if( Ret == RLEX_CondRetTransicaoNaoExiste )
+         RetPil = PIL_Empilhar( pPilhaCaminhamento , pEstadoCorr );
+
+         if( RetPil == PIL_CondRetFaltouMemoria )
          {
-            /* "Se o estado não for terminal, precisa-se retroceder sobre o caminho percorrido,
-               até que se chegue ou a um estado final ou ao estado inicial." */
+            return RLEX_CondRetMemoria;
+         } /* if */
+         else if( RetPil != PIL_CondRetOK )
+         {
+            return RLEX_CondRetErroEstrutura;
+         } /* if */
 
-            while( PIL_PilhaVazia( pPilhaCaminhamento ) == PIL_CondRetOK )
+         /* Caminha no grafo com o caractere corrente */
+
+         sprintf_s(SmallStr,2,"%c",c_corr);
+
+         RetGrf = GRF_CaminharGrafo( pRec , SmallStr , 1 );
+
+         if( RetGrf == GRF_CondRetOK )
+         {
+            /* Foi possível percorrer a transição */
+            if( *p != '\0' )
             {
+               p++;
+            } /* if */
+            else
+            {
+               break;
+            } /* else */
 
-               /* "Os caracteres do fluxo percorridos nesse trajeto inverso devem ser empilhados
-                  na pilha de releitura." */
+         } /* if */
+         else if( RetGrf == GRF_CondRetArestaNaoExiste )
+         {
+            /* Não há a transição */
+            while( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal 
+                   && PIL_PilhaVazia(pPilhaCaminhamento) == PIL_CondRetOK )
+            {
+               pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar(pPilhaCaminhamento);
 
-               pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar( pPilhaCaminhamento );
-               RetPil = PIL_Empilhar( pPilhaReleitura, p );
+               if( pEstadoCorr == NULL )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+               RetPil = PIL_Empilhar( pPilhaReleitura , SmallStr );
 
                if( RetPil == PIL_CondRetFaltouMemoria )
                {
@@ -725,95 +785,31 @@
                else if( RetPil != PIL_CondRetOK )
                {
                   return RLEX_CondRetErroEstrutura;
-               } /* else if */
+               } /* else-if */
 
-               if( pEstadoCorr == NULL )
-               {
-                  return RLEX_CondRetErroEstrutura;
-               } /* if */
-
-               if( pEstadoCorr->tipoEstado == RLEX_tppEstadoFinal )
-               {
-                  break;
-               } /* if */
+               if(
 
             } /* while */
 
-            if( PIL_PilhaVazia( pPilhaCaminhamento ) == PIL_CondRetPilhaVazia )
+            if( pEstadoCorr->tipoEstado == RLEX_tppEstadoFinal )
             {
-               /* "Caso, ao retroceder, tenha-se chegado ao estado inicial, encontrou-se um erro 
-                  de dados de entrada, mais especificamente, o caractere no topo da pilha de releitura
-                  não leva a um estado final. Neste caso elimina-se o caractere no topo da pilha, emite-se
-                  uma mensagem de erro e reinicia-se o reconhecimento." */
-
-               char topo[2];
-
-               if( strcpy_s(topo,2,(char *)PIL_Desempilhar( pPilhaReleitura )) != 0 )
-               {
-                  return RLEX_CondRetErroEstrutura;
-               } /* if */
-
-               if( strcat_s( StrSaida , TAMANHO_BUFFER_STR , "Erro, " ) != 0 )
-               {
-                  return RLEX_CondRetMemoria;
-               } /* if */
 
             } /* if */
-            else
+            else if( PIL_PilhaVazia(pPilhaCaminhamento) == PIL_CondRetPilhaVazia )
             {
-               /* "Caso, ao retroceder, tenha-se chegado a um estado final, esse corresponderá ao
-                  lexema encontrado." */
 
-               if( strcat_s( StrSaida , TAMANHO_BUFFER_STR , pEstadoCorr->nomeEstado ) != 0 )
-               {
-                  return RLEX_CondRetMemoria;
-               } /* if */
+            } /* else-if */
 
-               if( strcat_s( StrSaida , TAMANHO_BUFFER_STR , ", " ) != 0 )
-               {
-                  return RLEX_CondRetMemoria;
-               } /* if */
-
-               RetPil = PIL_DestruirPilha( &pPilhaCaminhamento );
-               
-               if( RetPil != PIL_CondRetOK )
-               {
-                  return RLEX_CondRetErroEstrutura;
-               } /* if */
-
-               RetPil = PIL_CriarPilha( &pPilhaCaminhamento );
-
-               if( RetPil == PIL_CondRetFaltouMemoria )
-               {
-                  return RLEX_CondRetMemoria;
-               } /* if */
-               else if( RetPil == PIL_CondRetErroEstrutura )
-               {
-                  return RLEX_CondRetErroEstrutura;
-               } /* else-if */
-
-               Ret = IrOrigem();
-
-               if( Ret != RLEX_CondRetOK )
-               {
-                  return Ret;
-               } /* if */
-
-            } /* else */
-
-         } /* if */
-         else if( Ret == RLEX_CondRetOK )
-         {
-            p++;
-         } /* if */
+         } /* else-if */
          else
          {
-            return Ret;
-         } /* if */
+            return RLEX_CondRetErroEstrutura;
+         } /* else */
 
       } /* while */
 
-      strcpy_s(StrSaida,TAMANHO_BUFFER_STR,Buffer);
+      //algo
+
       return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Reconhece String */
@@ -886,11 +882,6 @@
       if( pRec == NULL )
       {
          return RLEX_CondRetLexRecNaoExiste;
-      } /* if */
-
-      if( pPilhaReleitura == NULL )
-      {
-         return RLEX_CondRetErroEstrutura;
       } /* if */
 
       sprintf_s(Str,2,"%c",c);

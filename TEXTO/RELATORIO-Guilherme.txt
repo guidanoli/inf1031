@@ -53,3 +53,4 @@
 28/10	30min			revisar código do módulo	Adaptada a função PercorreAresta segundo os cri-
 								térios esclarecidos anteriormente.
 29/10	2h			projetar			função ReconheceStr
+31/10	2h			projetar			função ReconheceStr (de novo)
