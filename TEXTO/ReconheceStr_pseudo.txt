@@ -1,52 +1,98 @@
-(1) É PILHA DE RELEITURA (CHAR)
-(2) É PILHA DE CAMINHO (ESTADO)
-
-ReconheceStr( Str )
-char *p = Str, *ant = Str, c_corr
+ReconheceStr( Str, Saida ):
+char *p = Str, *ant = Str
+POS = 0
+LINHA = 0
+ESTADOCORR = NULL
+-- certificar aqui que nem Str e nem Saida são nulas --
+PIL_CriarPilha(PILHA)
+-- condretpil --
+LIMPA( Saida )
+-- certificar aqui se o grafo existe / não está vazio --
 ENQUANTO TRUE
-	PILHA RELEITURA VAZIA?
-	SE NÃO
-		DESEMPILHA -> c
-		C_CORR = c
-	SE SIM
-		C_CORR = *p
-	FIM SE
-	EMPILHA EM (2) O ESTADOCORR
-	CAMINHA( C_CORR) -> RET
+	EMPILHA EM PILHA O ESTADOCORR
+	-- condretpil --
+	CAMINHA( *p ) -> RET
 	SE RET == N HÁ ARESTA
-		EMPILHA EM (1) O C_CORR
 		ENQUANTO ESTADOCORR->TIPO != TERMINAL
-		E (2) N FOR VAZIO
-			DESEMPILHA (2) -> ESTADOCORR
-			EMPILHA EM (1) O C_CORR
-			SE (1) É VAZIO
+		E PILHA N FOR VAZIA
+			DESEMPILHA DE PILHA -> ESTADOCORR
+			-- condretpil --
+			-- Estadocorr nulo --
+			SE P == ANT
+				BREAK
+				// VAI PARA "SENÃO PILHA VAZIA"
+			SENÃO
 				P--
-				C_CORR = *P
-			SENAO
-				DESEMPILHA (1) -> C_CORR
-			FIM SE
 		FIM ENQUANTO
 		SE ESTADOCORR->TIPO == TERMINAL
-			MSG ESTADOCORR->NOME, INTERVALO(ANT,P), COL
-			SE *P != \0'
-				P++
-			SENÃO
-				BREAK
+			MSG ESTADOCORR->NOME, INTERVALO( p , ant, &pos ), POS, LINHA, Saida -> {0,-1}
+			SE -1: RET ERRO
+			LINHA_UPDATE( p, ant, &LINHA )
+			P++
 			ANT = P
+			SE *ANT == '\0'
+				BREAK
+			FIM SE
 			VOLTA P ORIGEM
-			ESVAZIA (2)
-		SENÃO (2) É VAZIA
-			MSG ERRO, PILHA_TO_STR (1)
+			ESVAZIA PILHA
+		SENÃO PILHA É VAZIA
+			ERRO MensagemDeErro, POS, LINHA, Saida -> {0,-1}
+			SE -1: RET ERRO
 			BREAK
 	SENÃO RET == OK
-			SE *P != \0'
-				P++
-			SENÃO
-				BREAK
+		SE *P != \0'
+			P++
+		SENÃO
+			BREAK
 	SENÃO
-			SWITCH( CONDRET(GRF) -> CONDRET(RLEX) )
+		-- condretgrf -- 
 	FIM SE
-	FIM ENQUANTO
-	.. ARQUIVO ..
+FIM ENQUANTO
 FIM
-		
+
+INTERVALO( p , ant, *pos ):
+	Str[BUFFER] = ""
+	ENQUANTO P > ANT:
+		Str = Str + *ant
+		ant++
+		(*pos)++
+	RETORNA Str
+
+LIMPA( path ):
+	ABRIR path, APPEND
+	SE NAO CONSEGUIU ABRIR
+		RETORNA -1
+	FECHAR path
+	SE NAO CONSEGUIU FECHAR
+		RETORNA -1
+	RETORNA 0
+
+ERRO( erro, posicao, linha, path ):
+	ABRIR path, APPEND
+	SE NAO CONSEGUIU ABRIR
+		RETORNA -1
+	ESCREVER erro, posicao, linha
+	SE NAO CONSEGUIU ESCREVER
+		RETORNA -1
+	FECHAR path
+	SE NAO CONSEGUIU FECHAR
+		RETORNA -1
+	RETORNA 0
+
+MSG( nome, lexema, posicao, linha, path ):
+	ABRIR path, APPEND
+	SE NAO CONSEGUIU ABRIR
+		RETORNA -1
+	ESCREVER nome, lexema, posicao, linha
+	SE NAO CONSEGUIU ESCREVER
+		RETORNA -1
+	FECHAR path
+	SE NAO CONSEGUIU FECHAR
+		RETORNA -1
+	RETORNA 0
+
+LINHA_UPDATE( p, ant, &linha ):
+	ENQUANTO P > ANT:
+		SE *ant == '\n':
+			(*linha)++
+		ant++
