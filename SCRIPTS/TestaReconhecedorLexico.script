@@ -6,23 +6,36 @@
 //            			baseando-se no modelo arquitetado.
 //
 
-== Declarar as condicoes de retorno
+== Declarar as condicoes de retorno do grafo
 =declararparm  OK                    int 0
-=declararparm  RecLexNaoExiste       int 1 
-=declararparm  RecLexVazio           int 2
-=declararparm  EstadoExiste          int 3
-=declararparm  EstadoNaoExiste       int 4
-=declararparm  ValorFornecidoNulo    int 5
-=declararparm  TransicaoExiste       int 6
-=declararparm  TransicaoNaoExiste    int 7
+=declararparm  GrafoNaoExiste        int 1 
+=declararparm  GrafoVazio            int 2
+=declararparm  VerticeExiste         int 3
+=declararparm  VerticeNaoExiste      int 4
+=declararparm  Grafo_ValorNulo       int 5
+=declararparm  ArestaExiste          int 6
+=declararparm  ArestaNaoExiste       int 7
 =declararparm  UnicaOrigem           int 8
 =declararparm  FuncNula	             int 9
-=declararparm  ErroEstrutura         int 10
-=declararparm  Memoria               int 11
+=declararparm  Grafo_ErroEstrutura   int 10
+=declararparm  Grafo_Memoria         int 11
+
+== Declarar as condicoes de retorno do reconhecedor léxico
+=declararparm  RecLexNaoExiste       int 1 
+=declararparm  RecLexVazio           int 2
+=declararparm  TransicaoNaoExiste    int 3
+=declararparm  RecLex_ValorNulo      int 4
+=declararparm  ErroArquivo           int 5
+=declararparm  ParametrosInvalidos   int 6
+=declararparm  RecLex_ErroEstrutura  int 7
+=declararparm  RecLex_Memoria        int 8
 
 == Declarar Tipos de Estados
 =declararparm  EstadoFinal           int 0
 =declararparm  EstadoIntermediario   int 1
+
+== Saída padrão do relatório
+=declararparm  Path                  string "Reconhecimento.txt"
 
 == Declarar Nomes de Estados
 =declararparm  NomeDummy             string "Nome dummy"
@@ -41,13 +54,13 @@
 =destruirlexrec OK
 
 == Testar destruir Reconhecedor Léxico inexistente
-=destruirlexrec RecLexNaoExiste
+=destruirlexrec GrafoNaoExiste
 
 == Inserir Estado em Reconhecedor Léxico inexistente
-=inserirestado 0 NomeDummy EstadoFinal RecLexNaoExiste
+=inserirestado 0 NomeDummy EstadoFinal GrafoNaoExiste
 
 == Inserir Estado com tipo de Estado inválido e recuperar
-=inserirestado 0 NomeDummy 37 RecLexNaoExiste
+=inserirestado 0 NomeDummy 37 GrafoNaoExiste
 =recuperar
 
 == Inserir Estado e destruir Reconhecedor Léxico ainda com o Estado existente
@@ -58,21 +71,21 @@
 == Testar inserir dois Estados com mesmo id no mesmo Reconhecedor Léxico
 =criarlexrec OK
 =inserirestado 0 NomeDummy EstadoFinal OK
-=inserirestado 0 NomeDummy EstadoFinal EstadoExiste
+=inserirestado 0 NomeDummy EstadoFinal VerticeExiste
 =destruirlexrec OK
 
 == Testar remover Estado de Reconhecedor Léxico inexistente
-=removerestado 0 RecLexNaoExiste
+=removerestado 0 GrafoNaoExiste
 
 == Testar remover Estado de Reconhecedor Léxico vazio
 =criarlexrec OK
-=removerestado 0 RecLexVazio
+=removerestado 0 GrafoVazio
 =destruirlexrec OK
 
 == Testar remover Estado inexistente de Reconhecedor Léxico
 =criarlexrec OK
 =inserirestado 0 NomeDummy EstadoFinal OK
-=removerestado 1 EstadoNaoExiste
+=removerestado 1 VerticeNaoExiste
 =destruirlexrec OK
 
 == Testar remover Estado origem de Reconhecedor Léxico com mais de um Estado
@@ -91,11 +104,11 @@
 =destruirlexrec OK
 
 == Testar inserir Transição em Reconhecedor Léxico inexistente
-=inserirtransicao 0 0 Letras RecLexNaoExiste
+=inserirtransicao 0 0 Letras GrafoNaoExiste
 
 == Testar inserir Transição entre Estados inexistentes em Reconhecedor Léxico
 =criarlexrec OK
-=inserirtransicao 0 0 Letras EstadoNaoExiste
+=inserirtransicao 0 0 Letras VerticeNaoExiste
 =destruirlexrec OK
 
 == Inserir Transição entre Estados existentes em um Reconhecedor Léxico
@@ -108,7 +121,7 @@
 =criarlexrec OK
 =inserirestado 0 NomeDummy EstadoFinal OK
 =inserirtransicao 0 0 Letras OK
-=inserirtransicao 0 0 Letras TransicaoExiste
+=inserirtransicao 0 0 Letras ArestaExiste
 =destruirlexrec OK
 
 == Inserir Transição com mesmo Rótulo indo para Estados diferentes
@@ -132,11 +145,11 @@
 =destruirlexrec OK
 
 == Testar remover Transição de Reconhecedor Léxico inexistente
-=removertransicao 0 0 Letras RecLexNaoExiste
+=removertransicao 0 0 Letras GrafoNaoExiste
 
 == Testar remover Transição de Reconhecedor Léxico vazio
 =criarlexrec OK
-=removertransicao 0 0 Letras RecLexVazio
+=removertransicao 0 0 Letras GrafoVazio
 =destruirlexrec OK
 
 == Remover Transição de Reconhecedor Léxico
@@ -150,13 +163,13 @@
 =criarlexrec OK
 =inserirestado 0 NomeDummy EstadoFinal OK
 =inserirtransicao 0 0 Letras OK
-=removertransicao 0 0 Decimais TransicaoNaoExiste
+=removertransicao 0 0 Decimais ArestaNaoExiste
 =destruirlexrec OK
 
 == Testar remover Transição entre Estados inexistentes
 =criarlexrec OK
 =inserirestado 0 NomeDummy EstadoFinal OK
-=removertransicao 1 1 Decimais EstadoNaoExiste
+=removertransicao 1 1 Decimais VerticeNaoExiste
 =destruirlexrec OK
 
 == Testar conflito de rótulos
@@ -168,3 +181,14 @@
 =inserirtransicao 0 0 "*" OK
 =destruirlexrec OK
 
+== Testar reconhecer string com Recnohecedor Léxico inexistente
+=reconhecerstring "a" Path RecLexNaoExiste
+
+== Testar reconhecer string com path vazia
+=reconhecerstring "a" "" RecLexNaoExiste
+=recuperar
+
+== Testar reconhecer string com Recnohecedor Léxico vazio
+=criarlexrec OK
+=reconhecerstring "a" "PathInvalida.txt" RecLexVazio
+=destruirlexrec OK

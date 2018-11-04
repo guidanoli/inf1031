@@ -55,3 +55,5 @@
 29/10	2h			projetar			função ReconheceStr
 31/10	2h			projetar			função ReconheceStr (de novo)
 04/11	2h			projetar			função ReconheceStr (de novo)
+04/11	1h			codificar módulo		função EsvaziarPilha no módulo PILHA
+04/11	1h			redigir script de teste		função EsvaziarPilha no módulo PILHA

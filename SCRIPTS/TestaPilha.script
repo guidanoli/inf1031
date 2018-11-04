@@ -6,6 +6,7 @@
 //				0.4	08/10/2018	desempilhar
 //				0.5	08/10/2018	pilhavazia
 //				0.6	12/10/2018	copiarpilha
+//				0.7	04/11/2018	esvaziarpilha
 // Propósito: 			Testa a integridade das funções de acesso
 //            			do módulo Pilha para com sua estrutura de dados,
 //            			baseando-se no modelo arquitetado.
@@ -155,3 +156,32 @@
 
 == Testar copiar pilha inexistente em si mesma
 =copiarpilha 0 0 PilhaNaoExiste
+
+== Testar esvaziar pilha inexistente
+=esvaziarpilha 0 PilhaNaoExiste
+
+== Esvaziar pilha vazia
+=criarpilha 0 OK
+=vazia 0 PilhaVazia
+=esvaziarpilha 0 OK
+=desempilhar 0 IntErro
+=vazia 0 PilhaVazia
+=destruirpilha 0 OK
+
+== Esvaziar pilha com elementos
+=criarpilha 0 OK
+=empilhar 0 1 OK
+=empilhar 0 2 OK
+=empilhar 0 3 OK
+=empilhar 0 4 OK
+=empilhar 0 5 OK
+=vazia 0 OK
+=esvaziarpilha 0 OK
+=desempilhar 0 IntErro
+=vazia 0 PilhaVazia
+=empilhar 0 1 OK
+=vazia 0 OK
+=desempilhar 0 1
+=desempilhar 0 IntErro
+=vazia 0 PilhaVazia
+=destruirpilha 0 OK

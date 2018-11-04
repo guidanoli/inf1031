@@ -16,7 +16,6 @@ ENQUANTO TRUE
 		ENQUANTO ESTADOCORR->TIPO != TERMINAL
 		E PILHA N FOR VAZIA
 			DESEMPILHA DE PILHA -> ESTADOCORR
-			-- condretpil --
 			-- Estadocorr nulo --
 			SE P == ANT
 				BREAK

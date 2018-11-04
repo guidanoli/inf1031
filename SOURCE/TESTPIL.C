@@ -11,6 +11,7 @@
 *     0       gui   06/10/2018  Início do desenvolvimento
 *     1       gui   08/10/2018  Criar, destruir, empilhar, desempilhar e vazia
 *     2       gui   12/10/2018  Copiar
+*     3       gui   04/11/2018  Esvaziar
 *
 ***************************************************************************/
 
@@ -31,6 +32,7 @@
 #define DESEMPILHAR_CMD          "=desempilhar"
 #define VAZIA_CMD                "=vazia"
 #define COPIAR_PILHA_CMD         "=copiarpilha"
+#define ESVAZIAR_PILHA_CMD       "=esvaziarpilha"
 
 #define TST_PIL_TRUE  1
 #define TST_PIL_FALSE 0
@@ -62,6 +64,7 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
 *    =desempilhar               indexPilha, IntEsperado
 *    =vazia                     indexPilha, CondRetEsp
 *    =copiarpilha               indexFonte, indexDestino, CondRetEsp
+*    =esvaziarpilha             indexPilha, CondRetEsp
 *
 ***********************************************************************/
 
@@ -129,14 +132,11 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
          } /* if */
          else
          {
-
             pInt = ( int * ) malloc( sizeof(int) );
-
             if( pInt == NULL )
             {
                return TST_CondRetMemoria;
             } /* if */
-
             *pInt = IntDado;
 
             CondRetPIL = PIL_Empilhar(vtPilhas[indexPilha],pInt);
@@ -203,6 +203,23 @@ PIL_tppPilha vtPilhas[ DIM_VT_PILHA ] = { NULL, NULL, NULL };
          return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao copiar pilha");
 
       } /*fim ativa: Testar copiarpilha*/
+
+      /* Testar esvaziarpilha */
+
+      if( strcmp(ComandoTeste, ESVAZIAR_PILHA_CMD) == 0 )
+      {
+         numLidos = LER_LerParametros("ii", &indexPilha, &CondRetEsp);
+
+         if ((numLidos != 2) ||
+            (!ValidarIndexPilha(indexPilha))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetPIL = PIL_EsvaziarPilha( vtPilhas[indexPilha] );
+
+         return TST_CompararInt(CondRetEsp,CondRetPIL,"Retorno errado ao copiar pilha");
+
+      } /*fim ativa: Testar esvaziarpilha*/
 
       return TST_CondRetNaoConhec;
 

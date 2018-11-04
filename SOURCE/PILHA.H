@@ -13,7 +13,8 @@
 *     Versão  Autor    Data     Observações
 *     0       gui   06/10/2018  Início do desenvolvimento
 *     1       gui   08/10/2018  Criar, destruir, empilhar, desempilhar e vazia
-*     2       gui   12/10/2018  Copiar
+*     2       gui   12/10/2018  Copiar pilha
+*     3       gui   04/11/2018  Esvaziar pilha
 *
 *  $ED Descrição do módulo
 *     Implementa pilhas genéricas a partir do módulo lista,
@@ -116,7 +117,6 @@
 *
 *  $FV Valor retornado
 *     PIL_CondRetOK
-*     PIL_CondRetErroEstrutura
 *     PIL_CondRetFaltouMemoria
 *
 ***********************************************************************/
@@ -240,6 +240,7 @@
 *     PIL_CondRetOK              - a pilha não está vazia
 *     PIL_CondRetPilhaNaoExiste  - a pilha não existe
 *     PIL_CondRetPilhaVazia      - a pilha está vazia
+*     PIL_CondRetErroEstrutura
 *
 ***********************************************************************/
 
@@ -280,6 +281,35 @@
 
    PIL_tpCondRet PIL_CopiarPilha( PIL_tppPilha * pFonte ,
                                   PIL_tppPilha * pDestino ) ;
+
+/***********************************************************************
+*
+*  $FC Função: PIL  &Esvaziar pilha
+*
+*  $ED Descrição da função
+*     Desempilha todos os elementos empilhados na pilha, tornando
+*     a pilha vazia.
+*
+*  $AE Assertivas de Entrada
+*     Recebe um ponteiro NULO ou que aponta para a pilha a ser esvaziada.
+*
+*  $AS Assertivas de Saída
+*     Caso a pilha existia, e não possuia erro na estrutura interna,
+*     será esvaziada com sucesso. Caso contrário, a estrutura da pilha
+*     não será modificada e a condição de retorno apropriada será
+*     retornada.
+*
+*  $EP Parâmetros
+*     pPilha                     - ponteiro para pilha
+*
+*  $FV Valor retornado
+*     PIL_CondRetOK              - esvaziada com sucesso
+*     PIL_CondRetPilhaNaoExiste  - ponteiro para pilha nulo
+*     PIL_CondRetErroEstrutura
+*
+***********************************************************************/
+
+   PIL_tpCondRet PIL_EsvaziarPilha( PIL_tppPilha pPilha ) ;
 
 #undef PILHA_EXT
 

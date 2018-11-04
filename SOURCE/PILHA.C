@@ -57,20 +57,16 @@
    PIL_tpCondRet PIL_CriarPilha( PIL_tppPilha * ppPilhaParam )
    {
 
+      /* Anula o ponteiro, qualquer coisa */
+
       PIL_tpPilha * pPilha = NULL;
       
       if( *ppPilhaParam != NULL )
       {
-         PIL_tpCondRet Ret = PIL_DestruirPilha( ppPilhaParam );
-
-         if( Ret == PIL_CondRetErroEstrutura )
-         {
-            return Ret;
-         } /* if */
-
+         PIL_DestruirPilha( ppPilhaParam );
       } /* if */
 
-      pPilha = ( PIL_tpPilha * ) malloc( sizeof( PIL_tpPilha ));
+      pPilha = ( PIL_tpPilha * ) malloc( sizeof( PIL_tpPilha ) );
 
       if( pPilha == NULL )
       {
@@ -78,6 +74,11 @@
       } /* if */
 
       pPilha->numElem = 0;
+
+      /* A função de exclusão de valores é NULL pois não deseja
+         excluir os elementos depois de desempilhados, pois serão muito 
+         possivelmente utilizados pelo módulo cliente que usa a pilha */
+      
       pPilha->pLista = LIS_CriarLista( NULL );
 
       if( pPilha->pLista == NULL )
@@ -105,12 +106,20 @@
          return PIL_CondRetPilhaNaoExiste;
       } /* if */
 
+      /* Apesar do ponteiro para lista significar um erro na estrutura
+         da pilha, isto não será levado em consideração pois senão o
+         ponteiro será inutilizado, pois estará fadado para ter uma 
+         pilha com erro de estrutura, sem ser destruída */
+
       if( (*ppPilhaParam)->pLista != NULL )
       {
          LIS_DestruirLista( (*ppPilhaParam)->pLista );
       } /* if */
 
       free( *ppPilhaParam );
+
+      /* O ponteiro é anulo para segurança, sem ponteiros loucos
+         ou "wild ponters" */
 
       *ppPilhaParam = NULL;
 
@@ -205,6 +214,11 @@
          return PIL_CondRetPilhaNaoExiste;
       } /* if */
 
+      if( pPilha->pLista == NULL )
+      {
+         return PIL_CondRetErroEstrutura;
+      } /* if */
+
       if( pPilha->numElem == 0 )
       {
          return PIL_CondRetPilhaVazia;
@@ -241,6 +255,11 @@
       if( *pFonte == *pDestino )
       {
          return PIL_CondRetOK;
+      } /* if */
+
+      if( (*pFonte)->pLista == NULL )
+      {
+         return PIL_CondRetErroEstrutura;
       } /* if */
 
       RetPil = PIL_CriarPilha(pDestino);
@@ -288,5 +307,30 @@
       return PIL_CondRetOK;
 
    } /* Fim função: PIL  &Copiar pilha */
+
+/***************************************************************************
+*
+*  Função: PIL  &Esvaziar pilha
+*  ******/
+
+   PIL_tpCondRet PIL_EsvaziarPilha( PIL_tppPilha pPilha )
+   {
+
+      if( pPilha == NULL )
+      {
+         return PIL_CondRetPilhaNaoExiste;
+      } /* if */
+
+      if( pPilha->pLista == NULL )
+      {
+         return PIL_CondRetErroEstrutura;
+      } /* if */
+
+      LIS_EsvaziarLista( pPilha->pLista );
+      pPilha->numElem = 0;
+
+      return PIL_CondRetOK;
+
+   } /* Fim função: PIL  &Esvaziar pilha */
 
 /********** Fim do módulo de implementação: PIL  Pilha genérica **********/
