@@ -59,5 +59,9 @@ Caso acho necessário debugar algum erro com o Visual Studio, é simples:
 * importe o(s) módulo(s) que deseja debugar
 * pronto! agora você poderá livremente colocar assertivas nos módulos e achar o bug!
 
+## .gitignore
+
+Este repositório ignora a pasta **__DISTRIBUICAO__**. Portanto, caso você queira submeter uma determinada distribuição, certifique-se que a colocará em uma pasta com outro nome! Assim quando você usar o comando "git add", esta pasta será considerada para o seu próximo commit!
+
 _Att,
 Guilherme_
