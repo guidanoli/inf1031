@@ -58,3 +58,4 @@
 04/11	1h			codificar módulo		função EsvaziarPilha no módulo PILHA
 04/11	1h			redigir script de teste		função EsvaziarPilha no módulo PILHA
 04/11	2h			redigir script de teste		função ReconheceStr -- começando a testar
+05/11	2h			codificar módulo		função C

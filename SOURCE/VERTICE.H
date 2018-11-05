@@ -123,6 +123,30 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
 /***********************************************************************
 *
+*  $TC Tipo de dados: VER Restrições de Arestas
+*
+*  $ED Descrição do tipo
+*     Restrições no modelo de interconexões entre vértices quanto
+*     à cardinalidade das arestas quanto ao seu sentido e valor.
+*
+***********************************************************************/
+
+   typedef enum {
+
+      VER_RestAreSaidaUnica = 0 ,
+         /* De um estado sai no máximo uma aresta com mesmo valor */
+
+      VER_RestAreChegadaUnica = 1 ,
+         /* De um estado chega no máximo uma aresta com mesmo valor */
+
+      VER_RestAreSaidaEChegada = 2
+         /* Conjunção das restrições acimas
+            Entre dois estados, em um determinado sentido, há apenas uma aresta */
+
+   } VER_tpRestAre ;
+
+/***********************************************************************
+*
 *  $TC Tipo de dados: VER Sentido de caminhamento
 *
 *  $ED Descrição do tipo

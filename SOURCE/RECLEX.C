@@ -42,6 +42,7 @@
 #define REMOVER_TRANSICAO_CMD    "=removertransicao"
 #define RECONHECER_STRING_CMD    "=reconhecerstring"
 #define RECONHECER_ARQUIVO_CMD   "=reconhecerarquivo"
+#define CMP_ARQUIVOS_CMD         "=cmparquivos"
 
 #define DIM_NOME_ESTADO    30
 #define DIM_ROTULO         30
@@ -80,6 +81,9 @@
 
       RLEX_CondRetValorFornecidoNulo ,
          /* Valor fornecido nulo */
+
+      RLEX_CondRetArquivosDiferentes ,
+         /* Os arquivos comparados são diferentes */
 
       RLEX_CondRetErroArquivo ,
          /* Não foi possível abrir ou fechar um arquivo */
@@ -169,14 +173,22 @@
    //WIP
    static RLEX_tpCondRet ReconheceArq ( char CaminhoEntrada[TAMANHO_BUFFER_STR] , char CaminhoSaida[TAMANHO_BUFFER_STR] ) ;
    static RLEX_tpCondRet ReconheceChar ( char c ) ;
-   static RLEX_tpCondRet EscreveErro ( int coluna , int linha , char Path[TAMANHO_BUFFER_STR] );
-   static RLEX_tpCondRet LimparArq ( char Path[TAMANHO_BUFFER_STR] ) ;
    static RLEX_tpCondRet ObterSubstring ( char * p , char * ant , int * col , int * linha , char * Str ) ;
    static RLEX_tpCondRet AtualizaLinha ( char * p , char * ant , int * linha ) ;
    static char * TraduzCaractere ( char c ) ;
    static int ValidarTipoEstado ( int Estado ) ;
    static void LiberaEstado ( void * pa ) ;
    static RLEX_tppEstado CriarEstado ( int idEstado , char nomeEstado[DIM_NOME_ESTADO] , RLEX_tpTipoEstado tipoEstado ) ;
+
+/***********************************************************************
+*
+*  Funções auxiliares de arquivo
+*
+***********************************************************************/
+
+   static RLEX_tpCondRet ComparaArq ( char ArqGerado[TAMANHO_BUFFER_STR] , char ArqEsperado[TAMANHO_BUFFER_STR] , char CharIgnora ) ;
+   static RLEX_tpCondRet EscreveErro ( int coluna , int linha , char Path[TAMANHO_BUFFER_STR] );
+   static RLEX_tpCondRet LimparArq ( char Path[TAMANHO_BUFFER_STR] ) ;
    static RLEX_tpCondRet EscreveArq ( char NomeEstado[DIM_NOME_ESTADO] , char LexemaReconhecido[TAMANHO_BUFFER_STR] ,
                                       int coluna , int linha ,  char Path[TAMANHO_BUFFER_STR] ) ;
 
@@ -199,6 +211,7 @@
 *    =removertransicao          idEstadoPart idEstadoDest   Rotulo      RetEsperado
 *    =reconhecerstring          String       CaminhoSaida   CondRetEsp
 *    =reconhecerarquivo         CaminhoArq   CaminhoSaida   CondRetEsp
+*    =cmparquivos               CaminhoArq1  CaminhoArq2    CharIgnora  CondRetEsp
 *
 **************************************************************************************/
 
@@ -453,6 +466,28 @@
          CondRetLexRetObtida = ReconheceArq(CaminhoArq,CaminhoSaida);
 
          return TST_CompararInt(CondRetLexRetEsperada,CondRetLexRetObtida,"Retorno errado ao reconhecer arquivo");
+
+      } /* if */
+
+      /* Comando =cmparquivos */
+
+      if( strcmp(ComandoTeste,CMP_ARQUIVOS_CMD) == 0 )
+      {
+         char Caminho1[TAMANHO_BUFFER_STR] = "";
+         char Caminho2[TAMANHO_BUFFER_STR] = "";
+         char CharIgnora;
+         RLEX_tpCondRet CondRetLexRetObtida, CondRetLexRetEsperada;
+
+         numParamLidos = LER_LerParametros("ssci",Caminho1,Caminho2,&CharIgnora,&CondRetLexRetEsperada);
+
+         if( numParamLidos != 4 || strcmp(Caminho1,"") == 0 || strcmp(Caminho2,"") == 0 )
+         {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetLexRetObtida = ComparaArq(Caminho1,Caminho2,CharIgnora);
+
+         return TST_CompararInt(CondRetLexRetEsperada,CondRetLexRetObtida,"Retorno errado ao comparar arquivos");
 
       } /* if */
 
@@ -1208,6 +1243,82 @@
 
       return RLEX_CondRetOK;
    } /* Fim função: RLEX -Escrever erro */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX -Compara arquivos
+*
+***********************************************************************/
+
+   RLEX_tpCondRet ComparaArq ( char ArqGerado[TAMANHO_BUFFER_STR] ,
+                               char ArqEsperado[TAMANHO_BUFFER_STR] ,
+                               char CharIgnora )
+   {
+      FILE *f1 = NULL, *f2 = NULL;
+      char c1, c2;
+      int flag_iguais = RLEX_TRUE;
+      
+      if( ArqGerado == NULL ||
+          ArqEsperado == NULL )
+      {
+         return RLEX_CondRetParametrosInvalidos;
+      } /* if */
+
+      if( fopen_s(&f1,ArqGerado,"r") != 0 )
+      {
+         return RLEX_CondRetErroArquivo;
+      } /* if */
+
+      if( fopen_s(&f2,ArqEsperado,"r") != 0 )
+      {
+         return RLEX_CondRetErroArquivo;
+      } /* if */
+
+      while( RLEX_TRUE )
+      {
+         c1 = fgetc(f1);
+         c2 = fgetc(f2);
+
+         if( feof(f1) || feof(f2) )
+         {
+            if( feof(f1) && feof(f2) )
+            {
+               break;
+            } /* if */
+
+            /* Um dos arquivos acabou, mas não os dois */
+            flag_iguais = RLEX_FALSE;
+            break;
+         } /* if */
+
+         if( c1 != c2 && c2 != CharIgnora )
+         {
+            flag_iguais = RLEX_FALSE;
+            break;
+         } /* if */
+
+      } /* if */
+
+      if( fclose(f1) != 0 )
+      {
+         return RLEX_CondRetErroArquivo;
+      } /* if */
+
+      if( fclose(f2) != 0 )
+      {
+         return RLEX_CondRetErroArquivo;
+      } /* if */
+      
+      if( flag_iguais )
+      {
+         return RLEX_CondRetOK;
+      } /* else */
+      else
+      {
+         return RLEX_CondRetArquivosDiferentes;
+      } /* else */
+
+   } /* Fim função: RLEX -Compara arquivos */
 
 /********** Fim do módulo de implementação: RLEX Reconhecedor Léxico **********/
 
