@@ -694,6 +694,18 @@
          return RetRlex;
       } /* if */
 
+      RetRlex = IrOrigem();
+
+      if( RetRlex != RLEX_CondRetOK )
+      {
+         /*
+         RLEX_CondRetLexRecNaoExiste
+         RLEX_CondRetLexRecVazio
+         RLEX_CondRetErroEstrutura
+         */
+         return RetRlex;
+      } /* if */
+
       /* Laço principal */
 
       while( 1 )
@@ -703,11 +715,7 @@
 
          RetGrf = GRF_ObterValor( pRec , (void**) &pEstadoCorr );
 
-         if( RetGrf == GRF_CondRetGrafoVazio )
-         {
-            return RLEX_CondRetLexRecVazio;
-         } /* if */
-         else if( RetGrf != GRF_CondRetOK )
+         if( RetGrf != GRF_CondRetOK )
          {
             return RLEX_CondRetErroEstrutura;
          } /* else-if */

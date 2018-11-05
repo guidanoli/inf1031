@@ -1,8 +1,6 @@
 // Script:    			TestaReconhecedorLexico.script
 // Autor:     			Guilherme Dantas 
 // Versionamento:		0.1	26/10/2018	criarlexrec, destruirlexrec
-//				0.2	26/10/2018	inserirestado, removerestado
-//				0.3	26/10/2018	inserirtransicao, removertransicao
 // Propósito: 			Testa a integridade das funções de acesso
 //            			do módulo Reconhecedor Léxico para com sua estrutura de dados,
 //            			baseando-se no modelo arquitetado.
@@ -192,17 +190,11 @@
 
 == Testar reconhecer string com Reconhecedor Léxico vazio
 =criarlexrec OK
-=reconhecerstring "a" Path  RecLexVazio
+=reconhecerstring "a" "PathInvalida.txt" RecLexVazio
 =destruirlexrec OK
 
-== Testar reconhecer string com Reconhecedor Léxico com um estado apenas mas sem transição
+== Testar reconhecer string com Reconhecedor Léxico com um estado apenas
 =criarlexrec OK
 =inserirestado 0 "Estado Inicial" EstadoIntermediario OK
-=reconhecerstring "a" Path OK
-=destruirlexrec OK
-
-== Testar reconhecer string com Reconhecedor Léxico com um estado apenas mas sem transição
-=criarlexrec OK
-=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
-=reconhecerstring "a" Path OK
+=reconhecerstring "a" "PathInvalida.txt" RecLexVazio
 =destruirlexrec OK
