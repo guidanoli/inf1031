@@ -58,4 +58,9 @@
 04/11	1h			codificar módulo		função EsvaziarPilha no módulo PILHA
 04/11	1h			redigir script de teste		função EsvaziarPilha no módulo PILHA
 04/11	2h			redigir script de teste		função ReconheceStr -- começando a testar
-05/11	2h			codificar módulo		função C
+05/11	1h			codificar módulo		função ComparaArq
+05/11	1h			redigir script de teste		função ReconheceStr -- testando
+05/11	3h			revisar código de módulo	função CriarAresta (VERTICE.C), agora mais genérica
+								( restrição de arestas --> em GRAFO.C e RECLEX.C
+								também ) + reajustes no módulo de testes e script
+								de testes para o módulo VERTICE, GRAFO e RECLEX.

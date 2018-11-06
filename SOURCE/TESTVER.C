@@ -65,6 +65,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
    static int ComparaStrings ( void * pa, void * pb ) ;
    static void CopiaStrings (void ** pDestino , void * pOrigem ) ;
    static void ConcatenaStrings ( void ** pSaida , void * pValor , int size ) ;
+   static int PercorreAresta ( void * pa, void * pb ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -80,7 +81,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 *    =criarvertice              inxVERTICE, StringEsperado, CondRetEsp
 *	  =destruirvertice			  inxVERTICE, CondRetEsp
 *	  =obtervalor					  inxVERTICE, ValorEsp
-*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, CondRetEsp
+*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, Restricao, CondRetEsp
 *	  =destruiraresta				  inxVERTICEPart, inxVERTICEDest, StringEsperadoAre, CondRetEsp
 *    =percorreraresta           inxVERTICEPart, StringEsperadoAre, Sentido, StringEsperadoVerDestino, CondRetEsp
 *    =arestacorrente            inxVERTICE, Sentido, StringEsperado, CondRetEsp
@@ -174,9 +175,11 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       if (strcmp(ComandoTeste, CRIAR_ARESTA_CMD) == 0) {
 
-         numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringEsperado, &CondRetEsp);
+         VER_tpRestAre Restricao;
 
-         if ((numLidos != 4) ||
+         numLidos = LER_LerParametros("iisii", &inxVERTICE, &inxVERTICE2, StringEsperado, &Restricao, &CondRetEsp);
+
+         if ((numLidos != 5) ||
             (!ValidarIndexVertice(inxVERTICE)) ||
             (!ValidarIndexVertice(inxVERTICE2))) {
             return TST_CondRetParm;
@@ -189,7 +192,8 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
                                        pDado ,
                                        ComparaStrings ,
                                        CopiaStrings,
-                                       NULL) ;
+                                       NULL,
+                                       Restricao ) ;
 
          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar aresta");
 
@@ -231,7 +235,7 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
          strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
 
-         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &VerticeDestino, ComparaStrings, (VER_tpSentCam)sentido);
+         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &VerticeDestino, PercorreAresta, (VER_tpSentCam)sentido);
 
          CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao percorrer aresta");
 
@@ -456,7 +460,20 @@ VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
 
       strcat_s( (char *) *pSaida , size , (char *) pValor );
 
-   }
+   } /* Fim função: TVER -Concatena Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Percorre Aresta
+*
+***********************************************************************/
+
+   int PercorreAresta ( void * pa, void * pb )
+   {
+
+      return !ComparaStrings(pa,pb);
+
+   } /* Fim função: TVER -Percorre Aresta */
 
 /********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
 

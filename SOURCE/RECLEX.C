@@ -235,7 +235,8 @@
             return TST_CondRetParm;
          } /* if */
 
-         CondRetObtida = GRF_CriarGrafo( ComparaRotulos ,
+         CondRetObtida = GRF_CriarGrafo( GRF_RestAreSaidaUnica ,
+                                         ComparaRotulos ,
                                          ComparaEstados ,
                                          CopiaStrings ,
                                          CopiaEstados ,

@@ -19,6 +19,8 @@
 *     1.3     gui     02/10/2018  implementação da lista de origens e funções auxiliares
 *     1.4   gui,cai   03/10/2018  assertivas de entrada e saída
 *     1.5     gui     12/10/2018  exibir grafo
+*     1.6     gui     27/10/2018  contadores de vértices e origens
+*     1.7     gui     05/11/2018  restrições de aresta
 *
 *  $ED Descrição do módulo
 *     
@@ -69,6 +71,23 @@
 *                         RETORNA:
 *                         >> 0 caso a aresta não deve ser percorrida
 *                         >> maior que 0, caso deve-se percorrê-la
+*
+*     Restricao         - Restrição de arestas que define a cardinalidade
+*                         de arestas com mesmo valor para mesmo vértice
+*                         de Partida e de Destino.
+*                         VALORES POSSÍVEIS:
+*                         >> VER_RestAreSemRestricao - Podem haver duas arestas
+*                         com mesmo rótulo, no mesmo sentido entre os mesmos vértices.
+*                         >> VER_RestAreSaidaUnica - Não podem haver duas arestas
+*                         com mesmo rótulo, saindo do mesmo vértice.
+*                         >> VER_RestAreEntradaUnica - Não podem haver duas arestas
+*                         com mesmo rótulo, entrando no mesmo vértice.
+*                         >> VER_RestAreSaidaEChegada - Não podem haver duas arestas
+*                         com mesmo rótulo, saindo de um mesmo vértice, ou entrando
+*                         no mesmo vértice.
+*                         >> GRF_RestAreArestaUnica - Não podem haver duas arestas
+*                         com mesmo rótulo, saindo de um mesmo vértice, e entrando
+*                         no mesmo vértice.
 *
 ***************************************************************************/
 
@@ -134,6 +153,38 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 
 /***********************************************************************
 *
+*  $TC Tipo de dados: GRF Restrições de Arestas
+*
+*  $ED Descrição do tipo
+*     Restrições no modelo de interconexões entre vértices quanto
+*     à cardinalidade das arestas quanto ao seu sentido e valor.
+*
+***********************************************************************/
+
+   typedef enum {
+
+      GRF_RestAreSemRestricao ,
+         /* Não há restrições */
+
+      GRF_RestAreSaidaUnica ,
+         /* De um estado sai no máximo uma aresta com mesmo valor */
+
+      GRF_RestAreEntradaUnica ,
+         /* De um estado chega no máximo uma aresta com mesmo valor */
+
+      GRF_RestAreSaidaEChegada ,
+         /* Não restringe que a aresta trate dos mesmos vértices
+            É a conjunção das restrições de entrada e saída únicas */
+
+      GRF_RestAreArestaUnica ,
+         /* Considera que a aresta é única quando parte de um estado X,
+            vai para outro estado Y (X pode ser igual a Y), e tem um 
+            rótulo R. Esta tríade identifica a aresta. */
+
+   } GRF_tpRestAre ;
+
+/***********************************************************************
+*
 *  $FC Função: GRF  &Criar grafo
 *
 *  $ED Descrição da função
@@ -147,7 +198,8 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *	  segundo parametro para o primeiro parametro, um ponteiro para a função que copia
 *     o valor da aresta do segundo parametro para o primeiro parametro, um ponteiro para 
 *     a função que exclui o valor de um vértice, um ponteiro para a função que exclui o valor
-*     de uma aresta e um ponteiro que referencia o grafo.
+*     de uma aresta e um ponteiro que referencia o grafo, e a condição de restrição das arestas
+*     do grafo, que, por padrão, será VER_RestAreSemRestricao.
 *
 *  $AS Assertivas de saída
 *     Armazena todos os paramentros de função na cabeça do grafo, zera os contadores de vértice de origem,
@@ -162,17 +214,19 @@ typedef struct GRF_tagGrafo * GRF_tppGrafo ;
 *     ExcluirValorVer   - Ver descrição do módulo
 *     ExcluirValorAre   - Ver descrição do módulo
 *     ConcatenaValorVer - Ver descrição do módulo
+*     RestricaoArestas  - Ver descrição do módulo
 *     ppGrafoParam      - Endereço para ponteiro de grafo que será criado
 *                         Caso não for possível criar o grafo, *ppGrafoParam = NULL
 *
 *  $FV Valor retornado
 *     GRF_CondRetOK              - criou grafo sem problemas
-*     GRF_CondRetFuncaoNula        - ponteiro para alguma das funções é nulo
+*     GRF_CondRetFuncaoNula      - ponteiro para alguma das funções é nulo
 *     GRF_CondRetFaltouMemoria   - não foi possível alocar memória para grafo
 *
 ***********************************************************************/
 
-   GRF_tpCondRet GRF_CriarGrafo( int ( *ComparaValorAre ) ( void * pA, void * pB) ,
+   GRF_tpCondRet GRF_CriarGrafo( GRF_tpRestAre Restricao ,
+                                 int ( *ComparaValorAre ) ( void * pA, void * pB) ,
                                  int ( *ComparaValorVer ) ( void * pA, void * pB) ,
                                  void ( *CopiaValorAre ) ( void ** pA, void * pB) ,
                                  void ( *CopiaValorVer ) ( void ** pA, void * pB) ,

@@ -135,8 +135,8 @@
 =inserirestado 1 NomeDummy EstadoIntermediario OK
 =inserirestado 2 NomeDummy EstadoFinal OK
 =inserirtransicao 0 0 Letras OK
-=inserirtransicao 0 1 Letras OK
-=inserirtransicao 0 2 Letras OK
+=inserirtransicao 0 1 Letras ArestaExiste
+=inserirtransicao 0 2 Letras ArestaExiste
 =inserirtransicao 1 0 Letras OK
 =destruirlexrec OK
 

@@ -1,11 +1,12 @@
-// Script:    			TestaVertice.script
-// Autor:     			Guilherme Dantas 
-// Versionamento:		0.1	25/09/2018	funções básicas
-//				0.2	09/10/2018	funções de manipulação de lista de aresta
-//				0.3	10/10/2018	flags
-// Propósito: 			Testa a integridade das funções de acesso
-//            			do módulo Vértice para com sua estrutura de dados,
-//            			baseando-se no modelo arquitetado.
+// Script:    		TestaVertice.script
+// Autor:     		Guilherme Dantas 
+// Versionamento:	0.1	25/09/2018	funções básicas
+//			0.2	09/10/2018	funções de manipulação de lista de aresta
+//			0.3	10/10/2018	flags
+//			0.4	06/11/2018	restrições de aresta
+// Propósito: 		Testa a integridade das funções de acesso
+//            		do módulo Vértice para com sua estrutura de dados,
+//            		baseando-se no modelo arquitetado.
 //
 
 == Declarar as condicoes de retorno
@@ -41,6 +42,13 @@
 
 == Declarar código para Flag "nula"
 =declararparm  FlagErro int -1236
+
+== Declarar Restrições de arestas
+=declararparm  SemRestricao     int 0
+=declararparm  SaidaUnica       int 1
+=declararparm  EntradaUnica     int 2
+=declararparm  AmbasRestricoes  int 3
+=declararparm  ArestaUnica      int 4
 
 == Criar vértice
 =criarvertice 0 StrA OK
@@ -83,7 +91,7 @@
 == Criar aresta entre dois vértices existentes
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 
 == Destruir aresta entre dois vértice existentes
 =destruiraresta 0 1 Stra OK
@@ -94,7 +102,7 @@
 
 == Criar aresta partindo de um vértice existente e indo para vértice inexistente
 =criarvertice 0 StrA OK
-=criararesta 0 1 Stra VerticeNaoExiste
+=criararesta 0 1 Stra ArestaUnica VerticeNaoExiste
 
 == Destruir aresta inexistente
 =criarvertice 1 StrB OK
@@ -104,56 +112,56 @@
 
 == Criar aresta partindo de um vértice inexistente e indo para vértice existente
 =criarvertice 1 StrA OK
-=criararesta 0 1 Stra VerticeNaoExiste
+=criararesta 0 1 Stra ArestaUnica VerticeNaoExiste
 =destruirvertice 1 OK
 
 == Criar aresta partindo de um vértice inexistente e indo para vértic inexistente
-=criararesta 0 1 Stra VerticeNaoExiste
+=criararesta 0 1 Stra ArestaUnica VerticeNaoExiste
 
 == Criar duas arestas com mesmo valor, origem e destino, origem != destino
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
-=criararesta 0 1 Stra ArestaExiste
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 0 1 Stra ArestaUnica ArestaExiste
 =destruirvertice 0 OK
 =destruirvertice 1 OK
 
 == Criar uma aresta com mesma origem e destino
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =destruirvertice 0 OK
 
 == Criar uma aresta com mesma origem e destino, não existentes
-=criararesta 0 0 Stra VerticeNaoExiste
+=criararesta 0 0 Stra ArestaUnica VerticeNaoExiste
 
 == Criar duas arestas com mesmo valor com origem e destinos trocados
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
-=criararesta 1 0 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 1 0 Stra ArestaUnica OK
 =destruirvertice 0 OK
 =destruirvertice 1 OK
 
 == Criar duas arestas com mesmo valor, origem e destino, origem == destino
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
-=criararesta 0 0 Stra ArestaExiste
+=criararesta 0 0 Stra ArestaUnica OK
+=criararesta 0 0 Stra ArestaUnica ArestaExiste
 =destruirvertice 0 OK
 
 == Criar três arestas com valores distintos, mas com mesma origem e destino, origem != destino
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
-=criararesta 0 1 Strb OK
-=criararesta 0 1 Strc OK
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 0 1 Strb ArestaUnica OK
+=criararesta 0 1 Strc ArestaUnica OK
 =destruirvertice 0 OK
 =destruirvertice 1 OK
 
 == Criar três arestas com valores distintos, mas com mesma origem e destino, origem == destino
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
-=criararesta 0 0 Strb OK
-=criararesta 0 0 Strc OK
+=criararesta 0 0 Stra ArestaUnica OK
+=criararesta 0 0 Strb ArestaUnica OK
+=criararesta 0 0 Strc ArestaUnica OK
 =destruirvertice 0 OK
 
 == Obter valor de vértice inexistente
@@ -174,20 +182,20 @@
 
 == Percorrer vértice por aresta existente para si mesmo pela frente
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =percorreraresta 0 Stra Frente StrA OK
 =destruirvertice 0 OK
 
 == Percorrer vértice por aresta existente para si mesmo por trás
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =percorreraresta 0 Stra Tras StrA OK
 =destruirvertice 0 OK
 
 == Percorrer vértice por aresta existente para outro vértice pela frente
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =percorreraresta 0 Stra Frente StrB OK
 =destruirvertice 0 OK
 =destruirvertice 1 OK
@@ -195,7 +203,7 @@
 == Percorrer vértice por aresta existente para outro vértice por trás
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =percorreraresta 1 Stra Tras StrA OK
 =destruirvertice 0 OK
 =destruirvertice 1 OK
@@ -204,12 +212,12 @@
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
 =criarvertice 2 StrC OK
-=criararesta 0 1 Stra OK
-=criararesta 0 2 Strb OK
-=criararesta 2 1 Strc OK
-=criararesta 1 0 Strd OK
-=criararesta 2 0 Stre OK
-=criararesta 1 2 Strf OK
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 0 2 Strb ArestaUnica OK
+=criararesta 2 1 Strc ArestaUnica OK
+=criararesta 1 0 Strd ArestaUnica OK
+=criararesta 2 0 Stre ArestaUnica OK
+=criararesta 1 2 Strf ArestaUnica OK
 =percorreraresta 0 Stra Frente StrB OK
 =percorreraresta 0 Strd Tras StrB OK
 =percorreraresta 1 Stra Tras StrA OK
@@ -229,8 +237,8 @@
 == Percorrer vértices com mesmo valor de aresta (mas sentidos opostos)
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
-=criararesta 1 0 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 1 0 Stra ArestaUnica OK
 =percorreraresta 0 Stra Frente StrB OK
 =percorreraresta 0 Stra Tras StrB OK
 =percorreraresta 1 Stra Frente StrA OK
@@ -240,9 +248,9 @@
 
 == Percorrer vértice com mais de uma aresta (com valores diferentes, que apontam pra si mesmo)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
-=criararesta 0 0 Strb OK
-=criararesta 0 0 Strc OK
+=criararesta 0 0 Stra ArestaUnica OK
+=criararesta 0 0 Strb ArestaUnica OK
+=criararesta 0 0 Strc ArestaUnica OK
 =percorreraresta 0 Stra Frente StrA OK
 =percorreraresta 0 Strb Tras StrA OK
 =percorreraresta 0 Strb Frente StrA OK
@@ -261,14 +269,14 @@
 
 == Obter aresta corrente de vértice existente de auto-aresta
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =arestacorrente 0 Frente StrA OK
 =destruirvertice 0 OK
 
 == Obter aresta corrente de vértice existente de aresta em que dest!=part
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =arestacorrente 0 Frente StrB OK
 =destruirvertice 0 OK
 =destruirvertice 1 OK
@@ -276,7 +284,7 @@
 == Testar aresta corrente para aresta removida na deleção de vértice
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =destruirvertice 0 OK
 =arestacorrente 1 Tras StrErro ArestaNaoExiste
 =destruirvertice 1 OK
@@ -284,8 +292,8 @@
 == Obter aresta corrente de vértice com duas arestas
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 0 Stra OK
-=criararesta 0 1 Strb OK
+=criararesta 0 0 Stra ArestaUnica OK
+=criararesta 0 1 Strb ArestaUnica OK
 =arestacorrente 0 Frente StrB OK
 =destruirvertice 0 OK
 =destruirvertice 1 OK
@@ -301,13 +309,13 @@
 == Testar avançar aresta corrente sobre vértice existente, mas sem arestas no sentido especificado
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 1 0 Stra OK
+=criararesta 1 0 Stra ArestaUnica OK
 =avancararesta 0 Frente 1 ArestaNaoExiste
 =destruirvertice 0 OK
 
 == Testar avançar aresta corrente somente para checar se vértice possui arestas (possui!)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =avancararesta 0 Frente 0 OK
 =destruirvertice 0 OK
 
@@ -320,12 +328,12 @@
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
 =criarvertice 2 StrC OK
-=criararesta 0 1 Stra OK
-=criararesta 0 2 Strb OK
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 0 2 Strb ArestaUnica OK
 =arestacorrente 0 Frente StrC OK
 =avancararesta 0 Frente -1 OK
 =arestacorrente 0 Frente StrB OK
-=criararesta 2 1 Strc OK
+=criararesta 2 1 Strc ArestaUnica OK
 =arestacorrente 1 Tras StrC OK
 =avancararesta 1 Tras -1 OK
 =arestacorrente 1 Tras StrA OK
@@ -344,7 +352,7 @@
 == Testar ir para início de lista de arestas de vértice existente, mas sem aresta no sentido especificado
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 1 0 Stra OK
+=criararesta 1 0 Stra ArestaUnica OK
 =arestainicial 0 Frente ArestaNaoExiste
 =destruirvertice 0 OK
 
@@ -353,11 +361,11 @@
 =criarvertice 1 StrB OK
 =criarvertice 2 StrC OK
 =arestacorrente 0 Tras StrErro ArestaNaoExiste
-=criararesta 1 0 Stra OK
+=criararesta 1 0 Stra ArestaUnica OK
 =arestacorrente 0 Tras StrB OK
-=criararesta 0 0 Strb OK
+=criararesta 0 0 Strb ArestaUnica OK
 =arestacorrente 0 Tras StrA OK
-=criararesta 2 0 Strc OK
+=criararesta 2 0 Strc ArestaUnica OK
 =arestacorrente 0 Tras StrC OK
 =arestainicial 0 Tras OK
 =arestacorrente 0 Tras StrB OK
@@ -365,25 +373,25 @@
 
 == Testar avançar aresta corrente no fim da lista (frente, passo +)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =avancararesta 0 Frente 1 FimLista
 =destruirvertice 0 OK
 
 == Testar avançar aresta corrente no fim da lista (frente, passo -)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =avancararesta 0 Frente -1 FimLista
 =destruirvertice 0 OK
 
 == Testar avançar aresta corrente no fim da lista (tras, passo +)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =avancararesta 0 Tras 1 FimLista
 =destruirvertice 0 OK
 
 == Testar avançar aresta corrente no fim da lista (tras, passo -)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =avancararesta 0 Tras -1 FimLista
 =destruirvertice 0 OK
 
@@ -419,28 +427,28 @@
 
 == Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag OK, frente)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =mudarflag 0 1 OK
 =cmpflags 0 1 Frente OK
 =destruirvertice 0 OK
 
 == Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag OK, tras)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =mudarflag 0 1 OK
 =cmpflags 0 1 Tras OK
 =destruirvertice 0 OK
 
 == Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag Diferente!, frente)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =mudarflag 0 37 OK
 =cmpflags 0 1 Frente FlagDiferente
 =destruirvertice 0 OK
 
 == Comparar flags de vizinhos de vértice que tem auto-relacionamento (Flag Diferente!, tras)
 =criarvertice 0 StrA OK
-=criararesta 0 0 Stra OK
+=criararesta 0 0 Stra ArestaUnica OK
 =mudarflag 0 37 OK
 =cmpflags 0 1 Tras FlagDiferente
 =destruirvertice 0 OK
@@ -449,7 +457,7 @@
 //Prova que o vértice em si não precisa ter a flag
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =mudarflag 0 37 OK
 =mudarflag 1 1 OK
 =cmpflags 0 1 Frente OK
@@ -460,7 +468,7 @@
 //Prova que o vértice em si não precisa ter a flag
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =mudarflag 0 1 OK
 =mudarflag 1 37 OK
 =cmpflags 1 1 Tras OK
@@ -470,7 +478,7 @@
 == Comparar flags de vizinhos de vértice que tem relacionamento externo (Flag Diferente!, frente)
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =mudarflag 0 1 OK
 =mudarflag 1 37 OK
 =cmpflags 0 1 Frente FlagDiferente
@@ -480,9 +488,77 @@
 == Comparar flags de vizinhos de vértice que tem relacionamento externo (Flag Diferente!, tras)
 =criarvertice 0 StrA OK
 =criarvertice 1 StrB OK
-=criararesta 0 1 Stra OK
+=criararesta 0 1 Stra ArestaUnica OK
 =mudarflag 0 37 OK
 =mudarflag 1 1 OK
 =cmpflags 1 1 Tras FlagDiferente
 =destruirvertice 0 OK
 =destruirvertice 1 OK
+
+== Testar criar aresta sem restrição
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criararesta 0 1 Stra SemRestricao OK
+=criararesta 1 0 Stra SemRestricao OK
+=criararesta 0 0 Stra SemRestricao OK
+=criararesta 1 1 Stra SemRestricao OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+
+== Testar criar aresta com restrição de entrada
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=criararesta 0 1 Stra EntradaUnica OK
+=criararesta 0 1 Strb EntradaUnica OK
+=criararesta 2 1 Stra EntradaUnica ArestaExiste
+=criararesta 1 1 Stra EntradaUnica ArestaExiste
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+=destruirvertice 2 OK
+
+== Testar criar aresta com restrição de saída
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=criararesta 1 0 Stra SaidaUnica OK
+=criararesta 1 0 Strb SaidaUnica OK
+=criararesta 1 2 Stra SaidaUnica ArestaExiste
+=criararesta 1 1 Stra SaidaUnica ArestaExiste
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+=destruirvertice 2 OK
+
+== Testar criar aresta com ambas as restrições
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=criararesta 1 0 Stra AmbasRestricoes OK
+=criararesta 0 1 Stra AmbasRestricoes OK
+=criararesta 2 0 Stra AmbasRestricoes ArestaExiste
+=criararesta 0 2 Stra AmbasRestricoes ArestaExiste
+=criararesta 0 0 Stra AmbasRestricoes ArestaExiste
+=criararesta 1 1 Stra AmbasRestricoes ArestaExiste
+=criararesta 1 0 Strb AmbasRestricoes OK
+=criararesta 0 1 Strb AmbasRestricoes OK
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+=destruirvertice 2 OK
+
+== Testar criar aresta como única
+=criarvertice 0 StrA OK
+=criarvertice 1 StrB OK
+=criarvertice 2 StrC OK
+=criararesta 1 0 Stra ArestaUnica OK
+=criararesta 0 1 Stra ArestaUnica OK
+=criararesta 2 0 Stra ArestaUnica OK
+=criararesta 0 2 Stra ArestaUnica OK
+=criararesta 0 0 Stra ArestaUnica OK
+=criararesta 1 1 Stra ArestaUnica OK
+=criararesta 1 0 Strb ArestaUnica OK
+=criararesta 0 1 Strb ArestaUnica OK
+=criararesta 1 0 Stra ArestaUnica ArestaExiste
+=criararesta 0 1 Stra ArestaUnica ArestaExiste
+=destruirvertice 0 OK
+=destruirvertice 1 OK
+=destruirvertice 2 OK

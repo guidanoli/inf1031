@@ -18,6 +18,7 @@
 *     1.3     gui   03/10/2018  assertivas de entrada e saída
 *     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
 *     1.5     gui   10/10/2018  funções para flags
+*     1.6     gui   05/11/2018  restrições de aresta
 *
 ***************************************************************************/
 
@@ -404,66 +405,146 @@
    VER_tpCondRet VER_CriarAresta(   VER_tppVertice pPartida ,
                                     VER_tppVertice pDestino ,
                                     void * pValorAresta ,
-                                    int (* ComparaValor) ( void * pA, void * pB),
-                                    void (* CopiaValor ) ( void ** pA, void * pB),
-                                    void (* ExcluirValor) ( void * p))
+                                    int (* ComparaValor) ( void * pA, void * pB) ,
+                                    void (* CopiaValor ) ( void ** pA, void * pB) ,
+                                    void (* ExcluirValor) ( void* p) ,
+                                    VER_tpRestAre Restricao )
    {
 
       LIS_tpCondRet RetLis;
-
       VER_tppAresta pNovaAresta;
+      int ExisteArestaSaindo = 0, ExisteArestaEntrando = 0;
+
+      /* Valida ponteiros de função */
 
       if( CopiaValor == NULL || ComparaValor == NULL )
       {
          return VER_CondRetFuncaoNula;
       } /* if */
 
+      /* Valida ponteiros */
+
       if( pPartida == NULL || pDestino == NULL )
       {
          return VER_CondRetVerticeNaoExiste;
       } /* if */
 
-      if( pValorAresta == NULL   || pPartida->pSuc == NULL || pDestino->pAnt == NULL ||
+      /* Validando estrutura interna dos vértices */
+
+      if( pPartida->pSuc == NULL || pDestino->pAnt == NULL ||
           pPartida->pAnt == NULL || pDestino->pSuc == NULL )
       {
          return VER_CondRetErroEstrutura;
       } /* if */
+
+      /* Validando ponteiro para valor */
 
       if( pValorAresta == NULL )
       {
          return VER_CondRetValorFornecidoNulo;
       } /* if */
 
-      if( LIS_AvancarElementoCorrente(pPartida->pSuc,0) != LIS_CondRetListaVazia )
+      /* Verificando restrições de aresta */
+
+      if( Restricao != VER_RestAreSemRestricao )
       {
 
-         IrInicioLista(pPartida->pSuc);
-         RetLis = LIS_CondRetOK;
+         /* Do vértice de partida, existe já esta aresta saindo? */
 
-         while( RetLis == LIS_CondRetOK )
+         if( LIS_AvancarElementoCorrente(pPartida->pSuc,0) != LIS_CondRetListaVazia )
          {
-            VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pPartida->pSuc);
 
-            if( pArestaTemp == NULL )
+            IrInicioLista(pPartida->pSuc);
+            RetLis = LIS_CondRetOK;
+
+            while( RetLis == LIS_CondRetOK )
             {
-               return VER_CondRetErroEstrutura;
-            } /* if */
+               VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pPartida->pSuc);
 
-            if( pArestaTemp->Valor == NULL )
+               if( pArestaTemp == NULL )
+               {
+                  return VER_CondRetErroEstrutura;
+               } /* if */
+
+               if( pArestaTemp->pDest == NULL ||
+                   pArestaTemp->pPart == NULL ||
+                   pArestaTemp->Valor == NULL )
+               {
+                  return VER_CondRetErroEstrutura;
+               } /* if */
+
+               if( (*ComparaValor)(pArestaTemp->Valor,pValorAresta) == 0
+                   && pArestaTemp->pPart == pPartida )
+               {
+                  ExisteArestaSaindo = 1;
+
+                  if( pArestaTemp->pDest == pDestino 
+                      && Restricao == VER_RestAreArestaUnica )
+                  {
+                     return VER_CondRetArestaExiste; 
+                  } /* if */
+
+               } /* if */
+
+               RetLis = LIS_AvancarElementoCorrente(pPartida->pSuc,1);
+
+            } /* while */
+
+         } /* if */
+
+         if( ExisteArestaSaindo
+             && Restricao == VER_RestAreSaidaUnica )
+         {
+            return VER_CondRetArestaExiste;
+         } /* if */
+
+         /* Do vértice de destino, existe já esta aresta entrando? */
+
+         if( LIS_AvancarElementoCorrente(pDestino->pAnt,0) != LIS_CondRetListaVazia )
+         {
+
+            IrInicioLista(pDestino->pAnt);
+            RetLis = LIS_CondRetOK;
+
+            while( RetLis == LIS_CondRetOK )
             {
-               return VER_CondRetErroEstrutura;
-            } /* if */
+               VER_tppAresta pArestaTemp = (VER_tppAresta) LIS_ObterValor(pDestino->pAnt);
 
-            if( ((*ComparaValor)(pArestaTemp->Valor,pValorAresta) == 0) &&
-                pArestaTemp->pDest == pDestino &&
-                pArestaTemp->pPart == pPartida )
-            {
-               return VER_CondRetArestaExiste;
-            } /* if */
+               if( pArestaTemp == NULL )
+               {
+                  return VER_CondRetErroEstrutura;
+               } /* if */
 
-            RetLis = LIS_AvancarElementoCorrente(pPartida->pSuc,1);
+               if( pArestaTemp->pDest == NULL ||
+                   pArestaTemp->pPart == NULL ||
+                   pArestaTemp->Valor == NULL )
+               {
+                  return VER_CondRetErroEstrutura;
+               } /* if */
 
-         } /* while */
+               if( (*ComparaValor)(pArestaTemp->Valor,pValorAresta) == 0
+                   && pArestaTemp->pDest == pDestino )
+               {
+                  ExisteArestaEntrando = 1;
+               } /* if */
+
+               RetLis = LIS_AvancarElementoCorrente(pDestino->pAnt,1);
+
+            } /* while */
+
+         } /* if */
+
+         if( ExisteArestaEntrando
+             && Restricao == VER_RestAreEntradaUnica )
+         {
+            return VER_CondRetArestaExiste;
+         } /* if */
+
+         if( (ExisteArestaEntrando || ExisteArestaSaindo)
+             && Restricao == VER_RestAreSaidaEChegada )
+         {
+            return VER_CondRetArestaExiste;
+         } /* if */
 
       } /* if */
 

@@ -19,6 +19,7 @@
 *     1.3  cai,nag  03/10/2018  assertivas de entrada e saída
 *     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
 *     1.5     gui   11/10/2018  funções para flags
+*     1.6     gui   05/11/2018  restrições de aresta
 *
 *  $ED Descrição do módulo
 *     
@@ -133,15 +134,23 @@ typedef struct VER_tagAresta * VER_tppAresta;
 
    typedef enum {
 
-      VER_RestAreSaidaUnica = 0 ,
+      VER_RestAreSemRestricao ,
+         /* Não há restrições */
+
+      VER_RestAreSaidaUnica ,
          /* De um estado sai no máximo uma aresta com mesmo valor */
 
-      VER_RestAreChegadaUnica = 1 ,
+      VER_RestAreEntradaUnica ,
          /* De um estado chega no máximo uma aresta com mesmo valor */
 
-      VER_RestAreSaidaEChegada = 2
-         /* Conjunção das restrições acimas
-            Entre dois estados, em um determinado sentido, há apenas uma aresta */
+      VER_RestAreSaidaEChegada ,
+         /* Não restringe que a aresta trate dos mesmos vértices
+            É a conjunção das restrições de entrada e saída únicas */
+
+      VER_RestAreArestaUnica ,
+         /* Considera que a aresta é única quando parte de um estado X,
+            vai para outro estado Y (X pode ser igual a Y), e tem um 
+            rótulo R. Esta tríade identifica a aresta. */
 
    } VER_tpRestAre ;
 
@@ -282,6 +291,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     CopiaValor é uma função que faz o ponteiro referenciado 
 *     pelo primeiro argumento apontar para uma cópia do valor referenciado
 *     pelo segundo argumento.
+*     A criação (ou não) da aresta obedecerá ao critério de restrição
+*     fornecido como argumento. A condição de restrição deve ser válida.
 *
 *  $AS Assertivas de saída
 *     Se tanto pPartida quanto pDestino apontam para vértices válidos,
@@ -295,9 +306,10 @@ typedef struct VER_tagAresta * VER_tppAresta;
 *     pPartida -      ponteiro para vértice de partida da aresta
 *     pDestino -      ponteiro para vértice de destino da aresta
 *     pAresta  -      ponteiro para valor da aresta
-*     ComparaValor -  Ver descrição do módulo.
-*     CopiaValor   -  Ver descrição do módulo.
+*     ComparaValor  - Ver descrição do módulo.
+*     CopiaValor    - Ver descrição do módulo.
 *     ExcluirValor  - Ver descrição do módulo.
+*     Restricao     - Ver descrição do tipo de enumeração.
 *
 *  $FV Valor retornado
 *     VER_CondRetOK                 - criou sem problemas
@@ -318,7 +330,8 @@ typedef struct VER_tagAresta * VER_tppAresta;
                                     void * pValorAresta ,
                                     int (* ComparaValor) ( void * pA, void * pB) ,
                                     void (* CopiaValor ) ( void ** pA, void * pB) ,
-                                    void (* ExcluirValor) ( void* p)) ;
+                                    void (* ExcluirValor) ( void* p) ,
+                                    VER_tpRestAre Restricao ) ;
 
 
 /***********************************************************************

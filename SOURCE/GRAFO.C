@@ -17,6 +17,8 @@
 *     1.2     gui   25/09/2018  implementação das funções básicas de vértices e arestas
 *     1.3     gui   02/10/2018  implementação da lista de origens e funções auxiliares
 *     1.4     gui   03/10/2018  assertivas de entrada e saída
+*     1.5     gui   27/10/2018  contadores de vértices e origens
+*     1.6     gui   05/11/2018  restrições de aresta
 *
 ***************************************************************************/
 
@@ -112,6 +114,9 @@
          int numOrigens ;
                /* Número de origens */
 
+         VER_tpRestAre RestricaoArestas;
+               /* Restrição de arestas */
+
    } GRF_tpGrafo ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -126,7 +131,8 @@
 *  Função: GRF  &Criar grafo
 *  ****/
 
-   GRF_tpCondRet GRF_CriarGrafo( int ( *ComparaValorAre ) ( void * pA, void * pB) ,
+   GRF_tpCondRet GRF_CriarGrafo( GRF_tpRestAre Restricao ,
+                                 int ( *ComparaValorAre ) ( void * pA, void * pB) ,
                                  int ( *ComparaValorVer ) ( void * pA, void * pB) ,
                                  void ( *CopiaValorAre ) ( void ** pA, void * pB) ,
                                  void ( *CopiaValorVer ) ( void ** pA, void * pB) ,
@@ -156,6 +162,12 @@
           PercorreAresta      == NULL )
       {
          return GRF_CondRetFuncaoNula;
+      } /* if */
+
+      if( Restricao < GRF_RestAreSemRestricao
+          || Restricao > GRF_RestAreArestaUnica )
+      {
+         Restricao = GRF_RestAreSemRestricao;
       } /* if */
 
       pNovoGrafo = (GRF_tppGrafo) malloc(sizeof(GRF_tpGrafo));
@@ -206,6 +218,7 @@
       pNovoGrafo->ExcluirValorVer = ExcluirValorVer;
       pNovoGrafo->ConcatenaValorVer = ConcatenaValorVer;
       pNovoGrafo->PercorreAresta = PercorreAresta;
+      pNovoGrafo->RestricaoArestas = (VER_tpRestAre) Restricao;
 
       pNovoGrafo->numVertices = 0;
       pNovoGrafo->numOrigens = 0;
@@ -584,7 +597,8 @@
                                 ValorAresta ,
                                 pGrafo->ComparaValorAre ,
                                 pGrafo->CopiaValorAre ,
-                                pGrafo->ExcluirValorAre) ;
+                                pGrafo->ExcluirValorAre ,
+                                pGrafo->RestricaoArestas ) ;
       
       switch( RetVer )
       {
@@ -602,6 +616,9 @@
 
       case VER_CondRetFuncaoNula:
          return GRF_CondRetFuncaoNula;
+
+      case VER_CondRetValorFornecidoNulo:
+         return GRF_CondRetValorFornecidoNulo;
 
       default:
          return GRF_CondRetOK;

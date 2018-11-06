@@ -20,6 +20,7 @@
 *     1.0     gui    30/09/18   Início da implementação do módulo
 *     2.0     gui    01/10/18   Opera com três grafos com todas as funções
 *     2.1     gui    27/10/18   Funções p/ obter número de vértices e origens
+*     2.1.1   gui    06/11/18   Restrições de arestas
 *
 ***************************************************************************/
 
@@ -78,7 +79,7 @@
 *
 *     Comandos disponíveis:
 *
-*    =criargrafo                indexGrafo CondRetEsperada
+*    =criargrafo                indexGrafo Restricao CondRetEsperada
 *    =destruirgrafo             indexGrafo CondRetEsperada
 *    =inserirvertice            indexGrafo ValorVertice CondRetEsperada
 *    =removervertice            indexGrafo ValorVertice CondRetEsperada
@@ -116,14 +117,17 @@
       if( strcmp(ComandoTeste,CRIAR_GRAFO_CMD) == 0 )
       {
 
-         numParamLidos = LER_LerParametros("ii",&indiceGrafo,&CondRetEsperada);
+         GRF_tpRestAre Restricao;
 
-         if( numParamLidos != 2 || !ValidaIndiceGrafo(indiceGrafo) )
+         numParamLidos = LER_LerParametros("iii",&indiceGrafo,&Restricao,&CondRetEsperada);
+
+         if( numParamLidos != 3 || !ValidaIndiceGrafo(indiceGrafo) )
          {
             return TST_CondRetParm;
          } /* if */
 
-         CondRetObtida = GRF_CriarGrafo(  ComparaStrings ,
+         CondRetObtida = GRF_CriarGrafo(  Restricao ,
+                                          ComparaStrings ,
                                           ComparaStrings ,
                                           CopiaStrings ,
                                           CopiaStrings ,
