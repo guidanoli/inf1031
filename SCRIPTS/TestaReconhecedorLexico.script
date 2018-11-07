@@ -290,4 +290,32 @@
 =cmparquivos Path "Output06_CaractereGenerico.txt" CharIgnora OK
 =destruirlexrec OK
 
+== Reconhecer números ímpares e pares em binário
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Impar" EstadoFinal OK
+=inserirestado 2 "Par" EstadoFinal OK
+=inserirtransicao 0 1 "1" OK
+=inserirtransicao 0 2 "0" OK
+=inserirtransicao 1 1 "1" OK
+=inserirtransicao 1 2 "0" OK
+=inserirtransicao 2 1 "1" OK
+=inserirtransicao 2 2 "0" OK
+=reconhecerstring "Macacada" Path OK
+=cmparquivos Path "Output11_ErroByte.txt" CharIgnora OK
+=reconhecerstring "Abacaxis" Path OK
+=cmparquivos Path "Output11_ErroByte.txt" CharIgnora OK
+=reconhecerstring "0" Path OK
+=cmparquivos Path "Output07_Par.txt" CharIgnora OK
+=reconhecerstring "1" Path OK
+=cmparquivos Path "Output08_Impar.txt" CharIgnora OK
+=reconhecerstring "01100100" Path OK
+=cmparquivos Path "Output09_ParByte.txt" CharIgnora OK
+=reconhecerstring "11111001" Path OK
+=cmparquivos Path "Output10_ImparByte.txt" CharIgnora OK
+=destruirlexrec OK
 
+== Reconhecer palavras
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Palavra" EstadoFinal OK

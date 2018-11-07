@@ -64,3 +64,5 @@
 								( restrição de arestas --> em GRAFO.C e RECLEX.C
 								também ) + reajustes no módulo de testes e script
 								de testes para o módulo VERTICE, GRAFO e RECLEX.
+07/11	1h			projetar			Discussão com Nagib sobre Estado Inicial E Final
+07/11	1h			redigir script de teste		função ReconheceStr -- reconhecendo rec.lexs.

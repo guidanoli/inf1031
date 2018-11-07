@@ -1,0 +1,1 @@
+O lexema "%" presente na linha 0 coluna 0 foi reconhecido como Impar.
