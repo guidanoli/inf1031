@@ -975,6 +975,11 @@
          return 0;
       } /* if */
 
+      if( strcmp((char *)pb,"") == 0 )
+      {
+         return 0;
+      } /* if */
+
       if( strcmp((char *)pa,"\\o") == 0 )
       {
          /* Rótulo engloba outros

@@ -1,0 +1,4 @@
+O lexema "_id123_" presente na linha 0 coluna 0 foi reconhecido como Identificador.
+O lexema "123" presente na linha 0 coluna 7 foi reconhecido como Numero Inteiro.
+O lexema "3.1415" presente na linha 0 coluna 10 foi reconhecido como Numero Fracionario.
+Erro de reconhecimento na linha 0 e coluna 16.

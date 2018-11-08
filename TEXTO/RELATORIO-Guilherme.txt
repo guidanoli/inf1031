@@ -66,3 +66,4 @@
 								de testes para o módulo VERTICE, GRAFO e RECLEX.
 07/11	1h			projetar			Discussão com Nagib sobre Estado Inicial E Final
 07/11	1h			redigir script de teste		função ReconheceStr -- reconhecendo rec.lexs.
+08/11	2h			redigir script de teste		função ReconheceStr -- continuação
