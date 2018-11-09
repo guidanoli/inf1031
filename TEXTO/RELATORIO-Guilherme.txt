@@ -67,3 +67,11 @@
 07/11	1h			projetar			Discussão com Nagib sobre Estado Inicial E Final
 07/11	1h			redigir script de teste		função ReconheceStr -- reconhecendo rec.lexs.
 08/11	2h			redigir script de teste		função ReconheceStr -- continuação
+08/11	1h			revisar código de módulo	Percebi que a função ReconheceStr "come" um caractere
+								cada vez que reconhece um lexema. Isto não era
+								percebido pois sempre se separavam os lexemas com
+								espaços, como se fosse algo natural do Rec. Lex.
+								ignorá-los. Foi removida apenas uma linha em que
+								o apontador para string era incrementada de 1.
+08/11	30min			revisar script de teste		Agora lexemas separados de espaço possuem um
+								espaço a mais no começo. Tudo foi corrigido.

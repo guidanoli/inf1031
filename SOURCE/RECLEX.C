@@ -839,7 +839,6 @@
                col = col_temp;
                linha = linha_temp;
 
-               p++;
                ant = p;
                if( *ant == '\0' )
                {

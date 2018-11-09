@@ -1,5 +1,5 @@
 O lexema "Lorem" presente na linha 0 coluna 0 foi reconhecido como Palavra.
-O lexema "ipsum" presente na linha 0 coluna 5 foi reconhecido como Palavra.
-O lexema "dolor" presente na linha 0 coluna 10 foi reconhecido como Palavra.
-O lexema "sit" presente na linha 0 coluna 15 foi reconhecido como Palavra.
-O lexema "amet" presente na linha 0 coluna 18 foi reconhecido como Palavra.
+O lexema " ipsum" presente na linha 0 coluna 5 foi reconhecido como Palavra.
+O lexema " dolor" presente na linha 0 coluna 11 foi reconhecido como Palavra.
+O lexema " sit" presente na linha 0 coluna 17 foi reconhecido como Palavra.
+O lexema " amet" presente na linha 0 coluna 21 foi reconhecido como Palavra.
