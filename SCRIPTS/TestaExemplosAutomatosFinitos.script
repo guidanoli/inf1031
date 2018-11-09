@@ -147,3 +147,28 @@
 =reconhecerstring "Ciro2022Bolsonaro2018Haddad13Novo30Eleicoes2018" Path OK
 =cmparquivos Path "OutputFiles\\Output17_Eleicoes2018.txt" CharIgnora OK
 =destruirlexrec OK
+
+== Reconhece tweets
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Inicio Hashtag" EstadoIntermediario OK
+=inserirestado 2 "Hashtag" EstadoFinal OK
+=inserirestado 3 "Inicio Marcacao" EstadoIntermediario OK
+=inserirestado 4 "Marcacao" EstadoFinal OK
+=inserirestado 5 "Texto" EstadoFinal OK
+=inserirestado 6 "Instavel" EstadoIntermediario OK
+=inserirtransicao 0 0 Espacamento OK
+=inserirtransicao 0 1 "#" OK
+=inserirtransicao 0 5 Outros OK
+=inserirtransicao 1 5 "#" OK
+=inserirtransicao 1 2 "\\l \\d" OK
+=inserirtransicao 2 2 "\\l \\d" OK
+=inserirtransicao 0 3 "@" OK
+=inserirtransicao 3 5 "@" OK
+=inserirtransicao 3 4 "\\l \\d" OK
+=inserirtransicao 4 4 "\\l \\d" OK
+=inserirtransicao 5 5 Outros OK
+=inserirtransicao 5 6 Espacamento OK
+=reconhecerstring "You'd be SHOCKED to know how many Black Americans really do support @realdonaldtrump & #MAGA #KAG. America will be on the right track after 6 years of the Trump Administration." Path OK
+=cmparquivos Path "OutputFiles\\Output20_Tweets.txt" CharIgnora OK
+=destruirlexrec OK

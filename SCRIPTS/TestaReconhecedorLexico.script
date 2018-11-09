@@ -295,3 +295,24 @@
 =reconhecerstring "a" Path OK
 =cmparquivos Path "OutputFiles\\Output06_CaractereGenerico.txt" CharIgnora OK
 =destruirlexrec OK
+
+== Testar reconhecer string quando o ponteiro vai de um estado final para um não-final
+=criarlexrec OK
+=inserirestado 0 "A" EstadoIntermediario OK
+=inserirestado 1 "B" EstadoFinal OK
+=inserirestado 2 "C" EstadoIntermediario OK
+=inserirtransicao 0 1 "d" OK
+=inserirtransicao 1 1 "d" OK
+=inserirtransicao 1 2 Espacamento OK
+=reconhecerstring "dd " Path OK
+=cmparquivos Path "OutputFiles\\Output18_Teste.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer string quando o ponteiro inicia o retrocesso num estado final
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Outro Estado" EstadoFinal OK
+=inserirtransicao 0 1 "a" OK
+=reconhecerstring "ab" Path OK
+=cmparquivos Path "OutputFiles\\Output19_Teste2.txt" CharIgnora OK
+=destruirlexrec OK

@@ -34,6 +34,8 @@
 #include    "GRAFO.H"
 #include    "PILHA.H"
 
+#define _DEBUG
+
 #define CRIAR_RLEX_CMD           "=criarlexrec"
 #define DESTRUIR_RLEX_CMD        "=destruirlexrec"
 #define INSERIR_ESTADO_CMD       "=inserirestado"
@@ -699,6 +701,10 @@
       PIL_tpCondRet  RetPil;
       RLEX_tpCondRet RetRlex;
 
+#ifdef _DEBUG
+      FILE *f = fopen("Debug.txt","w");
+#endif
+
       /* Validando ponteiros */
 
       if( pRec == NULL )
@@ -747,6 +753,8 @@
       while( 1 )
       {
 
+         char Buffer[500] = "";
+         
          /* Empilha na pilha de caminhamento o estado corrente */
 
          RetGrf = GRF_ObterValor( pRec , (void**) &pEstadoCorr );
@@ -760,6 +768,11 @@
          {
             return RLEX_CondRetErroEstrutura;
          } /* if */
+
+#ifdef _DEBUG
+         sprintf_s(Buffer,500,"Col = %d \t*p = %c *ant = %c IdEstadoCorr = %d\n",col,*p,*ant,pEstadoCorr->idEstado);
+         fwrite(Buffer,sizeof(char),strlen(Buffer),f);
+#endif
 
          RetPil = PIL_Empilhar( pPilhaReleitura , pEstadoCorr );
 
@@ -808,7 +821,10 @@
                } /* if */
                else
                {
-                  p--;
+                  if( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal )
+                  {
+                     p--;
+                  } /* if */
                } /* else */
 
             } /* while */
@@ -891,6 +907,8 @@
       } /* while */
 
       PIL_DestruirPilha(&pPilhaReleitura);
+
+      fclose(f);
 
       return RLEX_CondRetOK;
 
