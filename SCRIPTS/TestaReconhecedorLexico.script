@@ -330,3 +330,42 @@
 =cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
 =reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
 =destruirlexrec OK
+
+//Arquivos
+
+== Testar reconhecer arquivo com Reconhecedor Léxico inexistente
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path RecLexNaoExiste
+
+
+== Testar reconhecer arquivo com Reconhecedor Léxico vazio
+=criarlexrec OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path  RecLexVazio
+=cmparquivos Path "OutputFiles\\Output00_Vazio.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com Reconhecedor Léxico com um estado apenas mas sem transição
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output01_Erro.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com Reconhecedor Léxico com um estado inicial e uma auto-transição
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirtransicao 0 0 "a" OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output01_Erro.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com letras
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Letras" EstadoFinal OK
+=inserirtransicao 0 1 Letras OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=reconhecerstring "InputFiles\\Input01_Z.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=destruirlexrec OK
+
