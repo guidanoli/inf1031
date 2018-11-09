@@ -19,6 +19,7 @@
 *     0.1     gui   26/10/2018  criar e destruir rec.lex.
 *     0.2     gui   26/10/2018  inserir e remover estado
 *     0.3     gui   26/10/2018  inserir e remover transições
+*     0.4   gui,nag 09/11/2018  reconhecer string
 *
 ***************************************************************************/
 
@@ -924,7 +925,226 @@
                                  char CaminhoSaida[TAMANHO_BUFFER_STR] )
    {
       
-      //TO-DO
+      char Str[3];
+      char *p = Str , *ant = Str;
+      RLEX_tppEstado pEstadoCorr = NULL;
+      int col = 0, linha = 0;
+
+      char SmallStr[2] = "";
+
+      GRF_tpCondRet  RetGrf;
+      PIL_tpCondRet  RetPil;
+      RLEX_tpCondRet RetRlex;
+
+#ifdef _DEBUG
+      FILE *f = fopen("Debug.txt","w");
+#endif
+
+      /* Validando ponteiros */
+
+      if( pRec == NULL )
+      {
+         return RLEX_CondRetLexRecNaoExiste;
+      } /* if */
+
+      if( Str == NULL || CaminhoSaida == NULL )
+      {
+         return RLEX_CondRetParametrosInvalidos;
+      } /* if */
+
+      /* Criando pilha -- não importa se a pilha está
+         com erro de estrutura ou não, ela será destruída
+         para uma nova ser criada */
+
+      RetPil = PIL_CriarPilha(&pPilhaReleitura);
+
+      if( RetPil == PIL_CondRetFaltouMemoria )
+      {
+         return RLEX_CondRetMemoria;
+      } /* if */
+
+      RetRlex = LimparArq(CaminhoSaida);
+
+      if( RetRlex != RLEX_CondRetOK )
+      {
+         /* RLEX_CondRetErroArquivo */
+         return RetRlex;
+      } /* if */
+
+      RetRlex = IrOrigem();
+
+      if( RetRlex != RLEX_CondRetOK )
+      {
+         /*
+         RLEX_CondRetLexRecNaoExiste
+         RLEX_CondRetLexRecVazio
+         RLEX_CondRetErroEstrutura
+         */
+         return RetRlex;
+      } /* if */
+
+      /* Laço principal */
+
+      while( 1 )
+      {
+
+         char Buffer[500] = "";
+         
+         /* Empilha na pilha de caminhamento o estado corrente */
+
+         RetGrf = GRF_ObterValor( pRec , (void**) &pEstadoCorr );
+
+         if( RetGrf != GRF_CondRetOK )
+         {
+            return RLEX_CondRetErroEstrutura;
+         } /* else-if */
+
+         if( pEstadoCorr == NULL )
+         {
+            return RLEX_CondRetErroEstrutura;
+         } /* if */
+
+#ifdef _DEBUG
+         sprintf_s(Buffer,500,"Col = %d \t*p = %c *ant = %c IdEstadoCorr = %d\n",col,*p,*ant,pEstadoCorr->idEstado);
+         fwrite(Buffer,sizeof(char),strlen(Buffer),f);
+#endif
+
+         RetPil = PIL_Empilhar( pPilhaReleitura , pEstadoCorr );
+
+         if( RetPil == PIL_CondRetFaltouMemoria )
+         {
+            return RLEX_CondRetMemoria;
+         } /* if */
+         else if( RetPil != PIL_CondRetOK )
+         {
+            return RLEX_CondRetErroEstrutura;
+         } /* if */
+
+         /* Caminha no grafo com o caractere corrente */
+
+         RetRlex = ReconheceChar( *p );
+
+         if( RetRlex == RLEX_CondRetOK )
+         {
+            /* Foi possível percorrer a transição */
+            if( *p != '\0' )
+            {
+               p++;
+            } /* if */
+            else
+            {
+               break;
+            } /* else */
+
+         } /* if */
+         else if( RetRlex == RLEX_CondRetTransicaoNaoExiste )
+         {
+            /* Não há a transição */
+            while( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal 
+                   && PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetOK )
+            {
+               pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar(pPilhaReleitura);
+
+               if( pEstadoCorr == NULL )
+               {
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+               if( p == ant )
+               {
+                  break;
+               } /* if */
+               else
+               {
+                  if( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal )
+                  {
+                     p--;
+                  } /* if */
+               } /* else */
+
+            } /* while */
+
+            if( pEstadoCorr->tipoEstado == RLEX_tppEstadoFinal )
+            {
+               char LexemaReconhecido[TAMANHO_BUFFER_STR] = "";
+               int col_temp = col, linha_temp = linha;
+
+               RetRlex = ObterSubstring(p,ant,&col_temp,&linha_temp,LexemaReconhecido);
+               
+               if( RetRlex != RLEX_CondRetOK )
+               {
+                  return RetRlex;
+               } /* if */
+
+               RetRlex = EscreveArq( pEstadoCorr->nomeEstado ,
+                                     LexemaReconhecido ,
+                                     col ,
+                                     linha ,
+                                     CaminhoSaida );
+
+               if( RetRlex != RLEX_CondRetOK )
+               {
+                  return RetRlex;
+               } /* if */
+
+               col = col_temp;
+               linha = linha_temp;
+
+               ant = p;
+               if( *ant == '\0' )
+               {
+                  break;
+               } /* if */
+
+               RetRlex = IrOrigem();
+
+               if( RetRlex != RLEX_CondRetOK )
+               {
+                  return RetRlex;
+               } /* if */
+
+               RetPil = PIL_EsvaziarPilha( pPilhaReleitura );
+
+               if( RetPil != PIL_CondRetOK )
+               {
+                  /*
+                  PIL_CondRetPilhaNaoExiste
+                  PIL_CondRetErroEstrutura
+                  */
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+            } /* if */
+            else if( PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetPilhaVazia )
+            {
+               RetRlex = EscreveErro(col,linha,CaminhoSaida);
+
+               if( RetRlex != RLEX_CondRetOK )
+               {
+                  return RetRlex;
+               } /* if */
+
+               break;
+
+            } /* else-if */
+
+         } /* else-if */
+         else
+         {
+            /*
+            RLEX_CondRetLexRecNaoExiste
+            RLEX_CondRetLexRecVazio
+            RLEX_CondRetErroEstrutura
+            */
+            return RetRlex;
+         } /* else */
+
+      } /* while */
+
+      PIL_DestruirPilha(&pPilhaReleitura);
+
+      fclose(f);
+
       return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Reconhece Arquivo */
@@ -1201,9 +1421,12 @@
 
       while( p > ant )
       {
+         (*col)++;
+
          if( *ant == '\n' )
          {
             (*linha)++;
+            (*col) = 0;
          } /* if */
 
          sprintf_s(SmallStr,2,"%c",*ant);
@@ -1214,7 +1437,6 @@
          } /* if */
 
          ant++;
-         (*col)++;
 
       } /* while */
 

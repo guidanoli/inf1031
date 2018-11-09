@@ -75,3 +75,5 @@
 								o apontador para string era incrementada de 1.
 08/11	30min			revisar script de teste		Agora lexemas separados de espaço possuem um
 								espaço a mais no começo. Tudo foi corrigido.
+09/11	1h			revisar código do módulo	Corrigido erro em Rec.Lex.
+09/11	1h			redigir script de teste		Novos casos testes para a versão de Rec.Lex.

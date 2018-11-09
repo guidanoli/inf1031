@@ -172,3 +172,25 @@
 =reconhecerstring "You'd be SHOCKED to know how many Black Americans really do support @realdonaldtrump & #MAGA #KAG. America will be on the right track after 6 years of the Trump Administration." Path OK
 =cmparquivos Path "OutputFiles\\Output20_Tweets.txt" CharIgnora OK
 =destruirlexrec OK
+
+== Reconhece a Bíblia
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Palavra" EstadoFinal OK
+=inserirestado 2 "Indice 01" EstadoIntermediario OK
+=inserirestado 3 "Indice 02" EstadoIntermediario OK
+=inserirestado 4 "Versiculo" EstadoFinal OK
+=inserirestado 5 "Frase" EstadoFinal OK
+=inserirtransicao 0 0 Espacamento OK
+=inserirtransicao 0 1 Letras OK
+=inserirtransicao 1 1 "\\l \\b" OK
+=inserirtransicao 0 2 Decimais OK
+=inserirtransicao 2 2 Decimais OK
+=inserirtransicao 2 3 ":" OK
+=inserirtransicao 3 4 Decimais OK
+=inserirtransicao 4 4 Decimais OK
+=inserirtransicao 1 5 ". , ;" OK
+=inserirtransicao 5 5 ". , ;" OK
+=reconhecerstring "1:1 In the beginning God created the heaven and the earth. \n1:2 And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters." Path OK
+=cmparquivos Path ""OutputFiles\\Output21_Biblia.txt" CharIgnora OK
+=destruirlexrec OK
