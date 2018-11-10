@@ -34,10 +34,11 @@
 =declararparm  TransicaoNaoExiste    int 3
 =declararparm  RecLex_ValorNulo      int 4
 =declararparm  ArqDiferentes         int 5
-=declararparm  ErroArquivo           int 6
-=declararparm  ParametrosInvalidos   int 7
-=declararparm  RecLex_ErroEstrutura  int 8
-=declararparm  RecLex_Memoria        int 9
+=declararparm  ComecoArq             int 6
+=declararparm  ErroArquivo           int 7
+=declararparm  ParametrosInvalidos   int 8
+=declararparm  RecLex_ErroEstrutura  int 9
+=declararparm  RecLex_Memoria        int 10
 
 == Declarar Tipos de Estados
 =declararparm  EstadoFinal           int 0
@@ -197,7 +198,10 @@
 == Testar comparar arquivos diferentes
 =cmparquivos "OutputFiles\\Output02_Letras.txt" "OutputFiles\\Output01_Erro.txt" '*' ArqDiferentes
 
+// String
+
 == Testar reconhecer string com Reconhecedor Léxico inexistente
+// Não gera arquivo
 =reconhecerstring "a" Path RecLexNaoExiste
 
 == Testar reconhecer string com path vazia e recupar logo em seguida
@@ -331,11 +335,11 @@
 =reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
 =destruirlexrec OK
 
-//Arquivos
+// Arquivos
 
 == Testar reconhecer arquivo com Reconhecedor Léxico inexistente
+//Não gera arquivo
 =reconhecerarquivo "InputFiles\\Input00_a.txt" Path RecLexNaoExiste
-
 
 == Testar reconhecer arquivo com Reconhecedor Léxico vazio
 =criarlexrec OK
@@ -365,7 +369,103 @@
 =inserirtransicao 0 1 Letras OK
 =reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
 =cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
-=reconhecerstring "InputFiles\\Input01_Z.txt" Path OK
+=reconhecerarquivo "InputFiles\\Input01_A.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input02_z.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input03_Z.txt" Path OK
 =cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
 =destruirlexrec OK
 
+== Testar reconhecer arquivo com decimais
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Decimais" EstadoFinal OK
+=inserirtransicao 0 1 Decimais OK
+=reconhecerarquivo "InputFiles\\Input04_1.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output03_Decimais.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input05_9.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output03_Decimais.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com espaçamento
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Espacamento" EstadoFinal OK
+=inserirtransicao 0 1 Espacamento OK
+=reconhecerarquivo "InputFiles\\Input06_Espaco.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input07_Tab.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input08_QuebraDeLinha.txt" Path OK
+//
+// Nota importante: 	o reconhecedor de arquivo texto não lê o caractere "\r", que corresponde
+//			ao retrocesso de carro (mas poderiamos obtê-lo com a leitura do arquivo em 
+//			binário). Portanto, deve-se ter isso em mente na confecção de um reconhecedor 
+//			léxico para arquivos e strings. Eles não se distinguem neste quesito.
+//
+=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com outros
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Outros" EstadoFinal OK
+=inserirtransicao 0 1 Outros OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input04_1.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input06_Espaco.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input09_Asterisco.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com transições, respeitando a prioridade entre elas
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Outros" EstadoFinal OK
+=inserirestado 2 "Letras" EstadoFinal OK
+=inserirestado 3 "Caractere" EstadoFinal OK
+=inserirtransicao 0 1 Outros OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=inserirtransicao 0 2 Letras OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=inserirtransicao 0 3 "a" OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output06_CaractereGenerico.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo quando o ponteiro vai de um estado final para um não-final
+=criarlexrec OK
+=inserirestado 0 "A" EstadoIntermediario OK
+=inserirestado 1 "B" EstadoFinal OK
+=inserirestado 2 "C" EstadoIntermediario OK
+=inserirtransicao 0 1 "d" OK
+=inserirtransicao 1 1 "d" OK
+=inserirtransicao 1 2 Espacamento OK
+=reconhecerarquivo "InputFiles\\Input10_Teste.txt" Path OK
+//=cmparquivos Path "OutputFiles\\Output18_Teste.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer string quando o ponteiro inicia o retrocesso num estado final
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Outro Estado" EstadoFinal OK
+=inserirtransicao 0 1 "a" OK
+//=reconhecerarquivo "InputFiles\\Input11_Teste2.txt" Path OK
+//=cmparquivos Path "OutputFiles\\Output19_Teste2.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer string com espaçamento
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Espacamento" EstadoFinal OK
+=inserirestado 2 "Palavras" EstadoFinal OK
+=inserirtransicao 0 1 Espacamento OK
+=inserirtransicao 0 2 Letras OK
+//=reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
+=destruirlexrec OK

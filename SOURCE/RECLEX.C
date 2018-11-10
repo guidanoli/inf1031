@@ -205,7 +205,7 @@
 ***********************************************************************/
 
    static RLEX_tpCondRet ProximoChar ( FILE *f, PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar, char *c );
-   static RLEX_tpCondRet CharAnterior ( FILE *f, PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar );
+   static RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar );
    static RLEX_tpCondRet PilhaParaString ( PIL_tppPilha pPilhaChar , char Str[TAMANHO_BUFFER_STR] );
 
 /*****  Código das funções exportadas pelo módulo  *****/
@@ -839,6 +839,7 @@
                   {
                      p--;
                   } /* if */
+
                } /* else */
 
             } /* while */
@@ -1063,21 +1064,23 @@
 
          RetRlex = ProximoChar( f , pPilhaReleitura , pPilhaChar , &c_corr );
 
-        
-
          if( RetRlex != RLEX_CondRetOK )
          {
             return RetRlex;
          } /* if */
+
              #ifdef _DEBUG
              sprintf_s(Buffer,500," ANTES DE RECONHECERCHAR:\n Col = %d \t IdEstadoCorr = %d \t c_corr = %d, RetLex = %d\n",col,pEstadoCorr->idEstado,c_corr,RetRlex);
              fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
              #endif
+
          RetRlex = ReconheceChar( c_corr );
+
              #ifdef _DEBUG
              sprintf_s(Buffer,500,"DEPOIS DE RECONHECERCHAR:\nCol = %d \t IdEstadoCorr = %d \t c_corr = %d, RetLex = %d\n",col,pEstadoCorr->idEstado,c_corr,RetRlex);
              fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
              #endif
+
          if( RetRlex == RLEX_CondRetOK )
          {
             /* Foi possível percorrer a transição */
@@ -1111,7 +1114,7 @@
                {
                   if( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal )
                   {
-                     RetRlex = CharAnterior( f , pPilhaReleitura , pPilhaChar );
+                     RetRlex = CharAnterior( pPilhaReleitura , pPilhaChar );
 
                      if( RetRlex == RLEX_CondRetComecoArquivo )
                      {
@@ -1135,10 +1138,21 @@
                /*Suspeito que o erro esteja aqui vvv*/
                RetRlex = PilhaParaString( pPilhaChar , LexemaReconhecido );
 
-                #ifdef _DEBUG
-             sprintf_s(Buffer,500,"Pilha Pra String:\n %s\n",LexemaReconhecido);
-             fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
-             #endif
+               #ifdef _DEBUG
+                   sprintf_s(Buffer,500,"Pilha Pra String:\n %s\n",LexemaReconhecido);
+                   fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
+               #endif
+
+               if( RetRlex != RLEX_CondRetOK )
+               {
+                  return RetRlex;
+               } /* if */
+
+               RetRlex = EscreveArq( pEstadoCorr->nomeEstado ,
+                                     LexemaReconhecido ,
+                                     col ,
+                                     linha ,
+                                     CaminhoSaida );
 
                if( RetRlex != RLEX_CondRetOK )
                {
@@ -1159,20 +1173,8 @@
                   } /* if */
 
                } /* for */
-               
 
-               RetRlex = EscreveArq( pEstadoCorr->nomeEstado ,
-                                     LexemaReconhecido ,
-                                     col ,
-                                     linha ,
-                                     CaminhoSaida );
-
-               if( RetRlex != RLEX_CondRetOK )
-               {
-                  return RetRlex;
-               } /* if */
-
-               if( !feof(f) && (PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetPilhaVazia) )
+               if( feof(f) && (PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetPilhaVazia) )
                {
                   break;
                } /* if */
@@ -1663,11 +1665,12 @@
                                 PIL_tppPilha pPilhaChar ,
                                 char *c )
    {
-      char SmallStr[2] = "";
+      char *SmallStr = NULL;
       char c_corr;
 
 
       PIL_tpCondRet RetPil;
+
 #ifdef _DEBUG
       char Buffer[500];
       FILE* fdebug;
@@ -1686,11 +1689,14 @@
             c_corr = '\0';
          } /* if */
 
+         SmallStr = (char *) malloc(sizeof(char)*2);
          sprintf_s(SmallStr,2,"%c",c_corr);
+
           #ifdef _DEBUG
              sprintf_s(Buffer,500,"DENTRO DA PROXIMOCHAR:\n SMALLSTRING: %s",SmallStr);
              fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
           #endif
+
          RetPil = PIL_Empilhar(pPilhaChar,SmallStr);
          
          if( RetPil == PIL_CondRetFaltouMemoria )
@@ -1706,23 +1712,26 @@
       else
       {
          char * pTopo = (char *) PIL_Desempilhar(pPilhaReleitura);
+         char StrTemp[2] = "";
 
          if( pTopo == NULL )
          {
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
-         if( strcpy_s(SmallStr,2,pTopo) != 0 )
+         if( strcpy_s(StrTemp,2,pTopo) != 0 )
          {
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
+         c_corr = StrTemp[0];
+
          free(pTopo);
 
-         c_corr = SmallStr[0];
       } /* else */
 
       (*c) = c_corr;
+
 #ifdef _DEBUG
       fclose(fdebug);
 #endif
@@ -1736,9 +1745,8 @@
 *
 ***********************************************************************/
 
-   RLEX_tpCondRet CharAnterior ( FILE *f ,
-                                PIL_tppPilha pPilhaReleitura ,
-                                PIL_tppPilha pPilhaChar )
+   RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura ,
+                                 PIL_tppPilha pPilhaChar )
    {
       char c_corr, *pTopo = NULL;
       PIL_tpCondRet RetPil;
