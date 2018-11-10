@@ -1792,28 +1792,39 @@
    {
 
       PIL_tpCondRet RetPil = PIL_CondRetOK;
+      char Buffer_temp[TAMANHO_BUFFER_STR] = "";
       char *pTopo = NULL;
-	  char aux [TAMANHO_BUFFER_STR];
+      int length;
 
-      strcpy_s(aux,TAMANHO_BUFFER_STR,"");
-	  strcpy_s(Str,TAMANHO_BUFFER_STR,"");
-
-      RetPil=PIL_PilhaVazia(pPilhaChar);
+      /* Limpa a string que será formada */
+	   strcpy_s(Str,TAMANHO_BUFFER_STR,"");
+      
+      /* Inicializa o estado da pilha */
+      RetPil = PIL_PilhaVazia(pPilhaChar);
 
       while( RetPil == PIL_CondRetOK )
       {
+         /* Desempilha da pilha de caracteres */
          pTopo = (char *) PIL_Desempilhar( pPilhaChar );
 
-		 strcpy_s(aux,TAMANHO_BUFFER_STR,pTopo);
+         /* Insere o topo da pilha no começo da string */
+         length = _snprintf(Buffer_temp,TAMANHO_BUFFER_STR,"%c%s",*pTopo,Str);
 
-         if( strcat_s(aux,TAMANHO_BUFFER_STR,Str) != 0 )
+         /* Checa se a concatenação foi bem-sucedida */
+         if(!( length > -1 && length < sizeof(Buffer_temp) ))
          {
             return RLEX_CondRetMemoria;
          } /* if */
-		 strcpy_s(Str,TAMANHO_BUFFER_STR,aux);
-         RetPil=PIL_PilhaVazia(pPilhaChar);
 
-      }/* while */ 
+         if( strcpy_s(Str,TAMANHO_BUFFER_STR,Buffer_temp) != 0 )
+         {
+            return RLEX_CondRetMemoria;
+         } /* if */
+
+         /* Atualiza o estado da pilha */
+         RetPil = PIL_PilhaVazia(pPilhaChar);
+
+      } /* while */ 
 
       return RLEX_CondRetOK;
 
