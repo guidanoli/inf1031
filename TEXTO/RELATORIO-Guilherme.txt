@@ -79,3 +79,6 @@
 09/11	1h			redigir script de teste		Novos casos testes para a versão de Rec.Lex.
 10/11	2h			revisar código do módulo	Corrigindo Rec.Arq.
 10/11	2h			revisar script de teste		Corrigindo Rec.Arq.
+10/11	3h			revisar código do módulo	Corrigindo Rec.Arq.
+10/11	1h			redigir script de teste		Rec.Str -> Rec.Arq. (criar .txt's)
+10/11	30min			realizar testes			Tudo funcionando.

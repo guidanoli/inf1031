@@ -1,0 +1,9 @@
+O lexema "KEEP" presente na linha 0 coluna 0 foi reconhecido como Palavras.
+O lexema "
+CALM" presente na linha 0 coluna 4 foi reconhecido como Palavras.
+O lexema "
+AND" presente na linha 1 coluna 4 foi reconhecido como Palavras.
+O lexema "
+CARRY" presente na linha 2 coluna 3 foi reconhecido como Palavras.
+O lexema "
+ON" presente na linha 3 coluna 5 foi reconhecido como Palavras.

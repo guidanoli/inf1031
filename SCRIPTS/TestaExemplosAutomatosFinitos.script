@@ -54,6 +54,8 @@
 =declararparm  Espacamento           string "\\b"
 =declararparm  Outros                string "\\o"
 
+// String
+
 == Reconhecer números ímpares e pares em binário
 =criarlexrec OK
 =inserirestado 0 "Estado Inicial" EstadoIntermediario OK
@@ -192,5 +194,148 @@
 =inserirtransicao 1 5 ". , ;" OK
 =inserirtransicao 5 5 ". , ;" OK
 =reconhecerstring "1:1 In the beginning God created the heaven and the earth. \n1:2 And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters." Path OK
-=cmparquivos Path ""OutputFiles\\Output21_Biblia.txt" CharIgnora OK
+=cmparquivos Path "OutputFiles\\Output21_Biblia.txt" CharIgnora OK
+=destruirlexrec OK
+
+// Arquivo
+
+== Reconhecer números ímpares e pares em binário
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Impar" EstadoFinal OK
+=inserirestado 2 "Par" EstadoFinal OK
+=inserirtransicao 0 1 "1" OK
+=inserirtransicao 0 2 "0" OK
+=inserirtransicao 1 1 "1" OK
+=inserirtransicao 1 2 "0" OK
+=inserirtransicao 2 1 "1" OK
+=inserirtransicao 2 2 "0" OK
+=reconhecerarquivo "InputFiles\\Input15_Macacada.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output11_ErroByte.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input16_Abacaxis.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output11_ErroByte.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input17_Zero.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output07_Par.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input18_Um.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output08_Impar.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input19_Par.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output09_ParByte.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input20_Impar.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output10_ImparByte.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Reconhecer palavras
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Palavra" EstadoFinal OK
+=inserirtransicao 0 0 Espacamento OK
+=inserirtransicao 0 1 Letras OK
+=inserirtransicao 1 1 Letras OK
+=inserirtransicao 0 0 "\\b ," OK
+=reconhecerarquivo "InputFiles\\Input21_NaoNumeros.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output11_ErroByte.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input22_LoremIpsum.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output13_LoremIpsum.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Reconhecer lexemas com exemplo de autômato finito do enunciado
+=criarlexrec OK
+=inserirestado 0 "Estado inicial" EstadoIntermediario OK
+=inserirestado 1 "Identificador" EstadoFinal OK
+=inserirestado 2 "Numero Inteiro" EstadoFinal OK
+=inserirestado 3 "Numero Fracionario" EstadoFinal OK
+=inserirestado 4 "Comentario1" EstadoIntermediario OK
+=inserirestado 5 "Comentario2" EstadoIntermediario OK
+=inserirestado 6 "Comentario3" EstadoIntermediario OK
+=inserirestado 998 "Erro" EstadoFinal OK
+=inserirtransicao 0 0 Espacamento OK
+=inserirtransicao 0 1 "\\l _" OK
+=inserirtransicao 1 1 "\\l \\d _" OK
+=inserirtransicao 0 2 Decimais OK
+=inserirtransicao 2 2 Decimais OK
+=inserirtransicao 2 3 "." OK
+=inserirtransicao 3 3 Decimais OK
+=inserirtransicao 0 4 "/" OK
+=inserirtransicao 4 5 "*" OK
+=inserirtransicao 4 998 Outros OK
+=inserirtransicao 5 5 Outros OK
+=inserirtransicao 5 6 "*" OK
+=inserirtransicao 6 6 "*" OK
+=inserirtransicao 6 5 Outros OK
+=inserirtransicao 6 0 "/" OK
+=inserirtransicao 0 998 Outros OK
+=reconhecerarquivo "InputFiles\\Input23_ErroComentario.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output14_ErroComentario.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input24_ComentarioOK.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output15_ComentarioOK.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Reconhecer qualquer caractere
+=criarlexrec OK
+=inserirestado 0 "Estado inicial" EstadoIntermediario OK
+=inserirestado 1 "Lexema" EstadoFinal OK
+=inserirtransicao 0 1 Outros OK
+=inserirtransicao 1 1 Outros OK
+=reconhecerarquivo "InputFiles\\Input25_AlfabetoESimbolos.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output16_AceitaTudo.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Reconhece palavras e numeros concatenados
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Palavra" EstadoFinal OK
+=inserirestado 2 "Numero" EstadoFinal OK
+=inserirtransicao 0 1 Letras OK
+=inserirtransicao 1 1 Letras OK
+=inserirtransicao 0 2 Decimais OK
+=inserirtransicao 2 2 Decimais OK
+=reconhecerarquivo "InputFiles\\Input26_Eleicoes2018.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output17_Eleicoes2018.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Reconhece tweets
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Inicio Hashtag" EstadoIntermediario OK
+=inserirestado 2 "Hashtag" EstadoFinal OK
+=inserirestado 3 "Inicio Marcacao" EstadoIntermediario OK
+=inserirestado 4 "Marcacao" EstadoFinal OK
+=inserirestado 5 "Texto" EstadoFinal OK
+=inserirestado 6 "Instavel" EstadoIntermediario OK
+=inserirtransicao 0 0 Espacamento OK
+=inserirtransicao 0 1 "#" OK
+=inserirtransicao 0 5 Outros OK
+=inserirtransicao 1 5 "#" OK
+=inserirtransicao 1 2 "\\l \\d" OK
+=inserirtransicao 2 2 "\\l \\d" OK
+=inserirtransicao 0 3 "@" OK
+=inserirtransicao 3 5 "@" OK
+=inserirtransicao 3 4 "\\l \\d" OK
+=inserirtransicao 4 4 "\\l \\d" OK
+=inserirtransicao 5 5 Outros OK
+=inserirtransicao 5 6 Espacamento OK
+=reconhecerarquivo "InputFiles\\Input27_Tweet.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output20_Tweets.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Reconhece a Bíblia
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Palavra" EstadoFinal OK
+=inserirestado 2 "Indice 01" EstadoIntermediario OK
+=inserirestado 3 "Indice 02" EstadoIntermediario OK
+=inserirestado 4 "Versiculo" EstadoFinal OK
+=inserirestado 5 "Frase" EstadoFinal OK
+=inserirtransicao 0 0 Espacamento OK
+=inserirtransicao 0 1 Letras OK
+=inserirtransicao 1 1 "\\l \\b" OK
+=inserirtransicao 0 2 Decimais OK
+=inserirtransicao 2 2 Decimais OK
+=inserirtransicao 2 3 ":" OK
+=inserirtransicao 3 4 Decimais OK
+=inserirtransicao 4 4 Decimais OK
+=inserirtransicao 1 5 ". , ;" OK
+=inserirtransicao 5 5 ". , ;" OK
+=reconhecerarquivo "InputFiles\\Input28_InicioGenesis.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output21_Biblia.txt" CharIgnora OK
 =destruirlexrec OK

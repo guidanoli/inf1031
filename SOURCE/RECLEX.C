@@ -14,12 +14,13 @@
 *             nag   Nagib Suaid
 *
 *  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     0       gui   19/10/2018  Início do desenvolvimento (baseado em TSTGRF.c)
-*     0.1     gui   26/10/2018  criar e destruir rec.lex.
-*     0.2     gui   26/10/2018  inserir e remover estado
-*     0.3     gui   26/10/2018  inserir e remover transições
-*     0.4   gui,nag 09/11/2018  reconhecer string
+*     Versão  Autor      Data     Observações
+*     0       gui     19/10/2018  Início do desenvolvimento (baseado em TSTGRF.c)
+*     0.1     gui     26/10/2018  criar e destruir rec.lex.
+*     0.2     gui     26/10/2018  inserir e remover estado
+*     0.3     gui     26/10/2018  inserir e remover transições
+*     0.4   gui,nag   09/11/2018  reconhecer string
+*     0.5   gui,nag   10/11/2018  reconhecer arquivo
 *
 ***************************************************************************/
 
@@ -34,8 +35,6 @@
 
 #include    "GRAFO.H"
 #include    "PILHA.H"
-
-#define _DEBUG
 
 #define CRIAR_RLEX_CMD           "=criarlexrec"
 #define DESTRUIR_RLEX_CMD        "=destruirlexrec"
@@ -715,10 +714,6 @@
       PIL_tpCondRet  RetPil;
       RLEX_tpCondRet RetRlex;
 
-#ifdef _DEBUG
-      FILE *f = fopen("Debug.txt","w");
-#endif
-
       /* Validando ponteiros */
 
       if( pRec == NULL )
@@ -766,9 +761,7 @@
 
       while( 1 )
       {
-         #ifdef _DEBUG
-         char Buffer[500] = "";
-         #endif
+
          /* Empilha na pilha de caminhamento o estado corrente */
 
          RetGrf = GRF_ObterValor( pRec , (void**) &pEstadoCorr );
@@ -782,11 +775,6 @@
          {
             return RLEX_CondRetErroEstrutura;
          } /* if */
-
-#ifdef _DEBUG
-         sprintf_s(Buffer,500,"Col = %d \t*p = %c *ant = %c IdEstadoCorr = %d\n",col,*p,*ant,pEstadoCorr->idEstado);
-         fwrite(Buffer,sizeof(char),strlen(Buffer),f);
-#endif
 
          RetPil = PIL_Empilhar( pPilhaEstados , pEstadoCorr );
 
@@ -923,8 +911,6 @@
 
       PIL_DestruirPilha(&pPilhaEstados);
 
-      fclose(f);
-
       return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Reconhece String */
@@ -951,10 +937,6 @@
       GRF_tpCondRet  RetGrf;
       PIL_tpCondRet  RetPil;
       RLEX_tpCondRet RetRlex;
-
-      #ifdef _DEBUG
-      FILE *fdebug = fopen("Debug.txt","w");
-      #endif
 
       /* Validando ponteiros */
 
@@ -1027,9 +1009,7 @@
 
       while( 1 )
       {
-         #ifdef _DEBUG
-         char Buffer[500] = "";
-         #endif
+
          /* Empilha na pilha de caminhamento o estado corrente */
 
          RetGrf = GRF_ObterValor( pRec , (void**) &pEstadoCorr );
@@ -1069,17 +1049,7 @@
             return RetRlex;
          } /* if */
 
-             #ifdef _DEBUG
-             sprintf_s(Buffer,500," ANTES DE RECONHECERCHAR:\n Col = %d \t IdEstadoCorr = %d \t c_corr = %d, RetLex = %d\n",col,pEstadoCorr->idEstado,c_corr,RetRlex);
-             fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
-             #endif
-
          RetRlex = ReconheceChar( c_corr );
-
-             #ifdef _DEBUG
-             sprintf_s(Buffer,500,"DEPOIS DE RECONHECERCHAR:\nCol = %d \t IdEstadoCorr = %d \t c_corr = %d, RetLex = %d\n",col,pEstadoCorr->idEstado,c_corr,RetRlex);
-             fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
-             #endif
 
          if( RetRlex == RLEX_CondRetOK )
          {
@@ -1097,6 +1067,8 @@
 
             do
             {
+
+
 
                pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar(pPilhaEstados);
 
@@ -1131,13 +1103,8 @@
             {
 
                char LexemaReconhecido[TAMANHO_BUFFER_STR] = "", *p = NULL;
-               /*Suspeito que o erro esteja aqui vvv*/
+               
                RetRlex = PilhaParaString( pPilhaChar , LexemaReconhecido );
-
-               #ifdef _DEBUG
-                   sprintf_s(Buffer,500,"Pilha Pra String:\n %s\n",LexemaReconhecido);
-                   fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
-               #endif
 
                if( RetRlex != RLEX_CondRetOK )
                {
@@ -1158,10 +1125,7 @@
                for( p = LexemaReconhecido ; *p != '\0' ; p++ )
                {
                   col++;
-             #ifdef _DEBUG
-             sprintf_s(Buffer,500,"DENTRO DO FOR:\n Col = %d \t IdEstadoCorr = %d \t c_corr = %d, RetLex = %d , *p = %d\n",col,pEstadoCorr->idEstado,c_corr,RetRlex,*p);
-             fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
-             #endif
+
                   if( *p == '\n' )
                   {
                      col = 0;
@@ -1225,10 +1189,6 @@
       PIL_DestruirPilha(&pPilhaChar);
 
       fclose(f);
-
-      #ifdef _DEBUG
-      fclose(fdebug);
-      #endif
 
       return RLEX_CondRetOK;
 
@@ -1667,12 +1627,6 @@
 
       PIL_tpCondRet RetPil;
 
-#ifdef _DEBUG
-      char Buffer[500];
-      FILE* fdebug;
-      fdebug = fopen("debugproxchar.txt","w");
-#endif
-
       RetPil = PIL_PilhaVazia(pPilhaReleitura);
 
       if( RetPil == PIL_CondRetPilhaVazia )
@@ -1687,11 +1641,6 @@
 
          SmallStr = (char *) malloc(sizeof(char)*2);
          sprintf_s(SmallStr,2,"%c",c_corr);
-
-          #ifdef _DEBUG
-             sprintf_s(Buffer,500,"DENTRO DA PROXIMOCHAR:\n SMALLSTRING: %s",SmallStr);
-             fwrite(Buffer,sizeof(char),strlen(Buffer),fdebug);
-          #endif
 
          RetPil = PIL_Empilhar(pPilhaChar,SmallStr);
          
@@ -1722,15 +1671,21 @@
 
          c_corr = StrTemp[0];
 
-         free(pTopo);
+         RetPil = PIL_Empilhar(pPilhaChar,pTopo);
+         
+         if( RetPil == PIL_CondRetFaltouMemoria )
+         {
+            return RLEX_CondRetMemoria;
+         } /* if */
+         else if( RetPil != PIL_CondRetOK )
+         {
+            return RLEX_CondRetErroEstrutura;
+         } /* if */
 
       } /* else */
 
       (*c) = c_corr;
 
-#ifdef _DEBUG
-      fclose(fdebug);
-#endif
       return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Próximo caractere */
@@ -1745,7 +1700,7 @@
                                  PIL_tppPilha pPilhaChar ,
                                   char *c )
    {
-      char c_corr, *pTopo = NULL;
+      char *pTopo = NULL;
       PIL_tpCondRet RetPil;
 
       if( PIL_PilhaVazia( pPilhaChar ) == PIL_CondRetPilhaVazia )
@@ -1807,7 +1762,9 @@
          pTopo = (char *) PIL_Desempilhar( pPilhaChar );
 
          /* Insere o topo da pilha no começo da string */
-         length = _snprintf(Buffer_temp,TAMANHO_BUFFER_STR,"%c%s",*pTopo,Str);
+         length = _snprintf_s(Buffer_temp,TAMANHO_BUFFER_STR,_TRUNCATE ,"%c%s",*pTopo,Str);
+
+         free(pTopo);
 
          /* Código extraído de https://gist.github.com/bwolf/1851632 VVVV */
 

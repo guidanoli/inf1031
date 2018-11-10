@@ -4,7 +4,8 @@
 //				0.2	26/10/2018	inserirestado, removerestado
 //				0.3	26/10/2018	inserirtransicao, removertransicao
 //				0.4	05/11/2018	cmparquivos
-//				0.5	09/11/208	reconhecestr
+//				0.5	09/11/2018	reconhecestring
+//				0.6	10/11/2018	reconhecearquivo
 // Propósito: 			Testa a integridade dos comandos suportados pelo Reconhecedor Léxico
 //				para com sua estrutura de dados, baseando-se no modelo arquitetado.
 //				Além disso, testa alguns exemplos de autômatos finitos.
@@ -324,15 +325,11 @@
 == Testar reconhecer string com espaçamento
 =criarlexrec OK
 =inserirestado 0 "Estado Inicial" EstadoIntermediario OK
-=inserirestado 1 "Espacamento" EstadoFinal OK
-=inserirestado 2 "Palavras" EstadoFinal OK
-=inserirtransicao 0 1 Espacamento OK
-=inserirtransicao 0 2 Letras OK
-=reconhecerstring " " Path OK
-=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
-=reconhecerstring "	" Path OK
-=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
-=reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
+=inserirestado 1 "Palavras" EstadoFinal OK
+=inserirtransicao 0 1 "\\l \\b" OK
+=inserirtransicao 1 1 Letras OK
+=reconhecerstring "KEEP\nCALM\nAND\nCARRY\nON" Path OK
+=cmparquivos Path "OutputFiles\\Output22_GoodVibes.txt" CharIgnora OK
 =destruirlexrec OK
 
 // Arquivos
@@ -463,9 +460,9 @@
 == Testar reconhecer string com espaçamento
 =criarlexrec OK
 =inserirestado 0 "Estado Inicial" EstadoIntermediario OK
-=inserirestado 1 "Espacamento" EstadoFinal OK
-=inserirestado 2 "Palavras" EstadoFinal OK
-=inserirtransicao 0 1 Espacamento OK
-=inserirtransicao 0 2 Letras OK
-=reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
+=inserirestado 1 "Palavras" EstadoFinal OK
+=inserirtransicao 0 1 "\\l \\b" OK
+=inserirtransicao 1 1 Letras OK
+=reconhecerarquivo "InputFiles\\Input13_GoodVibes.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output22_GoodVibes.txt" CharIgnora OK
 =destruirlexrec OK
