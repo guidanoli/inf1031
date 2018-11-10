@@ -1,0 +1,178 @@
+// Script:    			TestaReconhecedorLexico.script
+// Autor:     			Guilherme Dantas, Nagib
+// Versionamento:		0.1	10/11/2018	
+//Propósito: 			Testa a função reconhecerArquivo do //reconhecerdor léxico
+
+== Declarar as condicões de retorno do grafo
+// para funções: 	criarlexrec, destruirlexrec,
+//			inserirestado, removerestado,
+//			inserirtransicao, removertransicao
+=declararparm  OK                    int 0
+=declararparm  GrafoNaoExiste        int 1 
+=declararparm  GrafoVazio            int 2
+=declararparm  VerticeExiste         int 3
+=declararparm  VerticeNaoExiste      int 4
+=declararparm  Grafo_ValorNulo       int 5
+=declararparm  ArestaExiste          int 6
+=declararparm  ArestaNaoExiste       int 7
+=declararparm  UnicaOrigem           int 8
+=declararparm  FuncNula	             int 9
+=declararparm  Grafo_ErroEstrutura   int 10
+=declararparm  Grafo_Memoria         int 11
+
+== Declarar as condicões de retorno do reconhecedor léxico
+// para funções:	cmparquivos, reconhecestr, reconhecearq
+=declararparm  RecLexNaoExiste       int 1 
+=declararparm  RecLexVazio           int 2
+=declararparm  TransicaoNaoExiste    int 3
+=declararparm  RecLex_ValorNulo      int 4
+=declararparm  ArqDiferentes         int 5
+=declararparm  ComecoArq             int 6
+=declararparm  ErroArquivo           int 7
+=declararparm  ParametrosInvalidos   int 8
+=declararparm  RecLex_ErroEstrutura  int 9
+=declararparm  RecLex_Memoria        int 10
+
+== Declarar Tipos de Estados
+=declararparm  EstadoFinal           int 0
+=declararparm  EstadoIntermediario   int 1
+
+== Relatório
+=declararparm  Path                  string "Reconhecimento.txt"
+=declararparm  CharIgnora            char '%'
+
+== Declarar nome arbitrário para Estado
+=declararparm  NomeDummy             string "Nome dummy"
+
+== Declarar Rótulos
+=declararparm  FimFluxo              string "\\f"
+=declararparm  Decimais	 	    string "\\d"
+=declararparm  Letras                string "\\l"
+=declararparm  Espacamento           string "\\b"
+=declararparm  Outros                string "\\o"
+
+== Declarar paths de entrada
+=declararparm  arq_a		    string "InputFiles\\Input00_a.txt"
+
+///COMEÇO
+== Testar reconhecer arquivo com Reconhecedor Léxico com um estado apenas mas sem transição
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output01_Erro.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com Reconhecedor Léxico com um estado inicial e uma auto-transição
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirtransicao 0 0 "a" OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output01_Erro.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com letras
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Letras" EstadoFinal OK
+=inserirtransicao 0 1 Letras OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input01_A.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input02_z.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input03_Z.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com decimais
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Decimais" EstadoFinal OK
+=inserirtransicao 0 1 Decimais OK
+=reconhecerarquivo "InputFiles\\Input04_1.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output03_Decimais.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input05_9.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output03_Decimais.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com espaçamento
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Espacamento" EstadoFinal OK
+=inserirtransicao 0 1 Espacamento OK
+=reconhecerarquivo "InputFiles\\Input06_Espaco.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input07_Tab.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input08_QuebraDeLinha.txt" Path OK
+//
+// Nota importante: 	o reconhecedor de arquivo texto não lê o caractere "\r", que corresponde
+//			ao retrocesso de carro (mas poderiamos obtê-lo com a leitura do arquivo em 
+//			binário). Portanto, deve-se ter isso em mente na confecção de um reconhecedor 
+//			léxico para arquivos e strings. Eles não se distinguem neste quesito.
+//
+=cmparquivos Path "OutputFiles\\Output04_Espacamento.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com outros
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Outros" EstadoFinal OK
+=inserirtransicao 0 1 Outros OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input04_1.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input06_Espaco.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input09_Asterisco.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com transições, respeitando a prioridade entre elas
+=criarlexrec OK
+=inserirestado 0 "Estado Inicial" EstadoIntermediario OK
+=inserirestado 1 "Outros" EstadoFinal OK
+=inserirestado 2 "Letras" EstadoFinal OK
+=inserirestado 3 "Caractere" EstadoFinal OK
+=inserirtransicao 0 1 Outros OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output05_Outros.txt" CharIgnora OK
+=inserirtransicao 0 2 Letras OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output02_Letras.txt" CharIgnora OK
+=inserirtransicao 0 3 "a" OK
+=reconhecerarquivo "InputFiles\\Input00_a.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output06_CaractereGenerico.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo quando o ponteiro vai de um estado final para um não-final
+=criarlexrec OK
+=inserirestado 0 "A" EstadoIntermediario OK
+=inserirestado 1 "B" EstadoFinal OK
+=inserirestado 2 "C" EstadoIntermediario OK
+=inserirtransicao 0 1 "d" OK
+=inserirtransicao 1 1 "d" OK
+=inserirtransicao 1 2 Espacamento OK
+=reconhecerarquivo "InputFiles\\Input10_Teste.txt" Path OK
+//=cmparquivos Path "OutputFiles\\Output18_Teste.txt" CharIgnora OK
+=destruirlexrec OK
+
+== Testar reconhecer arquivo com números, palavras ou brancos
+
+=criarlexrec OK
+=inserirestado 0 "I" EstadoIntermediario OK
+=inserirestado 1 "B" EstadoFinal OK
+=inserirestado 2 "N" EstadoFinal OK
+=inserirestado 3 "L" EstadoFinal OK
+=inserirtransicao 0 1 Espacamento OK
+=inserirtransicao 1 1 Espacamento OK
+=inserirtransicao 0 2 Decimais OK
+=inserirtransicao 2 2 Decimais OK
+=inserirtransicao 0 3 Letras OK
+=inserirtransicao 3 3 Letras OK
+=reconhecerstring "123 abc123 \n  ?" Path OK
+=reconhecerarquivo "InputFiles\\Input12_Tudo.txt" "Reconhecimento2.txt" OK
+=cmparquivos Path "Reconhecimento2.txt" CharIgnora OK
+=destruirlexrec OK

@@ -1793,8 +1793,10 @@
 
       PIL_tpCondRet RetPil = PIL_CondRetOK;
       char *pTopo = NULL;
+	  char aux [TAMANHO_BUFFER_STR];
 
-      strcpy_s(Str,TAMANHO_BUFFER_STR,"");
+      strcpy_s(aux,TAMANHO_BUFFER_STR,"");
+	  strcpy_s(Str,TAMANHO_BUFFER_STR,"");
 
       RetPil=PIL_PilhaVazia(pPilhaChar);
 
@@ -1802,11 +1804,13 @@
       {
          pTopo = (char *) PIL_Desempilhar( pPilhaChar );
 
-         if( strcat_s(Str,TAMANHO_BUFFER_STR,pTopo) != 0 )
+		 strcpy_s(aux,TAMANHO_BUFFER_STR,pTopo);
+
+         if( strcat_s(aux,TAMANHO_BUFFER_STR,Str) != 0 )
          {
             return RLEX_CondRetMemoria;
          } /* if */
-
+		 strcpy_s(Str,TAMANHO_BUFFER_STR,aux);
          RetPil=PIL_PilhaVazia(pPilhaChar);
 
       }/* while */ 
