@@ -448,7 +448,7 @@
 =inserirtransicao 1 1 "d" OK
 =inserirtransicao 1 2 Espacamento OK
 =reconhecerarquivo "InputFiles\\Input10_Teste.txt" Path OK
-//=cmparquivos Path "OutputFiles\\Output18_Teste.txt" CharIgnora OK
+=cmparquivos Path "OutputFiles\\Output18_Teste.txt" CharIgnora OK
 =destruirlexrec OK
 
 == Testar reconhecer string quando o ponteiro inicia o retrocesso num estado final
@@ -456,8 +456,8 @@
 =inserirestado 0 "Estado Inicial" EstadoIntermediario OK
 =inserirestado 1 "Outro Estado" EstadoFinal OK
 =inserirtransicao 0 1 "a" OK
-//=reconhecerarquivo "InputFiles\\Input11_Teste2.txt" Path OK
-//=cmparquivos Path "OutputFiles\\Output19_Teste2.txt" CharIgnora OK
+=reconhecerarquivo "InputFiles\\Input11_Teste2.txt" Path OK
+=cmparquivos Path "OutputFiles\\Output19_Teste2.txt" CharIgnora OK
 =destruirlexrec OK
 
 == Testar reconhecer string com espaçamento
@@ -467,5 +467,5 @@
 =inserirestado 2 "Palavras" EstadoFinal OK
 =inserirtransicao 0 1 Espacamento OK
 =inserirtransicao 0 2 Letras OK
-//=reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
+=reconhecerstring "PROG\nMOD\nMATA\nMEUS\nNEURONIOS" Path OK
 =destruirlexrec OK

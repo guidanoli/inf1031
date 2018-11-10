@@ -205,7 +205,7 @@
 ***********************************************************************/
 
    static RLEX_tpCondRet ProximoChar ( FILE *f, PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar, char *c );
-   static RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar );
+   static RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar , char *c );
    static RLEX_tpCondRet PilhaParaString ( PIL_tppPilha pPilhaChar , char Str[TAMANHO_BUFFER_STR] );
 
 /*****  Código das funções exportadas pelo módulo  *****/
@@ -1095,8 +1095,7 @@
          {
             /* Não há a transição */
 
-            while( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal 
-                   && PIL_PilhaVazia(pPilhaEstados) == PIL_CondRetOK )
+            do
             {
 
                pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar(pPilhaEstados);
@@ -1112,24 +1111,21 @@
                } /* if */
                else
                {
-                  if( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal )
+                  RetRlex = CharAnterior( pPilhaReleitura , pPilhaChar , &c_corr );
+
+                  if( RetRlex == RLEX_CondRetComecoArquivo )
                   {
-                     RetRlex = CharAnterior( pPilhaReleitura , pPilhaChar );
-
-                     if( RetRlex == RLEX_CondRetComecoArquivo )
-                     {
-                        break;
-                     } /* if */
-                     else if( RetRlex != RLEX_CondRetOK )
-                     {
-                        return RetRlex;
-                     } /* else-if */
-
+                     break;
                   } /* if */
+                  else if( RetRlex != RLEX_CondRetOK )
+                  {
+                     return RetRlex;
+                  } /* else-if */
 
                } /* else */
 
-            } /* while */
+            } while( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal 
+                   && PIL_PilhaVazia(pPilhaEstados) == PIL_CondRetOK ); /* do-while */
 
             if( pEstadoCorr->tipoEstado == RLEX_tppEstadoFinal )
             {
@@ -1174,7 +1170,7 @@
 
                } /* for */
 
-               if( feof(f) && (PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetPilhaVazia) )
+               if( c_corr == '\0' || PIL_PilhaVazia(pPilhaReleitura) == PIL_CondRetPilhaVazia )
                {
                   break;
                } /* if */
@@ -1746,7 +1742,8 @@
 ***********************************************************************/
 
    RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura ,
-                                 PIL_tppPilha pPilhaChar )
+                                 PIL_tppPilha pPilhaChar ,
+                                  char *c )
    {
       char c_corr, *pTopo = NULL;
       PIL_tpCondRet RetPil;
@@ -1763,6 +1760,8 @@
          {
             return RLEX_CondRetErroEstrutura;
          } /* if */
+
+         (*c) = *pTopo;
 
          RetPil = PIL_Empilhar( pPilhaReleitura , pTopo );
          
@@ -1809,6 +1808,8 @@
 
          /* Insere o topo da pilha no começo da string */
          length = _snprintf(Buffer_temp,TAMANHO_BUFFER_STR,"%c%s",*pTopo,Str);
+
+         /* Código extraído de https://gist.github.com/bwolf/1851632 VVVV */
 
          /* Checa se a concatenação foi bem-sucedida */
          if(!( length > -1 && length < sizeof(Buffer_temp) ))
