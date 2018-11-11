@@ -171,15 +171,10 @@
 ***********************************************************************/
 
    static RLEX_tpCondRet IrOrigem( );
-
-   //WIP
    static RLEX_tpCondRet ReconheceStr ( char Str[TAMANHO_BUFFER_STR] , char CaminhoSaida[TAMANHO_BUFFER_STR] ) ;
-
-   //WIP
    static RLEX_tpCondRet ReconheceArq ( char CaminhoEntrada[TAMANHO_BUFFER_STR] , char CaminhoSaida[TAMANHO_BUFFER_STR] ) ;
    static RLEX_tpCondRet ReconheceChar ( char c ) ;
    static RLEX_tpCondRet ObterSubstring ( char * p , char * ant , int * col , int * linha , char * Str ) ;
-   static RLEX_tpCondRet AtualizaLinha ( char * p , char * ant , int * linha ) ;
    static char * TraduzCaractere ( char c ) ;
    static int ValidarTipoEstado ( int Estado ) ;
    static void LiberaEstado ( void * pa ) ;
@@ -516,7 +511,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Compara Estados
+*  $FC Função: RLEX  -  Compara Estados
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -536,7 +546,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Copia Estados
+*  $FC Função: RLEX  -  Copia Estados
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -560,7 +585,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Concatena nome de estados
+*  $FC Função: RLEX  -  Concatena nome de estados
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -579,7 +619,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Libera Estado
+*  $FC Função: RLEX  -  Libera Estado
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -594,7 +649,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Compara Rotulos
+*  $FC Função: RLEX  -  Compara Strings
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -603,9 +673,24 @@
       return strcmp((char *)pa,(char *)pb);
    } /* Fim função: RLEX -Compara Strings */
 
- /***********************************************************************
+/***********************************************************************
 *
-*  $FC Função: RLEX -Copia Strings
+*  $FC Função: RLEX  -  Copia Strings
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -619,7 +704,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Validar tipo de estado
+*  $FC Função: RLEX  -  Validar tipo de estado
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -636,7 +736,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Criar Estado
+*  $FC Função: RLEX  -  Criar Estado
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -669,7 +784,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Traduz caractere para Rótulo correspondente
+*  $FC Função: RLEX  -  Traduz caractere para Rótulo correspondente
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -697,7 +827,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Reconhece String
+*  $FC Função: RLEX  -  Reconhece String
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -917,7 +1062,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Reconhece Arquivo
+*  $FC Função: RLEX  -  Reconhece Arquivo
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1196,7 +1356,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Reconhece Caractere
+*  $FC Função: RLEX  -  Reconhece Caractere
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1239,7 +1414,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Percorre Transicao
+*  $FC Função: RLEX  -  Percorre Transicao
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1335,7 +1525,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Ir à origem do reconhecedor léxico
+*  $FC Função: RLEX  -  Ir à origem do reconhecedor léxico
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1370,7 +1575,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Limpa arquivo
+*  $FC Função: RLEX  -  Limpa arquivo
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1398,7 +1618,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Escreve em arquivo
+*  $FC Função: RLEX  -  Escreve em arquivo
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1450,7 +1685,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Obter sub-string
+*  $FC Função: RLEX  -  Obter sub-string
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1492,7 +1742,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Escrever erro
+*  $FC Função: RLEX  -  Escrever erro
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1536,7 +1801,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Compara arquivos
+*  $FC Função: RLEX  -  Compara arquivos
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1612,7 +1892,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Próximo caractere
+*  $FC Função: RLEX  -  Próximo caractere
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1692,7 +1987,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Caractere anterior
+*  $FC Função: RLEX  -  Caractere anterior
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
 
@@ -1738,7 +2048,22 @@
 
 /***********************************************************************
 *
-*  $FC Função: RLEX -Desempilhar caracteres e construir uma string
+*  $FC Função: RLEX  -  Desempilhar caracteres e construir uma string
+*
+*  $ED Descrição da função
+*     
+*
+*  $AE Assertivas de entrada
+*     
+*
+*  $AS Assertivas de saída
+*     
+*
+*  $EP Parâmetros
+*     
+*
+*  $FV Valor retornado
+*     
 *
 ***********************************************************************/
    
