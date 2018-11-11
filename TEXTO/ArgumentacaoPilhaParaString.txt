@@ -107,20 +107,21 @@ AE
 *  $AI Assertivas intermediárias
 *
 *  AI1: Buffer_temp é uma string vazia com as mesmas dimensões que Str.
-*  AI2: Str passa a ser uma string vazia.
-*  AI3: RetPil recebe PIL_CondRetOK se a pilha não está vazia e outro valor distinto caso contrário.
-*  AI4: A construção da string foi realizada com sucesso e todos os elementos anteriormente na pilha foram liberados.
+*  AI2: AI1 + Str passa a ser uma string vazia.
+*  AI3: AI3 + RetPil recebe PIL_CondRetOK se a pilha não está vazia e outro valor distinto caso contrário.
+*  AI4: A construção da string foi realizada com sucesso e todos os elementos anteriormente na pilha foram liberados ou a execução
+*       Foi encerrada por um erro.
 *  AINV: Todos os caracteres na pilha ainda devem ser adicionados no inicio da string
 *        e todo caracter em Str ja foi removido da pilha e liberado.
 *  AI5: O elemento do topo da pilha é desempilhado e pTopo passa a referenciar esse elemento.
 *  AI6: Str é concatenado ao conteudo de pTopo e a string resultante é armazenada em Buffer_temp,
 *       length recebe o numero de caracteres gravados ou -1 se a operação falhou.
-*  AI7: O elemento referenciado por pTopo é liberado da memória.
-*  AI8: A concatenação e gravação em Buffer_temp foi bem sucedida.
-*  AI9: Str é uma cópia de Buffer_temp.
-*  AI10: RetPil recebe PIL_CondRetOK se a pilha não está vazia e outro valor distinto caso contrário.
+*  AI7: AI6 + O elemento referenciado por pTopo é liberado da memória.
+*  AI8: AI7 + A concatenação e gravação em Buffer_temp foi bem sucedida ou a execução foi encerrada por um erro.
+*  AI9: AI8 + Str é uma cópia de Buffer_temp ou a execução foi encerrada por um erro.
+*  AI10: AI9 + RetPil recebe PIL_CondRetOK se a pilha não está vazia e outro valor distinto caso contrário.
 *
-*  /* Argumentação de sequencia */
+*  /* Argumentação de sequencia principal */
 *
 *  (ignorando definições/declarações)
 *
@@ -130,12 +131,12 @@ AE
 *  AI3 + While => AI4
 *  AI4 + 'return RLEX_CondRetOK' => AS
 *
-*  /* fim Argumentação de sequencia */
+*  /* fim Argumentação de sequencia principal */
 *
 *  Deve-se argumentar que o bloco while desempilha todos os caracteres da pilha um de cada vez,
 *  adicionando-os no inicio de Str e liberando o seu espaço em memória.
 *
-*  /* Argumentação de repetição */
+*  /* Argumentação de repetição while */
 *
 *  AI3 => AINV: Pela AI3 a pilha ainda contem todos os caracteres que devem ser passados para a Str
 *               e Str não possui nenhum caractere, portanto vale a AINV.
@@ -144,7 +145,7 @@ AE
 *                          para ser adicionado à Str. Como c == F, não há nenhum caractere na pilha e portanto
 *                          nada precisa ser adicionado à Str nem liberado da memória, valendo a AI4.
 *                          Se c == T mas o primeiro ciclo não é completo, RLEX_CondRetMemoria é o valor retornado,
-*                          valendo a AS.
+*                          valendo a AI4.
 *
 *  AI3 && (c == T) + B => AINV: Pela AI3 RetPil == PIL_CondRetOK somente se existe um caractere no topo da pilha
 *                               para ser adicionado à Str. Como c == T, há pelo menos um caractere que precisa ser liberado
@@ -158,9 +159,47 @@ AE
 *
 *  AINV && (c == F) => AI4: Pela AINV, tudo que ainda deve ser passado para Str está na pilha. como c == F, a pilha está vazia
 *                           e mais nada precisa ser feito, valendo a AI4.
-*                           Se c == T mas o ciclo não é completo, RLEX_CondRetMemoria é o valor retornado, valendo a AS.
+*                           Se c == T mas o ciclo não é completo, RLEX_CondRetMemoria é o valor retornado, valendo a AI4.
 *
 *  Término : Cada execução do bloco correspondente garante que um elemento é desempilhado da pilha ou que a execução termine.
 *            Como a pilha possui um número finito de caracteres, a execução termina em um número finito de passos.   
 * 
-*  /* fim Argumentação de repetição */                      
+*  /* fim Argumentação de repetição while */   
+*
+*  Deve-se argumentar agora que o bloco de código dentro do while desempilha um caractere da pilha, o adiciona no inicio de Str,
+*  libera o seu espaço em memória e atualiza RetPil quando é executado completamente.
+*
+*  /* Argumentação de sequencia dentro do while */
+*
+*  AINV + 'pTopo = (char *) PIL_Desempilhar( pPilhaChar )' => AI5
+*  AI5 + 'length = _snprintf_s(Buffer_temp,TAMANHO_BUFFER_STR,_TRUNCATE ,"%c%s",*pTopo,Str)' => AI6
+*  AI6 + 'free(pTopo)' => AI7
+*  AI7 + primeiro_IF => AI8
+*  AI8 + segundo_IF => AI9
+*  AI9 + 'RetPil = PIL_PilhaVazia(pPilhaChar)' => AI10
+*
+*  /* fim Argumentação de sequencia dentro do while */
+*
+*  Deve-se argumentar a corretude dos dois blocos IF:
+*
+*  /* Argumentação de seleção primero_if */ 
+*
+*  AI7 && (c == T) + B => AI8: Pela AI7 length é o número de caracteres gravados ou -1 se a operação falhou. Como c == T,
+*                             ou a concatenação falhou ou não há espaço para gravar a string toda. Em ambos casos a execução
+*                             é interrompida, valendo AI8.    
+*
+*  AI7 && (c == F) => AI8: Pela AI7 length é o número de caracteres gravados ou -1 se a operação falhou. Como c == F,
+*                          a concatenação foi bem sucedida e o resultado gravado em Buffer_temp, valendo AI8
+*
+*  /* fim Argumentação de seleção primero_if */        
+*
+*  /* Argumentação de seleção segundo_if */ 
+*
+*  AI8 && (c == T) + B => AI9: Como c == T, Buffer não foi copiado para Str. Neste caso o seu bloco correspondente interrompe a execução,
+*                              retornando RLEX_CondRetMemoria, valendo a AI9.
+*
+*  AI8 && (c == F) => AI9: Como c == F, Buffer foi copiado para Str com sucesso, valendo a AI9.
+*
+*  /* fim Argumentação de seleção primero_if */ 
+*
+*  Como os blocos correspondentes a ambos IF's são de apenas uma linha, a argumentação está completa.
