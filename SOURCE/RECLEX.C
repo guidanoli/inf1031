@@ -202,6 +202,14 @@
    static RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura, PIL_tppPilha pPilhaChar , char *c );
    static RLEX_tpCondRet PilhaParaString ( PIL_tppPilha pPilhaChar , char Str[TAMANHO_BUFFER_STR] );
 
+/***********************************************************************
+*
+*  Funções auxiliares de house keeping
+*
+***********************************************************************/
+
+   static void HK_ReconheceArq ( FILE *f, PIL_tppPilha pPilhaChar, PIL_tppPilha pPilhaReleitura );
+
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /**************************************************************************************
@@ -849,19 +857,24 @@
 *  $FC Função: RLEX  -  Traduz caractere para Rótulo correspondente
 *
 *  $ED Descrição da função
-*     
+*     Retorna a cadeia de caracteres que correponde ao
+*     conjunto ao qual o caractere fornecido se encaixa.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe um caractere qualquer
 *
 *  $AS Assertivas de saída
-*     
+*     Retorna uma string que representa o conjunto
+*     ao qual este cractere pertence.
 *
 *  $EP Parâmetros
-*     
+*     c  - caractere
 *
 *  $FV Valor retornado
-*     
+*     "\\l" - letras = {'a','b',...,'z','A','B',...,'Z'}
+*     "\\d" - digitos = {'0','1',...,'9'}
+*     "\\b" - espacamento = {' ','\t','\n','\r'}
+*     "\\o" - outros, que engloba todos os outros caracteres
 *
 ***********************************************************************/
 
@@ -892,19 +905,39 @@
 *  $FC Função: RLEX  -  Reconhece String
 *
 *  $ED Descrição da função
-*     
+*     Reconhece a string com o reconhecedor léxico construído
+*     por meio dos scripts, produzindo um arquivo com a análise.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe a string a ser reconhecida e o nome do arquivo
+*     que será gerado com a análise de reconhecimento. Além
+*     de implicitamente usar o reconhecedor léxico (que é
+*     apontado por um ponteiro no escopo global), e a pilha
+*     de estados.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso o caminho de saída não for nulo, o reconhecedor
+*     léxico existir, houver espaço na memória, a string
+*     não for nula, seja possível abrir o arquivo, e o
+*     reconhecedor léxico não possua erro estrutural, o arquivo
+*     com a análise do reconhecimento será criada com sucesso.
+*     Caso contrário, a devida condição de retorno é retornada.
+*     Nenhum dos parâmetros da função são alterados.
+*     Os ponteiros correntes do grafo podem ser modificados.
 *
 *  $EP Parâmetros
-*     
+*     Str          - string a ser reconhecida
+*     CaminhoSaida - nome do arquivo em que o reconhecimento
+*                    será explanado
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK
+*     RLEX_CondRetLexRecNaoExiste
+*     RLEX_CondRetParametrosInvalidos
+*     RLEX_CondRetLexRecVazio
+*     RLEX_CondRetErroArquivo
+*     RLEX_CondRetErroEstrutura
+*     RLEX_CondRetMemoria
 *
 ***********************************************************************/
 
@@ -914,8 +947,6 @@
       char *p = Str , *ant = Str;
       RLEX_tppEstado pEstadoCorr = NULL;
       int col = 0, linha = 0;
-
-      char SmallStr[2] = "";
 
       GRF_tpCondRet  RetGrf;
       PIL_tpCondRet  RetPil;
@@ -1007,7 +1038,8 @@
             } /* if */
             else
             {
-               break;
+               /* Não se pode percorrer com \0 */
+               return RLEX_CondRetErroEstrutura;
             } /* else */
 
          } /* if */
@@ -1048,6 +1080,10 @@
                
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetParametrosInvalidos
+                  RLEX_CondRetMemoria
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1059,6 +1095,10 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetErroArquivo
+                  RLEX_CondRetParametrosInvalidos
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1075,6 +1115,11 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetErroEstrutura
+                  RLEX_CondRetLexRecVazio
+                  RLEX_CondRetLexRecNaoExiste
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1096,6 +1141,10 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetErroArquivo
+                  RLEX_CondRetParametrosInvalidos
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1127,19 +1176,37 @@
 *  $FC Função: RLEX  -  Reconhece Arquivo
 *
 *  $ED Descrição da função
-*     
+*     Reconhece o texto contido num arquivo com o reconhecedor léxico
+*     construído por meio dos scripts, produzindo um arquivo com a análise.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe o path relativo de um arquivo a ser reconhecido
+*     e o path relativo do arquivo que será gerado com a análise
+*     de reconhecimento. Usa implicitamente o reconhecedor léxico
+*     (no escopo global do módulo), e a pilha de estados.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso nenhum dos caminhos forem nulos, o reconhecedor
+*     existir e não possuir nenhum erro estrutural, houver
+*     espaço na memória, e ser possível abrir ambos os arquivos,
+*     o arquivo com a análise será criada com sucesso.
+*     Caso contrário, a devida condição de retorno será retornada.
+*     Nenhum dos parâmetros fornecidos à função serão alterados.
+*     Os ponteiros correntes do grafo podem ser modificados.
 *
 *  $EP Parâmetros
-*     
+*     CaminhoEntrada  - path do arquivo a ser reconhecido
+*     CaminhoSaida    - path do arquivo em que o reconhecimento
+*                       será explanado
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK
+*     RLEX_CondRetLexRecNaoExiste
+*     RLEX_CondRetParametrosInvalidos
+*     RLEX_CondRetLexRecVazio
+*     RLEX_CondRetErroArquivo
+*     RLEX_CondRetErroEstrutura
+*     RLEX_CondRetMemoria
 *
 ***********************************************************************/
 
@@ -1153,8 +1220,6 @@
       char c_corr;
 
       PIL_tppPilha pPilhaChar = NULL , pPilhaReleitura = NULL;
-
-      char SmallStr[2] = "";
 
       GRF_tpCondRet  RetGrf;
       PIL_tpCondRet  RetPil;
@@ -1172,7 +1237,20 @@
          return RLEX_CondRetParametrosInvalidos;
       } /* if */
 
-      /* Abre o arquivo a ser lido */
+      if( strcmp(CaminhoEntrada,CaminhoSaida) == 0 )
+      {
+         return RLEX_CondRetErroArquivo;
+      } /* if */
+
+      /* Verifica se é possível abrir o arquivo em que a análise
+         será explanada, fecha, e abre o arquivo a ser lido */
+
+      if( fopen_s(&f,CaminhoSaida,"w") != 0 )
+      {
+         return RLEX_CondRetErroArquivo;
+      } /* if */
+
+      fclose(f);
 
       if( fopen_s(&f,CaminhoEntrada,"r") != 0 )
       {
@@ -1268,30 +1346,22 @@
 
          if( RetRlex != RLEX_CondRetOK )
          {
+            /*
+            RLEX_CondRetMemoria
+            RLEX_CondRetErroEstrutura
+            RLEX_CondRetParametrosInvalidos
+            */
             return RetRlex;
          } /* if */
 
          RetRlex = ReconheceChar( c_corr );
 
-         if( RetRlex == RLEX_CondRetOK )
-         {
-            /* Foi possível percorrer a transição */
-            if( c_corr == '\0' )
-            {
-               break;
-            } /* if */
-
-         } /* if */
-
-         else if( RetRlex == RLEX_CondRetTransicaoNaoExiste )
+         if( RetRlex == RLEX_CondRetTransicaoNaoExiste )
          {
             /* Não há a transição */
 
             do
             {
-
-
-
                pEstadoCorr = (RLEX_tppEstado) PIL_Desempilhar(pPilhaEstados);
 
                if( pEstadoCorr == NULL )
@@ -1313,13 +1383,17 @@
                   } /* if */
                   else if( RetRlex != RLEX_CondRetOK )
                   {
+                     /*
+                     RLEX_CondRetErroEstrutura
+                     RLEX_CondRetMemoria
+                     */
                      return RetRlex;
                   } /* else-if */
 
                } /* else */
 
-            } while( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal 
-                   && PIL_PilhaVazia(pPilhaEstados) == PIL_CondRetOK ); /* do-while */
+            } while( pEstadoCorr->tipoEstado != RLEX_tppEstadoFinal &&
+                     PIL_PilhaVazia(pPilhaEstados) == PIL_CondRetOK ); /* do-while */
 
             if( pEstadoCorr->tipoEstado == RLEX_tppEstadoFinal )
             {
@@ -1330,6 +1404,7 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /* RLEX_CondRetMemoria */
                   return RetRlex;
                } /* if */
 
@@ -1341,6 +1416,10 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetErroArquivo
+                  RLEX_CondRetParametrosInvalidos
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1365,6 +1444,11 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetErroEstrutura
+                  RLEX_CondRetLexRecVazio
+                  RLEX_CondRetLexRecNaoExiste
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1386,6 +1470,10 @@
 
                if( RetRlex != RLEX_CondRetOK )
                {
+                  /*
+                  RLEX_CondRetErroArquivo
+                  RLEX_CondRetParametrosInvalidos
+                  */
                   return RetRlex;
                } /* if */
 
@@ -1394,13 +1482,14 @@
             } /* else-if */
 
          } /* else-if */
-         else
+         else if( RetRlex != RLEX_CondRetOK )
          {
             /*
             RLEX_CondRetLexRecNaoExiste
             RLEX_CondRetLexRecVazio
             RLEX_CondRetErroEstrutura
             */
+
             return RetRlex;
          } /* else */
 
@@ -1409,7 +1498,6 @@
       PIL_DestruirPilha(&pPilhaEstados);
       PIL_DestruirPilha(&pPilhaReleitura);
       PIL_DestruirPilha(&pPilhaChar);
-
       fclose(f);
 
       return RLEX_CondRetOK;
@@ -1421,19 +1509,29 @@
 *  $FC Função: RLEX  -  Reconhece Caractere
 *
 *  $ED Descrição da função
-*     
+*     Caminha no grafo com o caractere corrente do reconhecedor
+*     léxico, que internamente será interpretado pelas funções
+*     fornecidas na criação do grafo do reconhecedor.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe o caractere corrente do fluxo de entrada.
+*     Implicitamente faz uso do reconhecedor léxico.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso o grafo exista e não tenha erros estruturais, caminha
+*     (ou ao menos tenta caminhar) nele com o caractere, retornando
+*     a condição de retorno apropriada. O ponteiro corrente do
+*     grafo pode ser modificado.
 *
 *  $EP Parâmetros
-*     
+*     c  - caractere corrente do reconhecedor léxico
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                   - caminhou com sucesso
+*     RLEX_CondRetLexRecNaoExiste      - pRec = NULL
+*     RLEX_CondRetTransicaoNaoExiste   - não caminhou
+*     RLEX_CondRetLexRecVazio          - não há vértices no grafo
+*     RLEX_CondRetErroEstrutura        - há erros na estrutura do grafo
 *
 ***********************************************************************/
 
@@ -1442,11 +1540,6 @@
 
       GRF_tpCondRet RetGrf;
       char Str[2] = "";
-
-      if( pRec == NULL )
-      {
-         return RLEX_CondRetLexRecNaoExiste;
-      } /* if */
 
       sprintf_s(Str,2,"%c",c);
       RetGrf = GRF_CaminharGrafo( pRec , Str , SENTIDO_FRENTE );
@@ -1462,9 +1555,11 @@
       case GRF_CondRetGrafoVazio:
          return RLEX_CondRetLexRecVazio;
 
+      case GRF_CondRetGrafoNaoExiste:
+         return RLEX_CondRetLexRecNaoExiste;
+
       default:
          /*
-         GRF_CondRetGrafoNaoExiste
          GRF_CondRetValorFornecidoNulo
          GRF_CondRetErroEstrutura
          GRF_CondRetFuncaoNula
@@ -1479,19 +1574,30 @@
 *  $FC Função: RLEX  -  Percorre Transicao
 *
 *  $ED Descrição da função
-*     
+*     Arbitra a prioridade de se percorrer a transição de rótulo
+*     (char *) pa, com a string (char *) pb.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe dois ponteiros genéricos que apontam para uma cadeira
+*     de caracteres. A função tratará do caso em que um dos ponteiros
+*     é nulo.
 *
 *  $AS Assertivas de saída
-*     
+*     Retorna a prioridade que se tem de se percorrer tal transição.
+*     Nenhum dos ponteiros é modificado. O grafo não é modificado.
+*     Quanto maior o valor retornado, maior a prioridade. Retornar 0
+*     significa que a transição não deve ser percorrida, ou que um
+*     dos ponteiros é nulo ou uma das string é vazia.
 *
 *  $EP Parâmetros
-*     
+*     pa -  rótulo de transição
+*     pb -  string atômica com caractere corrente
 *
 *  $FV Valor retornado
-*     
+*     0  - não deve-se percorrer a transição
+*     1  - rótulo engloba qualquer caractere
+*     2  - rótulo engloba conjunto ao qual o caractere pertence
+*     3  - rótulo engloba o caractere em específico
 *
 ***********************************************************************/
 
@@ -1981,13 +2087,21 @@
       char *SmallStr = NULL;
       char c_corr;
 
-
       PIL_tpCondRet RetPil;
+
+      if( f == NULL ||
+          c == NULL ||
+          pPilhaReleitura == NULL ||
+          pPilhaChar == NULL )
+      {
+         return RLEX_CondRetParametrosInvalidos;
+      } /* if */
 
       RetPil = PIL_PilhaVazia(pPilhaReleitura);
 
       if( RetPil == PIL_CondRetPilhaVazia )
       {
+         
          c_corr = fgetc(f);
 
          if( c_corr == EOF )
@@ -2174,6 +2288,46 @@
       return RLEX_CondRetOK;
 
    } /* Fim função: RLEX -Desempilhar caracteres e construir uma string */
+
+/***********************************************************************
+*
+*  $FC Função: RLEX  -  House keeping da função ReconheceArq
+*
+*  $ED Descrição da função
+*     Libera espaço ocupado por pilhas e fecha arquivo.
+*
+*  $AE Assertivas de entrada
+*     Recebe ponteiros para arquivo e pilhas.
+*
+*  $AS Assertivas de saída
+*     Destrói as pilhas (libera espaço) e fecha arquivo.
+*
+*  $EP Parâmetros
+*     f                 - ponteiro para arquivo sendo reconhecido
+*     pPilhaChar        - ponteiro para pilha de caracteres
+*     pPilhaReleitura   - ponteiro para pilha de releitura
+*
+***********************************************************************/
+
+   void HK_ReconheceArq ( FILE *f,
+                          PIL_tppPilha pPilhaChar,
+                          PIL_tppPilha pPilhaReleitura )
+   {
+      if( pPilhaReleitura != NULL )
+      {
+         PIL_DestruirPilha(&pPilhaReleitura);
+      } /* if */
+
+      if( pPilhaChar != NULL )
+      {
+         PIL_DestruirPilha(&pPilhaChar);
+      } /* if */
+
+      if( f != NULL )
+      {
+         fclose(f);
+      } /* if */
+   }
 
 /********** Fim do módulo de implementação: RLEX Reconhecedor Léxico **********/
 
