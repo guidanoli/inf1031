@@ -176,7 +176,7 @@
    static RLEX_tpCondRet ReconheceChar ( char c ) ;
    static RLEX_tpCondRet ObterSubstring ( char * p , char * ant , int * col , int * linha , char * Str ) ;
    static char * TraduzCaractere ( char c ) ;
-   static int ValidarTipoEstado ( int Estado ) ;
+   static int ValidarTipoEstado ( int TipoEst ) ;
    static void LiberaEstado ( void * pa ) ;
    static RLEX_tppEstado CriarEstado ( int idEstado , char nomeEstado[DIM_NOME_ESTADO] , RLEX_tpTipoEstado tipoEstado ) ;
 
@@ -514,19 +514,24 @@
 *  $FC Função: RLEX  -  Compara Estados
 *
 *  $ED Descrição da função
-*     
+*     Compara os id's de dois estados
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe dois ponteiros nulos ou para estados estruturalmente
+*     corretos
 *
 *  $AS Assertivas de saída
-*     
+*     Os estados não são modificados, e um valor é retornado
+*     em função dos id's dos estados ou caso um dos ponteiros
+*     for nulo.
 *
 *  $EP Parâmetros
-*     
+*     pa, pb   - ponteiros para estados
 *
 *  $FV Valor retornado
-*     
+*     -1 caso um dos ponteiros for nulo
+*     0 caso os estados tenham mesmo id
+*     1 caso os estados tenham id diferente
 *
 ***********************************************************************/
 
@@ -549,19 +554,28 @@
 *  $FC Função: RLEX  -  Copia Estados
 *
 *  $ED Descrição da função
-*     
+*     Copia todas as informações de um estado para um novo,
+*     retornando a referência para este.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe um endereço para ponteiro que apontará para o novo
+*     estado, e um ponteiro ou nulo ou que aponta para um estado
+*     estruturamente correto.
 *
 *  $AS Assertivas de saída
-*     
+*     Todos os campos referentes ao estado apontado por pb
+*     serão copiados para o estado apontado por *pa. O estado
+*     apotnado por pb não é modificado. Caso o ponteiro pb for
+*     nulo ou caso não haja espaço na memória, *pa não apontará
+*     para a cópia do estado apontado por pb.
 *
 *  $EP Parâmetros
-*     
+*     pa - endereço de ponteiro para estado que receberá a cópia
+*     pb - ponteiro para estado a ser copiado
 *
 *  $FV Valor retornado
-*     
+*     Se houve memória disponível e se o ponteiro pb não for nulo,
+*     o estado copiado será armazenado no ponteiro referenciado pa.
 *
 ***********************************************************************/
 
@@ -570,8 +584,14 @@
       RLEX_tppEstado pEstA = (RLEX_tppEstado) malloc( sizeof(RLEX_tpEstado) );
       RLEX_tppEstado pEstB = (RLEX_tppEstado) pb;
 
-      if( pEstA == NULL || pEstB == NULL )
+      if( pEstA == NULL )
       {
+         return;
+      } /* if */
+
+      if( pEstB == NULL )
+      {
+         free(pEstA);
          return;
       } /* if */
 
@@ -588,29 +608,38 @@
 *  $FC Função: RLEX  -  Concatena nome de estados
 *
 *  $ED Descrição da função
-*     
+*     Contatena no final da string pa o nome do estado apontado
+*     por pb
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe uma string  e um ponteiro para estado. A função
+*     avalia se os ponteiros são nulos, por precaução.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso nenhum dos ponteiros for nulo, pa houver espaço,
+*     e o estado apontado por pb for estruturamente correto,
+*     o nome do estado será concatenado no final da string.
+*     Caso contrário, nem o estado apontado por pb tampouco
+*     a string pa serão modificados.
 *
 *  $EP Parâmetros
-*     
+*     pa - string
+*     pb - ponteiro para estado
 *
 *  $FV Valor retornado
-*     
+*     -1 caso um dos ponteiros for nulo
+*     0 em caso de sucesso
+*     1 em caso de erro na concatenação
 *
 ***********************************************************************/
 
    int ConcatenaEstados ( char * pa , void * pb )
    {
       RLEX_tppEstado pEstB = (RLEX_tppEstado) pb;
-
-      if( pEstB == NULL )
+      
+      if( pa == NULL || pEstB == NULL )
       {
-         return 0;
+         return -1;
       } /* if */
 
       return strcat_s( pa , TAMANHO_BUFFER_STR , pEstB->nomeEstado );
@@ -622,55 +651,57 @@
 *  $FC Função: RLEX  -  Libera Estado
 *
 *  $ED Descrição da função
-*     
+*     Libera estado alocado dinamicamente.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe ponteiro que aponta para estado ou é nulo.
 *
 *  $AS Assertivas de saída
-*     
+*     Libera estado apontado pelo ponteiro.
+*     Caso o ponteiro for nulo, não faz nada.
+*     Não faz o ponteiro tornar-se nulo!
 *
 *  $EP Parâmetros
-*     
-*
-*  $FV Valor retornado
-*     
+*     pa - ponteiro para estado
 *
 ***********************************************************************/
 
    void LiberaEstado ( void * pa )
    {
-      if( pa != NULL )
-      {
-         free(pa);
-      } /* if */
-
+      free(pa);
    } /* Fim função: RLEX -Libera Estado */
 
 /***********************************************************************
 *
 *  $FC Função: RLEX  -  Compara Strings
 *
-*  $ED Descrição da função
-*     
-*
 *  $AE Assertivas de entrada
-*     
+*     Recebe dois ponteiros para strings ( char * ) ou nulos.
 *
 *  $AS Assertivas de saída
-*     
+*     Não modifica os valores apontados. Apenas retorna um valor
+*     que depende das strings, ou do fato de um dos ponteiros
+*     ser nulo.
 *
 *  $EP Parâmetros
-*     
+*     pa, pb   - strings
 *
 *  $FV Valor retornado
-*     
+*     -1 caso um dos ponteiros for nulo
+*     0  caso as strings sejam idênticas
+*     1  caso as strings sejam diferentes
 *
 ***********************************************************************/
 
    int ComparaRotulos (void *pa, void *pb)
    {
-      return strcmp((char *)pa,(char *)pb);
+      if( pa == NULL || pb == NULL )
+      {
+         return -1;
+      } /* if */
+
+      return (strcmp((char *)pa,(char *)pb)==0) ? 0 : 1 ;
+
    } /* Fim função: RLEX -Compara Strings */
 
 /***********************************************************************
@@ -678,26 +709,42 @@
 *  $FC Função: RLEX  -  Copia Strings
 *
 *  $ED Descrição da função
-*     
+*     Copia o conteúdo da string pb para uma nova string, a qual
+*     *pa apontará, caso a cópia for efetuada com sucesso.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe o endereço para um ponteiro do tipo char *, que
+*     apontará para a string a ser criada, e a string pb;
+*     A função lida com o caso em que um dos ponteiros é nulo.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso haja espaço na memória disponível, e ambos ponteiros
+*     não forem nulos, a string será copiada de pb para *pa.
 *
 *  $EP Parâmetros
-*     
+*     pa - endereço de string
+*     pb - string
 *
 *  $FV Valor retornado
-*     
+*     Caso a cópia ocorra com sucesso, *pa receberá a cópia
+*     da string pb. Caso contrário, nada acontecerá.
 *
 ***********************************************************************/
 
    void CopiaStrings (void **pa, void *pb)
    {
+      if( pa == NULL || pb == NULL )
+      {
+         return;
+      } /* if */
 
       *pa = (char *) malloc(sizeof(char)*DIM_ROTULO);
+
+      if( *pa == NULL )
+      {
+         return;
+      } /* if */
+
       strcpy_s( (char*)(*pa), DIM_ROTULO, (char*)pb );
 
    } /* Fim função: RLEX -Copia Strings */
@@ -707,25 +754,27 @@
 *  $FC Função: RLEX  -  Validar tipo de estado
 *
 *  $ED Descrição da função
-*     
+*     Determina se um inteiro está no domínio para tipo
+*     de estado.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe um inteiro.
 *
 *  $AS Assertivas de saída
-*     
+*     Retorna um inteiro que depende do inteiro fornecido.
 *
 *  $EP Parâmetros
-*     
+*     TipoEst  - tipo de estado
 *
 *  $FV Valor retornado
-*     
+*     1  caso o tipo de estado esteja no domínio
+*     0  caso contrário
 *
 ***********************************************************************/
 
-   int ValidarTipoEstado ( int Estado )
+   int ValidarTipoEstado ( int TipoEst )
    {
-      if( Estado < 0 || Estado > 1 )
+      if( TipoEst < 0 || TipoEst > 1 )
       {
          return 0;
       } /* if */
@@ -739,19 +788,27 @@
 *  $FC Função: RLEX  -  Criar Estado
 *
 *  $ED Descrição da função
-*     
+*     Cria estado com os campos fornecidos e retorna seu endereço.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe os campos referentes ao estado a ser criado
 *
 *  $AS Assertivas de saída
-*     
+*     Caso os campos sejam válidos, e houver espaço na memória,
+*     o estado será criado com sucesso e retornado.
+*     Os dados estarem corretos implica na validade do tipo
+*     do estado (domínio), e a não-nulidade da string.
 *
 *  $EP Parâmetros
-*     
+*     idEstado    - id do estado
+*     nomeEstado  - nome do estado
+*     tipoEstado  - tipo do estado
 *
 *  $FV Valor retornado
-*     
+*     NULL, caso os campos não forem válidos ou não for possível
+*     alocar dinamicamente o estado.
+*     Caso contrário... retorna endereço do estado alocado, com
+*     os campos fornecidos.
 *
 ***********************************************************************/
 
@@ -763,6 +820,11 @@
       RLEX_tppEstado pEstado = NULL;
 
       if( nomeEstado == NULL )
+      {
+         return NULL;
+      } /* if */
+
+      if( ValidarTipoEstado( tipoEstado ) == 0 )
       {
          return NULL;
       } /* if */
