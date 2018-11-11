@@ -1,2 +1,2 @@
-O lexema "dd" presente na linha 0 coluna 0 foi reconhecido como B.
+O lexema "dd" presente na linha 0 coluna 0 foi reconhecido como B (id = 1).
 Erro de reconhecimento na linha 0 e coluna 2.

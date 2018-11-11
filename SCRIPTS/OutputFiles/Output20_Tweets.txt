@@ -1,31 +1,31 @@
-O lexema "You'd" presente na linha 0 coluna 0 foi reconhecido como Texto.
-O lexema " be" presente na linha 0 coluna 5 foi reconhecido como Texto.
-O lexema " SHOCKED" presente na linha 0 coluna 8 foi reconhecido como Texto.
-O lexema " to" presente na linha 0 coluna 16 foi reconhecido como Texto.
-O lexema " know" presente na linha 0 coluna 19 foi reconhecido como Texto.
-O lexema " how" presente na linha 0 coluna 24 foi reconhecido como Texto.
-O lexema " many" presente na linha 0 coluna 28 foi reconhecido como Texto.
-O lexema " Black" presente na linha 0 coluna 33 foi reconhecido como Texto.
-O lexema " Americans" presente na linha 0 coluna 39 foi reconhecido como Texto.
-O lexema " really" presente na linha 0 coluna 49 foi reconhecido como Texto.
-O lexema " do" presente na linha 0 coluna 56 foi reconhecido como Texto.
-O lexema " support" presente na linha 0 coluna 59 foi reconhecido como Texto.
-O lexema " @realdonaldtrump" presente na linha 0 coluna 67 foi reconhecido como Marcacao.
-O lexema " &" presente na linha 0 coluna 84 foi reconhecido como Texto.
-O lexema " #MAGA" presente na linha 0 coluna 86 foi reconhecido como Hashtag.
-O lexema " #KAG" presente na linha 0 coluna 92 foi reconhecido como Hashtag.
-O lexema "." presente na linha 0 coluna 97 foi reconhecido como Texto.
-O lexema " America" presente na linha 0 coluna 98 foi reconhecido como Texto.
-O lexema " will" presente na linha 0 coluna 106 foi reconhecido como Texto.
-O lexema " be" presente na linha 0 coluna 111 foi reconhecido como Texto.
-O lexema " on" presente na linha 0 coluna 114 foi reconhecido como Texto.
-O lexema " the" presente na linha 0 coluna 117 foi reconhecido como Texto.
-O lexema " right" presente na linha 0 coluna 121 foi reconhecido como Texto.
-O lexema " track" presente na linha 0 coluna 127 foi reconhecido como Texto.
-O lexema " after" presente na linha 0 coluna 133 foi reconhecido como Texto.
-O lexema " 6" presente na linha 0 coluna 139 foi reconhecido como Texto.
-O lexema " years" presente na linha 0 coluna 141 foi reconhecido como Texto.
-O lexema " of" presente na linha 0 coluna 147 foi reconhecido como Texto.
-O lexema " the" presente na linha 0 coluna 150 foi reconhecido como Texto.
-O lexema " Trump" presente na linha 0 coluna 154 foi reconhecido como Texto.
-O lexema " Administration." presente na linha 0 coluna 160 foi reconhecido como Texto.
+O lexema "You'd" presente na linha 0 coluna 0 foi reconhecido como Texto (id = 5).
+O lexema " be" presente na linha 0 coluna 5 foi reconhecido como Texto (id = 5).
+O lexema " SHOCKED" presente na linha 0 coluna 8 foi reconhecido como Texto (id = 5).
+O lexema " to" presente na linha 0 coluna 16 foi reconhecido como Texto (id = 5).
+O lexema " know" presente na linha 0 coluna 19 foi reconhecido como Texto (id = 5).
+O lexema " how" presente na linha 0 coluna 24 foi reconhecido como Texto (id = 5).
+O lexema " many" presente na linha 0 coluna 28 foi reconhecido como Texto (id = 5).
+O lexema " Black" presente na linha 0 coluna 33 foi reconhecido como Texto (id = 5).
+O lexema " Americans" presente na linha 0 coluna 39 foi reconhecido como Texto (id = 5).
+O lexema " really" presente na linha 0 coluna 49 foi reconhecido como Texto (id = 5).
+O lexema " do" presente na linha 0 coluna 56 foi reconhecido como Texto (id = 5).
+O lexema " support" presente na linha 0 coluna 59 foi reconhecido como Texto (id = 5).
+O lexema " @realdonaldtrump" presente na linha 0 coluna 67 foi reconhecido como Marcacao (id = 4).
+O lexema " &" presente na linha 0 coluna 84 foi reconhecido como Texto (id = 5).
+O lexema " #MAGA" presente na linha 0 coluna 86 foi reconhecido como Hashtag (id = 2).
+O lexema " #KAG" presente na linha 0 coluna 92 foi reconhecido como Hashtag (id = 2).
+O lexema "." presente na linha 0 coluna 97 foi reconhecido como Texto (id = 5).
+O lexema " America" presente na linha 0 coluna 98 foi reconhecido como Texto (id = 5).
+O lexema " will" presente na linha 0 coluna 106 foi reconhecido como Texto (id = 5).
+O lexema " be" presente na linha 0 coluna 111 foi reconhecido como Texto (id = 5).
+O lexema " on" presente na linha 0 coluna 114 foi reconhecido como Texto (id = 5).
+O lexema " the" presente na linha 0 coluna 117 foi reconhecido como Texto (id = 5).
+O lexema " right" presente na linha 0 coluna 121 foi reconhecido como Texto (id = 5).
+O lexema " track" presente na linha 0 coluna 127 foi reconhecido como Texto (id = 5).
+O lexema " after" presente na linha 0 coluna 133 foi reconhecido como Texto (id = 5).
+O lexema " 6" presente na linha 0 coluna 139 foi reconhecido como Texto (id = 5).
+O lexema " years" presente na linha 0 coluna 141 foi reconhecido como Texto (id = 5).
+O lexema " of" presente na linha 0 coluna 147 foi reconhecido como Texto (id = 5).
+O lexema " the" presente na linha 0 coluna 150 foi reconhecido como Texto (id = 5).
+O lexema " Trump" presente na linha 0 coluna 154 foi reconhecido como Texto (id = 5).
+O lexema " Administration." presente na linha 0 coluna 160 foi reconhecido como Texto (id = 5).

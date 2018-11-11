@@ -189,7 +189,7 @@
    static RLEX_tpCondRet ComparaArq ( char ArqGerado[TAMANHO_BUFFER_STR] , char ArqEsperado[TAMANHO_BUFFER_STR] , char CharIgnora ) ;
    static RLEX_tpCondRet EscreveErro ( int coluna , int linha , char Path[TAMANHO_BUFFER_STR] );
    static RLEX_tpCondRet LimparArq ( char Path[TAMANHO_BUFFER_STR] ) ;
-   static RLEX_tpCondRet EscreveArq ( char NomeEstado[DIM_NOME_ESTADO] , char LexemaReconhecido[TAMANHO_BUFFER_STR] ,
+   static RLEX_tpCondRet EscreveArq ( RLEX_tppEstado Estado , char LexemaReconhecido[TAMANHO_BUFFER_STR] ,
                                       int coluna , int linha ,  char Path[TAMANHO_BUFFER_STR] ) ;
 
 /***********************************************************************
@@ -1087,7 +1087,7 @@
                   return RetRlex;
                } /* if */
 
-               RetRlex = EscreveArq( pEstadoCorr->nomeEstado ,
+               RetRlex = EscreveArq( pEstadoCorr ,
                                      LexemaReconhecido ,
                                      col ,
                                      linha ,
@@ -1290,6 +1290,7 @@
       if( RetRlex != RLEX_CondRetOK )
       {
          /* RLEX_CondRetErroArquivo */
+         HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
          return RetRlex;
       } /* if */
 
@@ -1302,6 +1303,7 @@
          RLEX_CondRetLexRecVazio
          RLEX_CondRetErroEstrutura
          */
+         HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
          return RetRlex;
       } /* if */
 
@@ -1316,11 +1318,13 @@
 
          if( RetGrf != GRF_CondRetOK )
          {
+            HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
             return RLEX_CondRetErroEstrutura;
          } /* else-if */
 
          if( pEstadoCorr == NULL )
          {
+            HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
@@ -1328,10 +1332,12 @@
 
          if( RetPil == PIL_CondRetFaltouMemoria )
          {
+            HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
             return RLEX_CondRetMemoria;
          } /* if */
          else if( RetPil != PIL_CondRetOK )
          {
+            HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
@@ -1351,6 +1357,7 @@
             RLEX_CondRetErroEstrutura
             RLEX_CondRetParametrosInvalidos
             */
+            HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
             return RetRlex;
          } /* if */
 
@@ -1366,6 +1373,7 @@
 
                if( pEstadoCorr == NULL )
                {
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                   return RLEX_CondRetErroEstrutura;
                } /* if */
 
@@ -1387,6 +1395,7 @@
                      RLEX_CondRetErroEstrutura
                      RLEX_CondRetMemoria
                      */
+                     HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                      return RetRlex;
                   } /* else-if */
 
@@ -1405,10 +1414,11 @@
                if( RetRlex != RLEX_CondRetOK )
                {
                   /* RLEX_CondRetMemoria */
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                   return RetRlex;
                } /* if */
 
-               RetRlex = EscreveArq( pEstadoCorr->nomeEstado ,
+               RetRlex = EscreveArq( pEstadoCorr ,
                                      LexemaReconhecido ,
                                      col ,
                                      linha ,
@@ -1420,6 +1430,7 @@
                   RLEX_CondRetErroArquivo
                   RLEX_CondRetParametrosInvalidos
                   */
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                   return RetRlex;
                } /* if */
 
@@ -1449,6 +1460,7 @@
                   RLEX_CondRetLexRecVazio
                   RLEX_CondRetLexRecNaoExiste
                   */
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                   return RetRlex;
                } /* if */
 
@@ -1460,6 +1472,7 @@
                   PIL_CondRetPilhaNaoExiste
                   PIL_CondRetErroEstrutura
                   */
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                   return RLEX_CondRetErroEstrutura;
                } /* if */
 
@@ -1474,6 +1487,7 @@
                   RLEX_CondRetErroArquivo
                   RLEX_CondRetParametrosInvalidos
                   */
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
                   return RetRlex;
                } /* if */
 
@@ -1489,16 +1503,13 @@
             RLEX_CondRetLexRecVazio
             RLEX_CondRetErroEstrutura
             */
-
+            HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
             return RetRlex;
          } /* else */
 
       } /* while */
 
-      PIL_DestruirPilha(&pPilhaEstados);
-      PIL_DestruirPilha(&pPilhaReleitura);
-      PIL_DestruirPilha(&pPilhaChar);
-      fclose(f);
+      HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
 
       return RLEX_CondRetOK;
 
@@ -1805,7 +1816,7 @@
 *
 ***********************************************************************/
 
-   static RLEX_tpCondRet EscreveArq ( char NomeEstado[DIM_NOME_ESTADO] ,
+   static RLEX_tpCondRet EscreveArq ( RLEX_tppEstado Estado ,
                                       char LexemaReconhecido[TAMANHO_BUFFER_STR] ,
                                       int coluna ,
                                       int linha , 
@@ -1813,10 +1824,10 @@
    {
       FILE *f = NULL;
 
-      char Mensagens[][30] = {"O lexema \"","\" presente na linha "," coluna "," foi reconhecido como ",".\n"};
-      char linha_str[10] = "", coluna_str[10] = "";
+      char Mensagens[][30] = {"O lexema \"","\" presente na linha "," coluna "," foi reconhecido como "," (id = ",").\n"};
+      char linha_str[10] = "", coluna_str[10] = "", id_str[10] = "";
 
-      if( NomeEstado == NULL ||
+      if( Estado == NULL ||
           LexemaReconhecido == NULL ||
           Path == NULL ||
           coluna < 0 ||
@@ -1832,6 +1843,7 @@
       
       sprintf_s(linha_str,10,"%d",linha);
       sprintf_s(coluna_str,10,"%d",coluna);
+      sprintf_s(id_str,10,"%d",Estado->idEstado);
 
       fwrite(Mensagens[0],sizeof(char),strlen(Mensagens[0]),f);             // O lexema "
       fwrite(LexemaReconhecido,sizeof(char),strlen(LexemaReconhecido),f);   // <LexemaReconhecido>
@@ -1840,8 +1852,10 @@
       fwrite(Mensagens[2],sizeof(char),strlen(Mensagens[2]),f);             //  coluna
       fwrite(coluna_str,sizeof(char),strlen(coluna_str),f);                 // <coluna_str>
       fwrite(Mensagens[3],sizeof(char),strlen(Mensagens[3]),f);             //  foi reconhecido como 
-      fwrite(NomeEstado,sizeof(char),strlen(NomeEstado),f);                 // <NomeEstado>
-      fwrite(Mensagens[4],sizeof(char),strlen(Mensagens[4]),f);             // .\n
+      fwrite(Estado->nomeEstado,sizeof(char),strlen(Estado->nomeEstado),f); // <NomeEstado>
+      fwrite(Mensagens[4],sizeof(char),strlen(Mensagens[4]),f);             //  (id = 
+      fwrite(id_str,sizeof(char),strlen(id_str),f);                         // <idEstado>
+      fwrite(Mensagens[5],sizeof(char),strlen(Mensagens[5]),f);             // ).\n
 
       if( fclose(f) != 0 )
       {
