@@ -1,0 +1,166 @@
+/***********************************************************************
+*
+*  $FC Função: RLEX  -  Desempilhar caracteres e construir uma string
+*
+*  $ED Descrição da função
+*
+*  Copia para a string passada uma string obtida a partir de uma pilha.
+*  O caracter no topo da pilha será o ultimo da string.
+*  O conteúdo da pilha é liberado da memória.
+*
+*  $AE Assertivas de entrada
+*     
+*  pPilhaChar referencia uma pilha com caracteres
+*  Str é o endereço de uma string com tamanho máximo TAMANHO_BUFFER_STR
+*
+*  $AS Assertivas de saída
+*     
+*  Se foi possível realizar a construção da string:
+*  A pilha será completamente esvaziada.
+*  Todos os elementos anteriormente na pilha serão liberados.
+*  A string em Str passa a ser composta pelos caracteres anteriormente na pilha,
+*  como se fossem lidos da base ao topo.
+*  RLEX_CondRetOK é o valor retornado.
+*
+*  Se não foi possível realizar a construção:
+*  RLEX_CondRetMemoria é o valor retornado.
+*
+*  $EP Parâmetros
+*     pPilhaChar - ponteiro para pilha de char.
+*     Str - vetor de char que suporta strings de tamnho até TAMANHO_BUFFER_STR.
+*
+*  $FV Valor retornado
+*     RLEX_CondRetOK
+*     RLEX_CondRetMemoria
+
+***********************************************************************/
+   
+   RLEX_tpCondRet PilhaParaString ( PIL_tppPilha pPilhaChar , char Str[TAMANHO_BUFFER_STR] )
+   {
+AE
+      PIL_tpCondRet RetPil = PIL_CondRetOK;
+      char Buffer_temp[TAMANHO_BUFFER_STR] = "";
+      char *pTopo = NULL;
+      int length;
+AI1
+      strcpy_s(Str,TAMANHO_BUFFER_STR,"");
+AI2
+      RetPil = PIL_PilhaVazia(pPilhaChar);
+AI3
+      while( RetPil == PIL_CondRetOK )
+AINV
+      {
+
+         pTopo = (char *) PIL_Desempilhar( pPilhaChar );
+
+         AI5
+   
+         length = _snprintf_s(Buffer_temp,TAMANHO_BUFFER_STR,_TRUNCATE ,"%c%s",*pTopo,Str);
+
+         AI6
+
+         free(pTopo);
+
+         AI7
+
+         if(!( length > -1 && length < sizeof(Buffer_temp) ))
+         {
+            return RLEX_CondRetMemoria;
+         } /* if */
+
+         AI8
+
+         if( strcpy_s(Str,TAMANHO_BUFFER_STR,Buffer_temp) != 0 )
+         {
+            return RLEX_CondRetMemoria;
+         } /* if */
+
+         AI9
+
+         RetPil = PIL_PilhaVazia(pPilhaChar);
+
+         AI10
+      } /* while */ 
+AI4
+      return RLEX_CondRetOK;
+AE
+   } /* Fim função: RLEX -Desempilhar caracteres e construir uma string */
+
+/********** Fim do módulo de implementação: RLEX Reconhecedor Léxico **********/
+
+*  $AE Assertivas de entrada
+*     
+*  pPilhaChar referencia uma pilha com caracteres
+*  Str é o endereço de uma string com tamanho máximo TAMANHO_BUFFER_STR
+*
+*  $AS Assertivas de saída
+*     
+*  Se foi possível realizar a construção da string:
+*  A pilha será completamente esvaziada.
+*  Todos os elementos anteriormente na pilha serão liberados.
+*  A string em Str passa a ser composta pelos caracteres anteriormente na pilha,
+*  como se fossem lidos da base ao topo.
+*  RLEX_CondRetOK é o valor retornado.
+*  Se não foi possível realizar a construção:
+*  RLEX_CondRetMemoria é o valor retornado.
+*
+*  $AI Assertivas intermediárias
+*
+*  AI1: Buffer_temp é uma string vazia com as mesmas dimensões que Str.
+*  AI2: Str passa a ser uma string vazia.
+*  AI3: RetPil recebe PIL_CondRetOK se a pilha não está vazia e outro valor distinto caso contrário.
+*  AI4: A construção da string foi realizada com sucesso e todos os elementos anteriormente na pilha foram liberados.
+*  AINV: Todos os caracteres na pilha ainda devem ser adicionados no inicio da string
+*        e todo caracter em Str ja foi removido da pilha e liberado.
+*  AI5: O elemento do topo da pilha é desempilhado e pTopo passa a referenciar esse elemento.
+*  AI6: Str é concatenado ao conteudo de pTopo e a string resultante é armazenada em Buffer_temp,
+*       length recebe o numero de caracteres gravados ou -1 se a operação falhou.
+*  AI7: O elemento referenciado por pTopo é liberado da memória.
+*  AI8: A concatenação e gravação em Buffer_temp foi bem sucedida.
+*  AI9: Str é uma cópia de Buffer_temp.
+*  AI10: RetPil recebe PIL_CondRetOK se a pilha não está vazia e outro valor distinto caso contrário.
+*
+*  /* Argumentação de sequencia */
+*
+*  (ignorando definições/declarações)
+*
+*  AE + 'Buffer_temp[TAMANHO_BUFFER_STR] = ""' => AI1
+*  AI1 + 'strcpy_s(Str,TAMANHO_BUFFER_STR,"")' => AI2
+*  AI2 + 'RetPil = PIL_PilhaVazia(pPilhaChar)' => AI3
+*  AI3 + While => AI4
+*  AI4 + 'return RLEX_CondRetOK' => AS
+*
+*  /* fim Argumentação de sequencia */
+*
+*  Deve-se argumentar que o bloco while desempilha todos os caracteres da pilha um de cada vez,
+*  adicionando-os no inicio de Str e liberando o seu espaço em memória.
+*
+*  /* Argumentação de repetição */
+*
+*  AI3 => AINV: Pela AI3 a pilha ainda contem todos os caracteres que devem ser passados para a Str
+*               e Str não possui nenhum caractere, portanto vale a AINV.
+*
+*  AI3 && (c == F) => AI4: Pela AI3 RetPil == PIL_CondRetOK somente se existe um caractere no topo da pilha
+*                          para ser adicionado à Str. Como c == F, não há nenhum caractere na pilha e portanto
+*                          nada precisa ser adicionado à Str nem liberado da memória, valendo a AI4.
+*                          Se c == T mas o primeiro ciclo não é completo, RLEX_CondRetMemoria é o valor retornado,
+*                          valendo a AS.
+*
+*  AI3 && (c == T) + B => AINV: Pela AI3 RetPil == PIL_CondRetOK somente se existe um caractere no topo da pilha
+*                               para ser adicionado à Str. Como c == T, há pelo menos um caractere que precisa ser liberado
+*                               e adicionado à Str. O bloco de código correspondente desempilha um caractere da pilha,
+*                               o adiciona no inicio de Str, libera o seu espaço em memória e atualiza RetPil, valendo ainda a AINV.
+*
+*  AINV && (c == T) + B => AINV: Pela AINV, tudo que ainda deve ser passado para Str está na pilha. Como c == T, ainda há
+*                                pelo menos um caractere para ser transferido e liberado. O bloco de código correspondente 
+*                                desempilha um caractere da pilha, o adiciona no inicio de Str, libera o seu espaço em memória 
+*                                e atualiza RetPil, valendo ainda a AINV.
+*
+*  AINV && (c == F) => AI4: Pela AINV, tudo que ainda deve ser passado para Str está na pilha. como c == F, a pilha está vazia
+*                           e mais nada precisa ser feito, valendo a AI4.
+*                           Se c == T mas o ciclo não é completo, RLEX_CondRetMemoria é o valor retornado, valendo a AS.
+*
+*  Término : Cada execução do bloco correspondente garante que um elemento é desempilhado da pilha ou que a execução termine.
+*            Como a pilha possui um número finito de caracteres, a execução termina em um número finito de passos.   
+* 
+*  /* fim Argumentação de repetição */                      
