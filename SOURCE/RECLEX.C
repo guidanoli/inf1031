@@ -1696,19 +1696,23 @@
 *  $FC Função: RLEX  -  Ir à origem do reconhecedor léxico
 *
 *  $ED Descrição da função
-*     
+*     A função deve percorrer o grafo até achar a origem.
 *
 *  $AE Assertivas de entrada
-*     
+*     A função não recebe nenhum parâmetro, pois usa variáveis globais.
 *
 *  $AS Assertivas de saída
-*     
+*     A função em caso de sucesso, retornará GRF_CondRetOK e 
+*     apontará para o início do reconhecedor léxico. 
 *
 *  $EP Parâmetros
-*     
+*     Nenhum
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                   - Foi para o início do grafo
+*     RLEX_CondRetLexRecNaoExiste      - Reconhecedor léxico não existe
+*     RLEX_CondRetLexRecVazio          - Reconhecedor léxico vazio
+*     RLEX_CondRetErroEstrutura        - Erro na estrutura
 *
 ***********************************************************************/
 
@@ -1746,19 +1750,23 @@
 *  $FC Função: RLEX  -  Limpa arquivo
 *
 *  $ED Descrição da função
-*     
+*     A Função para limpar um arquivo passado para ela
 *
 *  $AE Assertivas de entrada
-*     
+*     A função recebe um path de um arquivo a ser reconhecido.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso o arquivo dado não tenha erros, a função irá passar NULL para o conteúdo
+*     do arquivo, limpando-o.
 *
 *  $EP Parâmetros
-*     
+*     Path - Path do relativo do arquivo
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                   - limpou o arquivo com sucesso
+*     RLEX_CondRetParametrosInvalidos  - Path = NULL
+*     RLEX_CondRetErroArquivo          - não conseguiu escrever no arquivo
+*     RLEX_CondRetErroArquivo          - não conseguiu fechar o arquivo
 *
 ***********************************************************************/
 
@@ -1789,19 +1797,30 @@
 *  $FC Função: RLEX  -  Escreve em arquivo
 *
 *  $ED Descrição da função
-*     
+*     A função escreve o que foi reconhecido do lexema no arquivo de saída
+*     indicando linha e coluna de cada.
 *
 *  $AE Assertivas de entrada
-*     
+*     A função recebe uma string com o Nome do estado, uma string com o lexema
+*     reconhecido, a coluna e linha, e o path relativo do arquivo de saída.
 *
 *  $AS Assertivas de saída
-*     
+*     A função se tudo ocorrer corretamente, irá concatenar os valores recebidos
+*     e formar o output de saída com os lexemas reconhecidos e suas respectivas
+*     linhas e colunas, retornardo RLEX_CondRetOK em caso de sucesso
 *
 *  $EP Parâmetros
-*     
+*     NomeEstado        - Nome do estado do lexema
+*     LexemaReconhecido - O lexema reconhecido 
+*     coluna            - A coluna do lexema
+*     linha             - A linha do lexema
+*     Path              - O path relativo do arquivo de saída
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                  - Escreveu todo o arquivo de saída como deveria
+*     RLEX_CondRetParametrosInvalidos - Erro na passagem dos parâmetros
+*     RLEX_CondRetErroArquivo         - Erro ao reconhecer o arquivo
+*     RLEX_CondRetErroArquivo         - Não foi possivel fechar o arquivo
 *
 ***********************************************************************/
 
