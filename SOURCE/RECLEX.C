@@ -2227,27 +2227,24 @@
 *  $FC Função: RLEX  -  Desempilhar caracteres e construir uma string
 *
 *  $ED Descrição da função
-*
-*  Copia para a string passada uma string obtida a partir de uma pilha.
-*  O caracter no topo da pilha será o ultimo da string.
-*  O conteúdo da pilha é liberado da memória.
+*     Copia para a string passada uma string obtida a partir de uma pilha.
+*     O caracter no topo da pilha será o ultimo da string.
+*     O conteúdo da pilha é liberado da memória.
 *
 *  $AE Assertivas de entrada
-*     
-*  pPilhaChar referencia uma pilha com caracteres
-*  Str é o endereço de uma string com tamanho máximo TAMANHO_BUFFER_STR
+*     pPilhaChar referencia uma pilha com caracteres
+*     Str é o endereço de uma string com tamanho máximo TAMANHO_BUFFER_STR
 *
 *  $AS Assertivas de saída
-*     
-*  Se foi possível realizar a construção da string:
-*  A pilha será completamente esvaziada.
-*  Todos os elementos anteriormente na pilha serão liberados.
-*  A string em Str passa a ser composta pelos caracteres anteriormente na pilha,
-*  como se fossem lidos da base ao topo.
-*  RLEX_CondRetOK é o valor retornado.
+*     Se foi possível realizar a construção da string:
+*     A pilha será completamente esvaziada.
+*     Todos os elementos anteriormente na pilha serão liberados.
+*     A string em Str passa a ser composta pelos caracteres anteriormente na pilha,
+*     como se fossem lidos da base ao topo.
+*     RLEX_CondRetOK é o valor retornado.
 *
-*  Se não foi possível realizar a construção:
-*  RLEX_CondRetMemoria é o valor retornado.
+*     Se não foi possível realizar a construção:
+*     RLEX_CondRetMemoria é o valor retornado.
 *
 *  $EP Parâmetros
 *     pPilhaChar - ponteiro para pilha de char.
