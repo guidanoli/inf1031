@@ -1,3 +1,15 @@
 ﻿Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
 29/10	2h			projetar			função ReconheceStr
+
+31/10	2h			projetar			função ReconheceStr 
+
+07/11	1h			projetar			Discussão com Guilherme sobre Estado Inicial E Final
+07/11	1h			redigir script de teste		função ReconheceStr -- reconhecendo rec.lexs.
+
+09/11	1h			revisar código do módulo	Corrigido erro em Rec.Lex.
+09/11	1h			redigir script de teste		Novos casos testes para a versão de Rec.Lex. 
+09/11   2h			diagnosticar e corrigir os 	Problemas no reconhecimento de arquivos
+				problemas encontrados   
+
+11/11   1h			especificar funções		Assertivas e argumentação da PilhaParaString
