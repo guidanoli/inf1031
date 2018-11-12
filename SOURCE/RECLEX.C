@@ -19,8 +19,9 @@
 *     0.1     gui     26/10/2018  criar e destruir rec.lex.
 *     0.2     gui     26/10/2018  inserir e remover estado
 *     0.3     gui     26/10/2018  inserir e remover transições
-*     0.4   gui,nag   09/11/2018  reconhecer string
-*     0.5   gui,nag   10/11/2018  reconhecer arquivo
+*     0.4     gui     05/11/2018  comparar arquivos
+*     0.5   gui,nag   11/11/2018  reconhecer string
+*     0.6   gui,nag   11/11/2018  reconhecer arquivo
 *
 ***************************************************************************/
 
@@ -55,6 +56,9 @@
 
 #define SENTIDO_FRENTE  1
 #define SENTIDO_TRAS    0
+
+/* Decidimos que o texto começa na linha 0, coluna 0 */
+#define INICIO_STRING   0
 
 /* Ponteiro para estado */
 
@@ -946,7 +950,7 @@
    {
       char *p = Str , *ant = Str;
       RLEX_tppEstado pEstadoCorr = NULL;
-      int col = 0, linha = 0;
+      int col = INICIO_STRING, linha = INICIO_STRING;
 
       GRF_tpCondRet  RetGrf;
       PIL_tpCondRet  RetPil;
@@ -980,6 +984,7 @@
       if( RetRlex != RLEX_CondRetOK )
       {
          /* RLEX_CondRetErroArquivo */
+         PIL_DestruirPilha(&pPilhaEstados);
          return RetRlex;
       } /* if */
 
@@ -992,6 +997,7 @@
          RLEX_CondRetLexRecVazio
          RLEX_CondRetErroEstrutura
          */
+         PIL_DestruirPilha(&pPilhaEstados);
          return RetRlex;
       } /* if */
 
@@ -1006,11 +1012,13 @@
 
          if( RetGrf != GRF_CondRetOK )
          {
+            PIL_DestruirPilha(&pPilhaEstados);
             return RLEX_CondRetErroEstrutura;
          } /* else-if */
 
          if( pEstadoCorr == NULL )
          {
+            PIL_DestruirPilha(&pPilhaEstados);
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
@@ -1018,10 +1026,12 @@
 
          if( RetPil == PIL_CondRetFaltouMemoria )
          {
+            PIL_DestruirPilha(&pPilhaEstados);
             return RLEX_CondRetMemoria;
          } /* if */
          else if( RetPil != PIL_CondRetOK )
          {
+            PIL_DestruirPilha(&pPilhaEstados);
             return RLEX_CondRetErroEstrutura;
          } /* if */
 
@@ -1039,6 +1049,7 @@
             else
             {
                /* Não se pode percorrer com \0 */
+               PIL_DestruirPilha(&pPilhaEstados);
                return RLEX_CondRetErroEstrutura;
             } /* else */
 
@@ -1053,6 +1064,7 @@
 
                if( pEstadoCorr == NULL )
                {
+                  PIL_DestruirPilha(&pPilhaEstados);
                   return RLEX_CondRetErroEstrutura;
                } /* if */
 
@@ -1084,6 +1096,7 @@
                   RLEX_CondRetParametrosInvalidos
                   RLEX_CondRetMemoria
                   */
+                  PIL_DestruirPilha(&pPilhaEstados);
                   return RetRlex;
                } /* if */
 
@@ -1099,6 +1112,7 @@
                   RLEX_CondRetErroArquivo
                   RLEX_CondRetParametrosInvalidos
                   */
+                  PIL_DestruirPilha(&pPilhaEstados);
                   return RetRlex;
                } /* if */
 
@@ -1120,6 +1134,7 @@
                   RLEX_CondRetLexRecVazio
                   RLEX_CondRetLexRecNaoExiste
                   */
+                  PIL_DestruirPilha(&pPilhaEstados);
                   return RetRlex;
                } /* if */
 
@@ -1131,12 +1146,15 @@
                   PIL_CondRetPilhaNaoExiste
                   PIL_CondRetErroEstrutura
                   */
+                  PIL_DestruirPilha(&pPilhaEstados);
                   return RLEX_CondRetErroEstrutura;
                } /* if */
 
             } /* if */
             else if( PIL_PilhaVazia(pPilhaEstados) == PIL_CondRetPilhaVazia )
             {
+               char LexemaReconhecido[TAMANHO_BUFFER_STR] = "";
+
                RetRlex = EscreveErro(col,linha,CaminhoSaida);
 
                if( RetRlex != RLEX_CondRetOK )
@@ -1145,10 +1163,27 @@
                   RLEX_CondRetErroArquivo
                   RLEX_CondRetParametrosInvalidos
                   */
+                  PIL_DestruirPilha(&pPilhaEstados);
                   return RetRlex;
                } /* if */
 
-               break;
+               if( *ant == '\n' )
+               {
+                  linha++;
+                  col = INICIO_STRING;
+               } /* if */
+               else
+               {
+                  col++;
+               } /* if */
+
+               ant++;
+               p = ant;
+
+               if( *ant == '\0' )
+               {
+                  break;
+               } /* if */
 
             } /* else-if */
 
@@ -1160,6 +1195,7 @@
             RLEX_CondRetLexRecVazio
             RLEX_CondRetErroEstrutura
             */
+            PIL_DestruirPilha(&pPilhaEstados);
             return RetRlex;
          } /* else */
 
@@ -1216,7 +1252,7 @@
       
       FILE *f = NULL;
       RLEX_tppEstado pEstadoCorr = NULL;
-      int col = 0, linha = 0;
+      int col = INICIO_STRING, linha = INICIO_STRING;
       char c_corr;
 
       PIL_tppPilha pPilhaChar = NULL , pPilhaReleitura = NULL;
@@ -1440,7 +1476,7 @@
 
                   if( *p == '\n' )
                   {
-                     col = 0;
+                     col = INICIO_STRING;
                      linha++;
                   } /* if */
 
@@ -1479,6 +1515,21 @@
             } /* if */
             else if( PIL_PilhaVazia(pPilhaEstados) == PIL_CondRetPilhaVazia )
             {
+               char * pTopo = NULL;
+
+               pTopo = (char *) PIL_Desempilhar( pPilhaReleitura );
+
+               if( pTopo == NULL )
+               {
+                  HK_ReconheceArq(f,pPilhaChar,pPilhaReleitura);
+                  return RLEX_CondRetErroEstrutura;
+               } /* if */
+
+               if( *pTopo == '\0' )
+               {
+                  break;
+               } /* if */
+
                RetRlex = EscreveErro(col,linha,CaminhoSaida);
 
                if( RetRlex != RLEX_CondRetOK )
@@ -1491,7 +1542,15 @@
                   return RetRlex;
                } /* if */
 
-               break;
+               if( *pTopo == '\n' )
+               {
+                  linha++;
+                  col = INICIO_STRING;
+               } /* if */
+               else
+               {
+                  col++;
+               } /* else */
 
             } /* else-if */
 
@@ -1849,8 +1908,8 @@
       if( Estado == NULL ||
           LexemaReconhecido == NULL ||
           Path == NULL ||
-          coluna < 0 ||
-          linha < 0 )
+          coluna < INICIO_STRING ||
+          linha < INICIO_STRING )
       {
          return RLEX_CondRetParametrosInvalidos;
       } /* if */
@@ -1889,19 +1948,32 @@
 *  $FC Função: RLEX  -  Obter sub-string
 *
 *  $ED Descrição da função
-*     
+*     Obtém a string de caracteres entre ant e p (ant <= p), e ainda
+*     atualiza os contadores de linha e coluna após a string.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe os limites inferior e superior (excludente) da string,
+*     endereços para os contadores de linha e coluna da função que
+*     reconhece ou arquivo ou string, e um string, aonde será
+*     armazenada a string obtida entre os limites.
 *
 *  $AS Assertivas de saída
-*     
+*     Os contadores são atualizados, e a string obtida entre os
+*     limites é armazenada em Str, caso haja memória.
+*     Caso um dos ponteiros for nulo, ou não houver memória,
+*     a condição de erro apropriada será retornada.
 *
 *  $EP Parâmetros
-*     
+*     p     - ponteiro para o início da string
+*     ant   - ponteiro para o fim (exludente) da string
+*     col   - endereço de contador de coluna
+*     linha - endereço de contador de linha
+*     Str   - string obtida
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                   - obteu-se a substring com sucesso
+*     RLEX_CondRetParametrosInvalidos  - algum dos ponteiros é nulo
+*     RLEX_CondRetMemoria
 *
 ***********************************************************************/
 
@@ -1910,7 +1982,7 @@
       char Buffer[TAMANHO_BUFFER_STR] = "";
       char SmallStr[2] = "";
 
-      if( p == NULL || ant == NULL || col == NULL || Str == NULL )
+      if( p == NULL || ant == NULL || col == NULL || linha == NULL || Str == NULL )
       {
          return RLEX_CondRetParametrosInvalidos;
       } /* if */
@@ -1922,7 +1994,7 @@
          if( *ant == '\n' )
          {
             (*linha)++;
-            (*col) = 0;
+            (*col) = INICIO_STRING;
          } /* if */
 
          sprintf_s(SmallStr,2,"%c",*ant);
@@ -1946,19 +2018,29 @@
 *  $FC Função: RLEX  -  Escrever erro
 *
 *  $ED Descrição da função
-*     
+*     Adiciona ao final de um determinado arquivo uma mensagem
+*     de erro ao tentar reconhecer em determinada linha e coluna.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe dois contadores e o Path do log de análise do reconhecedor.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso a string não for nula, os contadores forem válidos, e
+*     for possível abrir e fechar o arquivo, será escrito no final
+*     deste arquivo a mensagem de erro.
 *
 *  $EP Parâmetros
-*     
+*     coluna   - contador atual de coluna
+*     linha    - contador atual de linha
+*     Path     - o path relativo do arquivo em que a mensagem
+*                será escrita
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                   - escreveu com sucesso
+*     RLEX_CondRetParametrosInvalidos  - um dos contadores é
+*                                        inválido ou path é nulo
+*     RLEX_CondRetErroArquivo          - não foi possível abrir/
+*                                        fechar o arquivo
 *
 ***********************************************************************/
 
@@ -1972,8 +2054,8 @@
       char linha_str[10] = "", coluna_str[10] = "";
 
       if( Path == NULL ||
-          coluna < 0 ||
-          linha < 0 )
+          coluna < INICIO_STRING ||
+          linha < INICIO_STRING )
       {
          return RLEX_CondRetParametrosInvalidos;
       } /* if */
@@ -2005,19 +2087,29 @@
 *  $FC Função: RLEX  -  Compara arquivos
 *
 *  $ED Descrição da função
-*     
+*     Compara o conteúdo integral de dois arquivos, ignorando
+*     um determinado caracetere do arquivo esperado.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe o path dos dois arquivos a serem comparados,
+*     e o caractere que deve ser ignorado do arquivo esperado.
 *
 *  $AS Assertivas de saída
-*     
+*     Retorna a condição de retorno condizente com a comparação,
+*     ou com algum erro que possa ter ocorrido. Nenhum dos
+*     arquivos é modificado, tampouco as strings.
 *
 *  $EP Parâmetros
-*     
+*     ArqGerado   - path relativo do arquivo gerado pelo reconhecedor
+*     ArqEspero   - path relativo do arquivo esperado
+*     CharIgnora  - caractere a ser ignorado do arquivo esperado.
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK                   - os arquivos são idênticos
+*     RLEX_CondRetArquivosDiferentes   - os arquivos são diferentes
+*     RLEX_CondRetParametrosInvalidos  - alguma das string é nula
+*     RLEX_CondRetErroArquivo          - não foi possível abrir/fechar
+*                                        algum dos arquivos
 *
 ***********************************************************************/
 
@@ -2096,19 +2188,37 @@
 *  $FC Função: RLEX  -  Próximo caractere
 *
 *  $ED Descrição da função
-*     
+*     Muda o estado do reconhecedor léxico para o caractere
+*     seguinte, caso não for o último caractere.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe um fluxo de entrada (FILE *), ponteiros para pilha
+*     de releitura, de caracteres, e para o caractere corrente.
+*     O ponteiro para o fluxo de entrada ou é nulo ou aponta
+*     para um file stream de um arquivo aberto.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso houver elementos na pilha de releitura, o elemento
+*     desempilhado do topo da pilha é empilhado na pilha de
+*     caracteres, e este caractere será o caractere corrente.
+*     Caso contrário, é lido o próximo caractere do fluxo de
+*     entrada, que será o caractere corrente, e é empilhado
+*     na pilha de caracteres. Caso tenha-se chegado ao final
+*     do fluxo de entrada, o caractere será '\0'. Caso algum
+*     erro for capturado, a condição de retorno condizente
+*     será retornada.
 *
 *  $EP Parâmetros
-*     
+*     f                 - ponteiro para fluxo de entrada
+*     pPilhaReleitura   - ponteiro para pilha de releitura
+*     pPilhaChar        - ponteiro para pilha de caracteres
+*     c                 - endereço do caractere corrente
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK
+*     RLEX_CondRetParametrosInvalidos
+*     RLEX_CondRetErroEstrutura
+*     RLEX_CondRetMemoria
 *
 ***********************************************************************/
 
@@ -2199,25 +2309,38 @@
 *  $FC Função: RLEX  -  Caractere anterior
 *
 *  $ED Descrição da função
-*     
+*     Muda o estado do reconhecedor léxico para o caractere
+*     anterior, caso não for o primeiro caractere.
 *
 *  $AE Assertivas de entrada
-*     
+*     Recebe três ponteiros não-nulos para pilha de releitura,
+*     de caracteres lidos, e para o caractere corrente.
 *
 *  $AS Assertivas de saída
-*     
+*     Caso houver elementos na pilha de caracteres, passa
+*     o topo desta para o topo da pilha de releitura, e altera
+*     *c para o elemento que foi transferido. Caso não houver
+*     elementos na pilha de caracteres ou caso haja algum erro
+*     de estrutura ou falta de espaço na memória, o devido erro
+*     será retornado.
 *
 *  $EP Parâmetros
-*     
+*     pPilhaReleitura   -  pilha de releitura
+*     pPilhaChar        -  pilha de caracteres
+*     c                 -  endereço para caractere corrente
+*                          (indicador de estado na função ReconheceArq)
 *
 *  $FV Valor retornado
-*     
+*     RLEX_CondRetOK
+*     RLEX_CondRetComecoArquivo
+*     RLEX_CondRetErroEstrutura
+*     RLEX_CondRetMemoria
 *
 ***********************************************************************/
 
    RLEX_tpCondRet CharAnterior ( PIL_tppPilha pPilhaReleitura ,
                                  PIL_tppPilha pPilhaChar ,
-                                  char *c )
+                                 char *c )
    {
       char *pTopo = NULL;
       PIL_tpCondRet RetPil;

@@ -2,3 +2,13 @@ O lexema "_id123_" presente na linha 0 coluna 0 foi reconhecido como Identificad
 O lexema " 123" presente na linha 0 coluna 7 foi reconhecido como Numero Inteiro (id = 2).
 O lexema " 3.1415" presente na linha 0 coluna 11 foi reconhecido como Numero Fracionario (id = 3).
 Erro de reconhecimento na linha 0 e coluna 18.
+Erro de reconhecimento na linha 0 e coluna 19.
+O lexema "*" presente na linha 0 coluna 20 foi reconhecido como Erro (id = 998).
+O lexema " Comentario" presente na linha 0 coluna 21 foi reconhecido como Identificador (id = 1).
+O lexema " no" presente na linha 0 coluna 32 foi reconhecido como Identificador (id = 1).
+O lexema " final" presente na linha 0 coluna 35 foi reconhecido como Identificador (id = 1).
+O lexema " nao" presente na linha 0 coluna 41 foi reconhecido como Identificador (id = 1).
+O lexema " eh" presente na linha 0 coluna 45 foi reconhecido como Identificador (id = 1).
+O lexema " considerado" presente na linha 0 coluna 48 foi reconhecido como Identificador (id = 1).
+O lexema " *" presente na linha 0 coluna 60 foi reconhecido como Erro (id = 998).
+Erro de reconhecimento na linha 0 e coluna 62.

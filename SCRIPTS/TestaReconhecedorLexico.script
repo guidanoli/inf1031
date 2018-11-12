@@ -5,7 +5,7 @@
 //				0.3	26/10/2018	inserirtransicao, removertransicao
 //				0.4	05/11/2018	cmparquivos
 //				0.5	09/11/2018	reconhecestring
-//				0.6	10/11/2018	reconhecearquivo
+//				0.6	10/11/2018	reconhecearquivo	
 // Propósito: 			Testa a integridade dos comandos suportados pelo Reconhecedor Léxico
 //				para com sua estrutura de dados, baseando-se no modelo arquitetado.
 //				Além disso, testa alguns exemplos de autômatos finitos.

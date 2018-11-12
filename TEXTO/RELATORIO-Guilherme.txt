@@ -82,3 +82,7 @@
 10/11	3h			revisar código do módulo	Corrigindo Rec.Arq.
 10/11	1h			redigir script de teste		Rec.Str -> Rec.Arq. (criar .txt's)
 10/11	30min			realizar testes			Tudo funcionando.
+11/11	6h			revisar código de módulo	Revisando funções auxiliares + assertivas
+11/11	2h			revisar código de módulo	Revisando enunciado e funcionalidades pedidas
+11/11	1h			revisar script de testes	Revisando script de testes com as modificações
+11/11	2h			redigir código de módulo	Assertivas das funções auxiliares de RECLEX.C
