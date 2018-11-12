@@ -1,2 +1,0 @@
-O lexema "a" presente na linha 0 coluna 0 foi reconhecido como Outro Estado (id = 1).
-Erro de reconhecimento na linha 0 e coluna 1.

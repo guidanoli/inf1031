@@ -1,1 +1,0 @@
-O lexema "qwertyuiopasdfghjklzxcvbnm1234567890!@#$¨&*()" presente na linha 0 coluna 0 foi reconhecido como Lexema (id = 1).

@@ -1,1 +1,0 @@
-O lexema "/* Comentario antes do lexema eh considerado */ 2018" presente na linha 0 coluna 0 foi reconhecido como Numero Inteiro (id = 2).
