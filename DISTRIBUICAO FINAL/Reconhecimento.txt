@@ -1,8 +1,0 @@
-O lexema "1:1" presente na linha 0 coluna 0 foi reconhecido como Versiculo (id = 4).
-O lexema " In the beginning God created the heaven and the earth." presente na linha 0 coluna 3 foi reconhecido como Frase (id = 5).
-O lexema " 
-1:2" presente na linha 0 coluna 58 foi reconhecido como Versiculo (id = 4).
-O lexema " And the earth was without form," presente na linha 1 coluna 3 foi reconhecido como Frase (id = 5).
-O lexema " and void;" presente na linha 1 coluna 35 foi reconhecido como Frase (id = 5).
-O lexema " and darkness was upon the face of the deep." presente na linha 1 coluna 45 foi reconhecido como Frase (id = 5).
-O lexema " And the Spirit of God moved upon the face of the waters." presente na linha 1 coluna 89 foi reconhecido como Frase (id = 5).

@@ -1,0 +1,479 @@
+/***************************************************************************
+*  $MCI Módulo de implementação: TVER Teste Vértice
+*
+*  Arquivo gerado:              TESTVER.c
+*  Letras identificadoras:      TVER
+*
+*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*
+*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Gestor:  LES/DI/PUC-Rio
+*  Autores:   avs   Arndt Von Staa
+*             gui   Guilherme Dantas
+*             cai   Caique Molina
+*             nag   Nagib Suaid
+*
+*  $HA Histórico de evolução:
+*     Versão  Autor    Data     Observações
+*     0       avs    26/09/18   Modificamos a implementação de TESTLIS.C
+*                               de Arndt Von Staa.
+*     1       nag    26/09/18   Teste de todas funções menos 
+*                               destruiraresta e percorreraresta.
+*     2       nag    28/09/18   Implementação de todas as funções de acesso.
+*     3       gui    08/10/18   Funções adicionais necessárias para analizador léxico.
+*     4       gui    10/10/18   Flags
+*
+***************************************************************************/
+
+#include    <string.h>
+#include    <stdio.h>
+#include    <malloc.h>
+
+#include    "TST_Espc.h"
+
+#include    "Generico.h"
+#include    "LerParm.h"
+
+#include    "VERTICE.H"
+
+#define CRIAR_VERTICE_CMD        "=criarvertice"
+#define DESTRUIR_VERTICE_CMD     "=destruirvertice"
+#define OBTER_VALOR_VERTICE_CMD  "=obtervalor"
+#define CRIAR_ARESTA_CMD         "=criararesta"
+#define DESTRUIR_ARESTA_CMD      "=destruiraresta"
+#define PERCORRER_ARESTA_CMD     "=percorreraresta"
+#define ARESTA_CORRENTE_CMD      "=arestacorrente"
+#define AVANCAR_ARESTA_CMD       "=avancararesta"
+#define ARESTA_INICIAL_CMD       "=arestainicial"
+#define MUDAR_FLAG_CMD           "=mudarflag"
+#define OBTER_FLAG_CMD           "=obterflag"
+#define CMP_FLAG_VIZ_CMD         "=cmpflags"
+
+#define TST_VER_TRUE  1
+#define TST_VER_FALSE 0
+
+#define TST_VER_FLAG_ERRO -1236
+
+#define DIM_VT_VERTICE 10
+#define DIM_VALOR_VERTICE 10
+
+VER_tppVertice vtVertices[ DIM_VT_VERTICE ] ;
+
+/***** Protótipos das funções encapuladas no módulo *****/
+
+   static int ValidarIndexVertice( int indexVertice ) ;
+   static int ComparaStrings ( void * pa, void * pb ) ;
+   static void CopiaStrings (void ** pDestino , void * pOrigem ) ;
+   static void ConcatenaStrings ( void ** pSaida , void * pValor , int size ) ;
+   static int PercorreAresta ( void * pa, void * pb ) ;
+
+/*****  Código das funções exportadas pelo módulo  *****/
+
+/***********************************************************************
+*
+*  $FC Função: TVER &Testar vértice
+*
+*  $ED Descrição da função
+*     Podem ser criadas até 10 vértices, identificadas pelos índices 0 a 9 (inclusive)
+*
+*     Comandos disponíveis:
+*
+*    =criarvertice              inxVERTICE, StringEsperado, CondRetEsp
+*	  =destruirvertice			  inxVERTICE, CondRetEsp
+*	  =obtervalor					  inxVERTICE, ValorEsp
+*	  =criararesta				     inxVERTICEPart, inxVERTICEDest, StringEsperado, Restricao, CondRetEsp
+*	  =destruiraresta				  inxVERTICEPart, inxVERTICEDest, StringEsperadoAre, CondRetEsp
+*    =percorreraresta           inxVERTICEPart, StringEsperadoAre, Sentido, StringEsperadoVerDestino, CondRetEsp
+*    =arestacorrente            inxVERTICE, Sentido, StringEsperado, CondRetEsp
+*    =avancararesta             inxVERTICE, Sentido, numArestas, CondRetEsp
+*    =arestainicial             inxVERTICE, Sentido, CondRetEsp
+*    =mudarflag                 inxVERTICE, FlagDada, CondRetEsp
+*    =obterflag                 inxVERTICE, FlagEsperada, CondRetEsp
+*    =flagvizinhos              inxVERTICE, FlagDada, Sentido, CondRetEsp
+*
+***********************************************************************/
+
+   TST_tpCondRet TST_EfetuarComando(char * ComandoTeste) {
+
+      int inxVERTICE = -1,
+         inxVERTICE2 = -1,
+         numLidos = -1,
+         sentido = -1;
+
+      VER_tpCondRet CondRetEsp = VER_CondRetFaltouMemoria;
+      TST_tpCondRet CondRetTST = TST_CondRetOK;
+      VER_tpCondRet CondRetVER = VER_CondRetOK;
+
+      char pDado[DIM_VALOR_VERTICE] = "";
+      char *pRecebido;
+      char StringDado[DIM_VALOR_VERTICE] = "!";
+      char StringEsperado[DIM_VALOR_VERTICE] = "!";
+      char StringEsperado2[DIM_VALOR_VERTICE] = "!";
+
+      /* Testar criarvertice */
+
+      if (strcmp(ComandoTeste, CRIAR_VERTICE_CMD) == 0) {
+
+         numLidos = LER_LerParametros("isi", &inxVERTICE, StringEsperado, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+
+         CondRetVER = VER_CriarVertice(NULL, CopiaStrings, pDado, &vtVertices[inxVERTICE]);
+
+          return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar vertice");
+
+      } /* fim ativa: Testar criarvertice */
+
+      /* Testar destruirvertice */
+
+      if (strcmp(ComandoTeste, DESTRUIR_VERTICE_CMD) == 0) {
+         numLidos = LER_LerParametros("ii", &inxVERTICE, &CondRetEsp);
+
+         if ((numLidos != 2) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_DestruirVertice(&vtVertices[inxVERTICE]);
+
+         vtVertices[inxVERTICE] = NULL;
+
+        return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao destruir vertice");
+
+      } /* fim ativa: Testar destruirvertice */
+
+      /* Testar obtervalor*/
+
+      if (strcmp(ComandoTeste, OBTER_VALOR_VERTICE_CMD) == 0) {
+
+         numLidos = LER_LerParametros("is", &inxVERTICE, StringDado);
+
+         if ((numLidos != 2) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringDado);
+
+         pRecebido = (char *) VER_ObterValor(vtVertices[inxVERTICE]);
+
+         if(pRecebido != NULL)
+         {
+            strcpy_s(StringEsperado, DIM_VALOR_VERTICE, pRecebido);
+         } /* if */
+
+         return TST_CompararString(pDado,StringEsperado,"Valor obtido nao corresponde ao esperado");
+
+      } /* fim ativa: Testar obtervalor */
+
+      /* Testar criararesta*/
+
+      if (strcmp(ComandoTeste, CRIAR_ARESTA_CMD) == 0) {
+
+         VER_tpRestAre Restricao;
+
+         numLidos = LER_LerParametros("iisii", &inxVERTICE, &inxVERTICE2, StringEsperado, &Restricao, &CondRetEsp);
+
+         if ((numLidos != 5) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (!ValidarIndexVertice(inxVERTICE2))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+
+         CondRetVER = VER_CriarAresta( vtVertices[inxVERTICE] ,
+                                       vtVertices[inxVERTICE2] ,
+                                       pDado ,
+                                       ComparaStrings ,
+                                       CopiaStrings,
+                                       NULL,
+                                       Restricao ) ;
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao criar aresta");
+
+      } /* fim ativa: Testar criararesta */
+
+      /* Testar destruiraresta*/
+
+      if (strcmp(ComandoTeste, DESTRUIR_ARESTA_CMD) == 0) {
+         numLidos = LER_LerParametros("iisi", &inxVERTICE, &inxVERTICE2, StringEsperado, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (!ValidarIndexVertice(inxVERTICE2))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+
+         CondRetVER = VER_DestruirAresta(vtVertices[inxVERTICE], vtVertices[inxVERTICE2], pDado, ComparaStrings);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao destruir aresta");
+
+      } /* fim ativa: Testar destruiraresta */
+
+      /* Testar percorreraresta*/
+
+      if (strcmp(ComandoTeste, PERCORRER_ARESTA_CMD) == 0) {
+
+         char * pValorVerDestino = NULL;
+         VER_tppVertice VerticeDestino = NULL;
+
+         numLidos = LER_LerParametros("isisi", &inxVERTICE, StringEsperado, &sentido, StringEsperado2, &CondRetEsp);
+
+         if ((numLidos != 5) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         strcpy_s(pDado, DIM_VALOR_VERTICE, StringEsperado);
+
+         CondRetVER = VER_PercorrerAresta(vtVertices[inxVERTICE], pDado, &VerticeDestino, PercorreAresta, (VER_tpSentCam)sentido);
+
+         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao percorrer aresta");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         pValorVerDestino = (char *) VER_ObterValor(VerticeDestino);
+
+         if( pValorVerDestino != NULL )
+         {
+            strcpy_s(StringEsperado,DIM_VALOR_VERTICE,pValorVerDestino);
+         } /* if */
+
+         return TST_CompararString(StringEsperado2,StringEsperado,"Valor obtido nao corresponde ao esperado");
+
+      } /* fim ative: Testar percorreraresta */
+
+      /* Testar arestacorrente */
+
+      if( strcmp(ComandoTeste,ARESTA_CORRENTE_CMD) == 0 )
+      {
+
+         char * pValorVerDestino = NULL;
+         VER_tppVertice VerticeDestino = NULL;
+
+         numLidos = LER_LerParametros("iisi", &inxVERTICE, &sentido, StringEsperado2, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_ObterArestaCorrente(vtVertices[inxVERTICE],&VerticeDestino,(VER_tpSentCam)sentido);
+
+         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao obter aresta corrente");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         pValorVerDestino = (char *) VER_ObterValor(VerticeDestino);
+
+         if( pValorVerDestino != NULL )
+         {
+            strcpy_s(StringEsperado,DIM_VALOR_VERTICE,pValorVerDestino);
+         } /* if */
+
+         return TST_CompararString(StringEsperado2,StringEsperado,"Valor obtido nao corresponde ao esperado");
+
+      } /* fim ativa: Testar arestacorrente */
+
+      /* Testar avancararesta */
+
+      if( strcmp(ComandoTeste,AVANCAR_ARESTA_CMD) == 0 )
+      {
+         int numAre;
+
+         numLidos = LER_LerParametros("iiii", &inxVERTICE, &sentido, &numAre, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_AvancarArestaCorrente(vtVertices[inxVERTICE],(VER_tpSentCam)sentido,numAre);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao avancar aresta corrente");
+
+      } /* fim ativa: Testar avancararesta */
+
+      /* Testar arestainicial */
+
+      if( strcmp(ComandoTeste,ARESTA_INICIAL_CMD) == 0 )
+      {
+
+         numLidos = LER_LerParametros("iii", &inxVERTICE, &sentido, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE)) ||
+            (sentido!=0 && sentido!=1)) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_IrInicioArestaCorrente(vtVertices[inxVERTICE],(VER_tpSentCam)sentido);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao avancar aresta corrente");
+
+      } /* fim ativa: Testar arestainicial */
+
+      /* Testar mudarflag */
+
+      if( strcmp(ComandoTeste,MUDAR_FLAG_CMD) == 0 )
+      {
+         int FlagRecebida;
+
+         numLidos = LER_LerParametros("iii", &inxVERTICE, &FlagRecebida, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_MudarFlag(vtVertices[inxVERTICE],FlagRecebida);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao mudar flag");
+
+      } /* fim ativa: Testar mudarflag */
+
+      /* Testar mudarflag */
+
+      if( strcmp(ComandoTeste,OBTER_FLAG_CMD) == 0 )
+      {
+         int FlagObtida = TST_VER_FLAG_ERRO, FlagEsperada;
+
+         numLidos = LER_LerParametros("iii", &inxVERTICE, &FlagEsperada, &CondRetEsp);
+
+         if ((numLidos != 3) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_ObterFlag(vtVertices[inxVERTICE],&FlagObtida);
+
+         CondRetTST = TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao obter flag");
+
+         if( CondRetTST != TST_CondRetOK )
+         {
+            return CondRetTST;
+         } /* if */
+
+         return TST_CompararInt(FlagEsperada,FlagObtida,"Flag obtida nao corresponde a esperada");
+
+      } /* fim ativa: Testar mudarflag */
+
+      /* Testar flagvizinhos */
+
+      if( strcmp(ComandoTeste,CMP_FLAG_VIZ_CMD) == 0 )
+      {
+         int FlagRecebida;
+
+         numLidos = LER_LerParametros("iiii", &inxVERTICE, &FlagRecebida, &sentido, &CondRetEsp);
+
+         if ((numLidos != 4) ||
+            (!ValidarIndexVertice(inxVERTICE))) {
+            return TST_CondRetParm;
+         } /* if */
+
+         CondRetVER = VER_ComparaFlagsVizinhos(vtVertices[inxVERTICE],FlagRecebida,(VER_tpSentCam)sentido);
+
+         return TST_CompararInt(CondRetEsp,CondRetVER,"Retorno errado ao comparar flag de vizinhos");
+
+      }
+
+      return TST_CondRetNaoConhec;
+
+   } /* Fim função: TVER &Testar VERTICE */
+
+
+/*****  Código das funções encapsuladas no módulo  *****/
+
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Validar indice de VERTICE
+*
+***********************************************************************/
+
+   int ValidarIndexVertice( int indexVertice )
+   {
+
+      if ( ( indexVertice <  0 )
+        || ( indexVertice >= DIM_VT_VERTICE ))
+      {
+         return TST_VER_FALSE ;
+      } /* if */
+         
+      return TST_VER_TRUE ;
+
+   } /* Fim função: TVER -Validar indice de VERTICE */
+
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Compara Strings
+*
+***********************************************************************/
+
+   int ComparaStrings (void *pa, void *pb)
+   {
+
+      return strcmp( (char*) pa , (char*) pb );
+
+   } /* Fim função: TVER -Compara Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Copia Strings
+*
+***********************************************************************/
+
+   void CopiaStrings (void ** pDestino , void * pOrigem )
+   {
+
+      *pDestino = (char *) malloc( sizeof(char) * DIM_VALOR_VERTICE );
+      strcpy_s( (char*)(*pDestino) , DIM_VALOR_VERTICE , (char*)pOrigem );
+
+   } /* Fim função: TVER -Copia Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Concatena Strings
+*
+***********************************************************************/
+
+   void ConcatenaStrings ( void ** pSaida , void * pValor , int size )
+   {
+
+      strcat_s( (char *) *pSaida , size , (char *) pValor );
+
+   } /* Fim função: TVER -Concatena Strings */
+
+/***********************************************************************
+*
+*  $FC Função: TVER -Percorre Aresta
+*
+***********************************************************************/
+
+   int PercorreAresta ( void * pa, void * pb )
+   {
+
+      return !ComparaStrings(pa,pb);
+
+   } /* Fim função: TVER -Percorre Aresta */
+
+/********** Fim do módulo de implementação: TVER Teste VERTICE de símbolos **********/
+

@@ -34,8 +34,10 @@ Membros do trio:
 		<não há>
 
 	-- CONSTRUTOS --
-	TRAB3-1.exe	...	testa o módulo RECONHECEDOR LÉXICO
+	TRAB3-1.exe	...	testa o módulo RECLEX
 	TRAB3-2.exe	...	testa o módulo PILHA
+	TRAB3-3.exe	...	testa o módulo GRAFO
+	TRAB3-4.exe	...	testa o módulo VERTICE
 
 	-- DOCUMENTAÇÃO --
 	LEIAME.txt	...	este documento
@@ -49,6 +51,8 @@ Membros do trio:
 		PILHA.C		...	pilha
 		VERTICE.C	...	vértice
 		TESTPIL.C	...	teste de pilha
+		TESTGRF.C	...	teste de grafo
+		TESTVER.C	...	teste de vértice
 
 		- DEFINIÇÃO:
 		GENERICO.H
@@ -60,23 +64,26 @@ Membros do trio:
 		VERTICE.H	...	vértice
 
 	-- SCRIPTS --
-	TestaExemplosAutomatosFinitos.script	...	testa autômatos mais complexos
+	TestaGrafo.script			...	testa o módulo Grafo
 	TestaPilha.script			...	testa o módulo Pilha
 	TestaReconhecedorLexico.script		...	testa as funcionalidades básicas
+	TestaVertice.script			...	testa o módulo Vértice
 
 	-- ARQUIVOS GERADOS --
 	Reconhecimento.txt		...	Análise de reconhecimento gereado pelo RECLEX.C
-	SaidaAutomatosFinitos.log	...	log da execução de TestaExemplosAutomatosFinitos.script
+	SaidaGrafo.log			... 	log da execução de TestaGrafo.script
 	SaidaPilha.log			...	log da execução de TestaPilha.script
 	SaidaReconhecedorLexico.log	...	log da execução de TestaReconhecedorLexico.script
+	SaidaVertice.log		... 	log da execução de TestaVertice.script
 
 [ Funcionalidades ]
 
 Para gerar os logs de saída, basta rodar o batch "TestaTudo.bat". Ele executará o arcabouço de testes, analisando
-os três scripts de testes e gerará dois logs de saída distintos:
+os três scripts de testes e gerará dois logs de saída distintos, abrindo-os assim que gerados:
 
-* SaidaAutomatosFinitos.log
+* SaidaGrafo.log
 * SaidaReconhecedorLexico.log
 * SaidaPilha.log
+* SaidaVertice.log
 
 Confira o item anterior, no subitem ARQUIVOS GERADOS deste LEIAME para saber os scripts de origem desses logs.
