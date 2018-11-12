@@ -1,0 +1,10 @@
+O lexema "Ciro" presente na linha 0 coluna 0 foi reconhecido como Palavra (id = 1).
+O lexema "2022" presente na linha 0 coluna 4 foi reconhecido como Numero (id = 2).
+O lexema "Bolsonaro" presente na linha 0 coluna 8 foi reconhecido como Palavra (id = 1).
+O lexema "2018" presente na linha 0 coluna 17 foi reconhecido como Numero (id = 2).
+O lexema "Haddad" presente na linha 0 coluna 21 foi reconhecido como Palavra (id = 1).
+O lexema "13" presente na linha 0 coluna 27 foi reconhecido como Numero (id = 2).
+O lexema "Novo" presente na linha 0 coluna 29 foi reconhecido como Palavra (id = 1).
+O lexema "30" presente na linha 0 coluna 33 foi reconhecido como Numero (id = 2).
+O lexema "Eleicoes" presente na linha 0 coluna 35 foi reconhecido como Palavra (id = 1).
+O lexema "2018" presente na linha 0 coluna 43 foi reconhecido como Numero (id = 2).

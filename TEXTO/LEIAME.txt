@@ -1,6 +1,6 @@
 *********************************
 ARCABOUÇO DE TESTE AUTOMATIZADO
-PARA MÓDULO GRAFO E VÉRTICE
+PARA MÓDULO RECONHECEDOR LÉXICO
 --------------------------------
 PUC-Rio INF1301 2018.2 T3
 *********************************
@@ -13,9 +13,9 @@ Membros do trio:
 	Nagib Suaid
 
 [ Diretórios ]
-./ Caique	relatório de Caique
-./ Nagib	relatório de Nagib
-./ Guilherme	relatório de Guilherme
+./ Caique	relatório e caderno de Caique
+./ Nagib	relatório e caderno de Nagib
+./ Guilherme	relatório e caderno de Guilherme
 
 [ Arquivos ]
 
@@ -26,13 +26,13 @@ Membros do trio:
 		
 		-ESTÁTICAS:
 		ArcaboucoTeste.lib
+		MinhaBiblioteca.lib
 
 		-DINÂMICAS:
 		<não há>
 
 	-- CONSTRUTOS --
-	TRAB2-1.exe	...	testa o módulo GRAFO
-	TRAB2-2.exe	...	testa o módulo VÉRTICE
+	TRAB3-1.exe	...	testa o módulo RECONHECEDOR LÉXICO
 
 	-- DOCUMENTAÇÃO --
 	LEIAME.txt	...	este documento
@@ -45,6 +45,7 @@ Membros do trio:
 		TESTGRF.C
 		TESTVER.C
 		VERTICE.C
+		RECLEX.C
 
 		- DEFINIÇÃO:
 		GENERICO.H
@@ -55,16 +56,14 @@ Membros do trio:
 		VERTICE.H
 
 	-- SCRIPTS --
-	TestaGrafo.script
-	TestaVertice.script
-
-	-- MODELO --
-	Modelo.pdf	...	Modelo, exemplo e assertivas estruturais
+	TestaReconhecedorLexico.script		...	testa as funcionalidades básicas
+	TestaExemplosAutomatosFinitos.script	...	testa autômatos mais complexos
 
 [ Funcionalidades ]
 
 Para gerar o log de saída, basta rodar o batch "TestaTudo.bat". Ele executará o arcabouço de testes, analisando
-todos os scripts de teste presentes na pasta e gerará dois arquivos distintos:
+os dois scripts de testes e gerará dois logs de saída distintos:
 
-* SaidaTesteVertice.log	...	resultado do teste do módulo VÉRTICE
-* SaidaTesteGrafo.log	...	resultado do teste do módulo GRAFO
+* SaidaReconhecedorLexico.log	...	log da execução de TestaReconhecedorLexico.script
+* SaidaAutomatosFinitos.log	...	log da execução de TestaExemplosAutomatosFinitos.script
+

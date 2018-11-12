@@ -1,0 +1,8 @@
+Erro de reconhecimento na linha 0 e coluna 0.
+Erro de reconhecimento na linha 0 e coluna 1.
+Erro de reconhecimento na linha 0 e coluna 2.
+Erro de reconhecimento na linha 0 e coluna 3.
+Erro de reconhecimento na linha 0 e coluna 4.
+Erro de reconhecimento na linha 0 e coluna 5.
+Erro de reconhecimento na linha 0 e coluna 6.
+Erro de reconhecimento na linha 0 e coluna 7.

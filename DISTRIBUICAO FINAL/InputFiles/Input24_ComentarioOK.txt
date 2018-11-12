@@ -1,0 +1,1 @@
+/* Comentario antes do lexema eh considerado */ 2018

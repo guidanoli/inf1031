@@ -1,0 +1,55 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: TRAB3-1.exe
+
+      Arquivo de teste:    TestaExemplosAutomatosFinitos.script
+
+
+!!!    0  Linha:     1  // Script:    			TestaAutomatosFinitos.script 
+!!!    0  Linha:     2  // Autor:     			Guilherme Dantas 
+!!!    0  Linha:     3  // Propósito:			Testar autômatos finitos com as funções 
+!!!    0  Linha:     4  //				do módulo Reconhecedor Léxico de modo a 
+!!!    0  Linha:     5  //				constatar a integridade da estrutura de dados. 
+!!!    0  Linha:     6  //				Recomenda-se rodar primeiro o script TestaReconhecedorLéxico 
+!!!    0  Linha:     7  //				para assegurar que o módulo está correto. 
+!!!    0  Linha:     8  // 
+   10  == Declarar as condicões de retorno do grafo
+!!!    0  Linha:    11  // para funções: 	criarlexrec, destruirlexrec, 
+!!!    0  Linha:    12  //			inserirestado, removerestado, 
+!!!    0  Linha:    13  //			inserirtransicao, removertransicao 
+   27  == Declarar as condicões de retorno do reconhecedor léxico
+!!!    0  Linha:    28  // para funções:	cmparquivos, reconhecestr, reconhecearq 
+   39  == Declarar Tipos de Estados
+   43  == Relatório
+   47  == Declarar nome arbitrário para Estado
+   50  == Declarar Rótulos
+!!!    0  Linha:    57  // String 
+   59  == Reconhecer números ímpares e pares em binário
+   84  == Reconhecer palavras
+   98  == Reconhecer lexemas com exemplo de autômato finito do enunciado
+  130  == Reconhecer qualquer caractere
+  140  == Reconhece palavras e numeros concatenados
+  153  == Reconhece tweets
+  178  == Reconhece a Bíblia
+!!!    0  Linha:   200  // Arquivo 
+  202  == Reconhecer números ímpares e pares em binário
+  227  == Reconhecer palavras
+  241  == Reconhecer lexemas com exemplo de autômato finito do enunciado
+  273  == Reconhecer qualquer caractere
+  283  == Reconhece palavras e numeros concatenados
+  296  == Reconhece tweets
+  321  == Reconhece a Bíblia
+
+!!! Número de linhas lidas:         341
+!!! Número de casos de teste:        20
+!!! Número comandos corretos:       285
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

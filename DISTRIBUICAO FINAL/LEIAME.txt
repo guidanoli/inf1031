@@ -1,0 +1,82 @@
+*************************************
+*  ARCABOUÇO DE TESTE AUTOMATIZADO  *
+*  PARA MÓDULO RECONHECEDOR LÉXICO  *
+*  -------------------------------  *
+*     PUC-Rio INF1301 2018.2 T3     *
+*************************************
+
+Professor: Flávio Bevilacqua
+Turma: 3WB
+Membros do trio:
+	Caique Soares
+	Guilherme Dantas
+	Nagib Suaid
+
+[ Diretórios ]
+./ InputFiles	arquivos texto que servirão como entrada para função ReconheceArq de RECLEX.C
+./ OutputFiles	reconhecimentos esperados pelo módulo RECLEX.C e que serão comparados nos scripts
+./ _CAIQUE	relatório e caderno de Caique
+./ _NAGIB	relatório e caderno de Nagib
+./ _GUILHERME	relatório e caderno de Guilherme
+
+[ Arquivos ]
+
+	-- BATCHES --
+	TestaTudo.bat	...	gera os logs de saída dos testes
+
+	-- BIBLIOTECAS --
+		
+		-ESTÁTICAS:
+		ArcaboucoTeste.lib
+		MinhaBiblioteca.lib
+
+		-DINÂMICAS:
+		<não há>
+
+	-- CONSTRUTOS --
+	TRAB3-1.exe	...	testa o módulo RECONHECEDOR LÉXICO
+	TRAB3-2.exe	...	testa o módulo PILHA
+
+	-- DOCUMENTAÇÃO --
+	LEIAME.txt	...	este documento
+
+	-- MÓDULOS --
+
+		- IMPLEMENTAÇÃO:
+		GRAFO.C		...	grafo
+		LISTA.C		...	lista
+		RECLEX.C	...	reconhecedor léxico
+		PILHA.C		...	pilha
+		VERTICE.C	...	vértice
+		TESTPIL.C	...	teste de pilha
+
+		- DEFINIÇÃO:
+		GENERICO.H
+		GRAFO.H		...	grafo
+		LERPARM.H
+		LISTA.H		...	lista
+		PILHA.H		...	pilha
+		TST_ESPC.H
+		VERTICE.H	...	vértice
+
+	-- SCRIPTS --
+	TestaExemplosAutomatosFinitos.script	...	testa autômatos mais complexos
+	TestaPilha.script			...	testa o módulo Pilha
+	TestaReconhecedorLexico.script		...	testa as funcionalidades básicas
+
+	-- ARQUIVOS GERADOS --
+	Reconhecimento.txt		...	Análise de reconhecimento gereado pelo RECLEX.C
+	SaidaAutomatosFinitos.log	...	log da execução de TestaExemplosAutomatosFinitos.script
+	SaidaPilha.log			...	log da execução de TestaPilha.script
+	SaidaReconhecedorLexico.log	...	log da execução de TestaReconhecedorLexico.script
+
+[ Funcionalidades ]
+
+Para gerar os logs de saída, basta rodar o batch "TestaTudo.bat". Ele executará o arcabouço de testes, analisando
+os três scripts de testes e gerará dois logs de saída distintos:
+
+* SaidaAutomatosFinitos.log
+* SaidaReconhecedorLexico.log
+* SaidaPilha.log
+
+Confira o item anterior, no subitem ARQUIVOS GERADOS deste LEIAME para saber os scripts de origem desses logs.

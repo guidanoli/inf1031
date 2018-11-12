@@ -1,0 +1,636 @@
+/***************************************************************************
+*
+*  $MCD Módulo de implementação: VER Vértice
+*
+*  Arquivo gerado:              VERTICE.h
+*  Letras identificadoras:      VER
+*
+*  Curso: INF 1301 Programação Modular
+*  Orientador: Flavio Bevilacqua
+*  Autores:   gui   Guilherme Dantas
+*             cai   Caique Molina
+*             nag   Nagib Suaid
+*
+*  $HA Histórico de evolução:
+*     Versão  Autor    Data     Observações
+*     1       gui   17/09/2018  início do desenvolvimento
+*     1.1     gui   21/09/2018  definição das funções básicas
+*     1.2     gui   25/09/2018  implementação das funções básicas de arestas
+*     1.3  cai,nag  03/10/2018  assertivas de entrada e saída
+*     1.4     gui   08/10/2018  obterarestacorr, avancararestacorr, irinicio
+*     1.5     gui   11/10/2018  funções para flags
+*     1.6     gui   05/11/2018  restrições de aresta
+*
+*  $ED Descrição do módulo
+*     
+*     Este módulo implementa vértices e arestas genéricos.
+*     Vértices possuem:
+*        - ponteiro genérico que pode apontar para qualquer estrutura (void *)
+*        - uma lista de arestas que partem do vértice (ponteiros VER_tppAresta)
+*        - uma lista de arestas que chegam no vértice (ponteiros VER_tppAresta)
+*        - um ponteiro para função que exclui o valor genérico
+*
+*      A função de liberação dos valores contidos no vértice e aresta deve
+*        assegurar a liberação de todos os espaços referênciados pelo
+*        ponteiro pValor.
+*        Esta função é chamada antes de se desalocar um elemento
+*        de uma lista.
+*        Caso não seja necessário desalocar o valor referenciado pelo
+*        elemento, o ponteiro para a função de liberação poderá ser NULL .
+*        Caso o elemento da lista seja a única âncora do valor referenciado,
+*        esta função deve promover a destruição (free) desse valor e
+*        de todos os dados nele ancorados.
+*
+*     A função de comparação recebe dois valores do mesmo tipo.
+*     e retorna:
+*        >>> 0 caso os valores forem iguais
+*        >>> diferente de 0 caso contrário
+*
+*     A função de percurso de aresta recebe dois valores:
+*        >>> pA, o valor armazenado na aresta
+*        >>> pB, a entrada do usuário
+*     E retorna a prioridade de se percorrer tal aresta, e zero caso não deve-se
+*     percorrer tal aresta. Quanto maior o valor retornado, maior a prioridade 
+*     de se percorrer tal aresta. A aresta com maior prioridade será percorrida.
+*     Se duas arestas possuem a mesma prioridade, a primeira a ser identificada
+*     será percorrida. Idealmente deseja-se que não hajam colisões de prioridade.
+*
+*     A função de cópia recebe um ponteiro para o valor aonde será
+*     copiado o valor do segundo parâmetro. É essencial para estruturas de dados
+*     que trabalham com ponteiros, como string e structs. O espaço referenciado
+*     deverá ser alocado dinamicamente.
+*
+*     Para funções que fazem uso da variável de caminhamento, o sentido
+*     padrão será sempre para FRENTE (VER_SentCamFrente).
+*
+***************************************************************************/
+
+/***** Declarações exportadas pelo módulo *****/
+
+/* Ponteiro para estrutura de vértice */
+typedef struct VER_tagVertice * VER_tppVertice;
+
+/* Ponteiro para estrutura de aresta */
+typedef struct VER_tagAresta * VER_tppAresta;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: VER Condições de retorno
+*
+*
+*  $ED Descrição do tipo
+*     Condições de retorno das funções do vértice
+*
+***********************************************************************/
+
+   typedef enum {
+
+         VER_CondRetOK ,
+               /* Concluiu corretamente */
+
+         VER_CondRetVerticeNaoExiste ,
+               /* O ponteiro para vértice é nulo */
+
+         VER_CondRetArestaExiste ,
+               /* Uma aresta com mesmo valor já existe */
+
+         VER_CondRetArestaNaoExiste ,
+               /* O ponteiro para a aresta é nulo */
+
+         VER_CondRetListaVazia ,
+               /* A lista está vazia */
+
+         VER_CondRetFimLista ,
+               /* Não é possível avançar o elemento corrente
+                  da lista pois o corrente está em um dos
+                  extremos da lista */
+
+         VER_CondRetFlagDiferente ,
+               /* Duas flags são distintas */
+
+         VER_CondRetValorFornecidoNulo ,
+               /* O valor fornecido é nulo */
+
+         VER_CondRetFuncaoNula ,
+               /* O ponteiro para função é nulo */
+
+         VER_CondRetErroEstrutura ,
+               /* Erro na estrutura do vértice */    
+
+         VER_CondRetFaltouMemoria
+               /* Faltou memória ao tentar criar um vértice */
+
+   } VER_tpCondRet ;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: VER Restrições de Arestas
+*
+*  $ED Descrição do tipo
+*     Restrições no modelo de interconexões entre vértices quanto
+*     à cardinalidade das arestas quanto ao seu sentido e valor.
+*
+***********************************************************************/
+
+   typedef enum {
+
+      VER_RestAreSemRestricao ,
+         /* Não há restrições */
+
+      VER_RestAreSaidaUnica ,
+         /* De um estado sai no máximo uma aresta com mesmo valor */
+
+      VER_RestAreEntradaUnica ,
+         /* De um estado chega no máximo uma aresta com mesmo valor */
+
+      VER_RestAreSaidaEChegada ,
+         /* Não restringe que a aresta trate dos mesmos vértices
+            É a conjunção das restrições de entrada e saída únicas */
+
+      VER_RestAreArestaUnica ,
+         /* Considera que a aresta é única quando parte de um estado X,
+            vai para outro estado Y (X pode ser igual a Y), e tem um 
+            rótulo R. Esta tríade identifica a aresta. */
+
+   } VER_tpRestAre ;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: VER Sentido de caminhamento
+*
+*  $ED Descrição do tipo
+*     Sentido de caminhamento por arestas
+*
+***********************************************************************/
+
+   typedef enum {
+
+      VER_SentCamTras = 0 ,
+            /* Caminhando para trás */
+
+      VER_SentCamFrente = 1
+            /* Caminhando para frente */
+
+   } VER_tpSentCam ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Criar vértice
+*
+*  $ED Descrição da função
+*     Cria a estrutura de um vértice.
+*     O tipo do valor armazenados não é espeficiado.
+*
+*  $AE Assertivas de entrada
+*     pValor é um ponteiro para o valor a ser armazenado no vértice.
+*     ExcluirValor é uma função que exclui o tipo de dado referenciado
+*     por pValor, CopiaValor é uma função que faz o ponteiro referenciado 
+*     pelo primeiro argumento apontar para uma cópia do valor referenciado
+*     pelo segundo argumento. ppVerticeParm deve ser NULL ou referenciar um
+*     vértice existente.
+*
+*  $AS Assertivas de saída
+*     Se ppVerticeParm não apontava para um vértice com erro de estrutura, ele
+*     passa a referenciar um vértice, cujo valor é uma cópia daquele referenciado
+*     por pValor. As listas de sucessores e antecessores desse novo vértice são
+*     necessáriamente vazias.
+*
+*  $EP Parâmetros
+*     ExcluirValor  - Ver descrição do módulo.
+*     CopiaValor    - Ver descrição do módulo.
+*     pValor        - ponteiro genérico para o valor do vértice procurado
+*     ppVerticeParm - endereço do ponteiro para vértice a ser criado
+*
+*  $FV Valor retornado
+*     VER_CondRetOK
+*     VER_CondRetFaltouMemoria
+*     VER_CondRetFuncaoNula      - ponteiro para função CopiaValor é nulo
+*     VER_CondRetErroEstrutura
+*     VER_CondRetValorFornecidoNulo
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_CriarVertice(  void ( * ExcluirValor ) ( void * pDado ) ,
+                                    void (* CopiaValor ) ( void ** pA, void * pB) ,
+                                    void * pValor ,
+                                    VER_tppVertice *ppVerticeParm ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Destruir vértice
+*
+*  $ED Descrição da função
+*     Destrói o vértice fornecido.
+*
+*  $AE Assertivas de entrada
+*     A função recebe um ponteiro para um vértice existente ou NULL.
+*
+*  $AS Assertivas de saída
+*     Se o parâmetro aponta para um vértice sem erros de estrutura,
+*     ele passa a ser NULL e o vértice para o qual ele apontava é
+*     destruido junto com suas listas e todas as arestas que a referenciavam.
+*
+*  $EP Parâmetros
+*     pVertice - ponteiro para o vértice
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - destruiu sem problemas
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_DestruirVertice( VER_tppVertice *  pVertice ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Obter referência para o valor contido no vértice
+*
+*  $ED Descrição da função
+*     Retorna pVertice->pValor.
+*     Esta função não altera o vértice ou sua estrutura interna.
+*
+*  $AE Assertivas de entrada
+*     A função recebe um ponteiro para um vértice existente ou NULL.
+*
+*  $AS Assertivas de saída
+*     Se o vértice referenciado pelo parâmetro existe e não possui erros
+*     de estrutura, a função retorna uma referência ao valor deste vértice.
+*     Se o vértice referenciado não existe a função retorna NULL
+*
+*  $EP Parâmetros
+*     pVertice - ponteiro para o vértice cujo valor deseja-se obter
+*
+*  $FV Valor retornado
+*     Retorna o valor armazenado em vértice.
+*     Se o vértice não existir ou se o valor for nulo,
+*     será retornado NULL.
+*
+***********************************************************************/
+
+   void * VER_ObterValor( VER_tppVertice pVertice ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Criar aresta
+*
+*  $ED Descrição da função
+*     Cria uma aresta que sai do vértice pPartida e vai para
+*     pDestino, com o valor pValorAresta. Recebe também
+*     ponteiro para funções que tratam do tipo de dados
+*     apontado por pValorAresta.
+*
+*  $AE Assertivas de entrada
+*     Os ponteiros pPartida e pDestino são nulos ou apontam
+*     para vértices existentes.
+*     A função ComparaValor recebe duas referências a valores do
+*     mesmo tipo referenciado por pValorAresta, retorna 0 se os valores 
+*     referenciados forem iguais e um valor diferente de 0 caso contrario.
+*     ExcluirValor é uma função que exclui o tipo de dado referenciado
+*     por pValor, e todos os dados referenciados por ele.
+*     CopiaValor é uma função que faz o ponteiro referenciado 
+*     pelo primeiro argumento apontar para uma cópia do valor referenciado
+*     pelo segundo argumento.
+*     A criação (ou não) da aresta obedecerá ao critério de restrição
+*     fornecido como argumento. A condição de restrição deve ser válida.
+*
+*  $AS Assertivas de saída
+*     Se tanto pPartida quanto pDestino apontam para vértices válidos,
+*     pValorAresta é diferente de NULL e as funções CopiaValor e ComparaValor
+*     são válidas, é criada uma aresta cujo valor é uma cópia do referenciado
+*     por pValorAresta. Esta nova aresta referencia os dois vértices passados.
+*     São criados elementos na lista de sucessores do vértice de partida e na
+*     lista de antecessores do vértice destino que referenciam a nova aresta criada.
+*
+*  $EP Parâmetros
+*     pPartida -      ponteiro para vértice de partida da aresta
+*     pDestino -      ponteiro para vértice de destino da aresta
+*     pAresta  -      ponteiro para valor da aresta
+*     ComparaValor  - Ver descrição do módulo.
+*     CopiaValor    - Ver descrição do módulo.
+*     ExcluirValor  - Ver descrição do módulo.
+*     Restricao     - Ver descrição do tipo de enumeração.
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - criou sem problemas
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaExiste       - há uma aresta com mesmo valor saindo de
+*                                     pPartida e indo para pDestino.
+*                                     (Assertiva Estrutural)
+*     VER_CondRetValorFornecidoNulo - pValorAresta é nulo
+*     VER_CondRetErroEstrutura      - há algum erro na estrutura do vértice
+*     VER_CondRetFaltouMemoria      - não foi possível alocar uma nova aresta
+*     VER_CondRetFuncaoNula         - ponteiro para função CopiaValor ou
+*                                     para função ComparaValor é nulo
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_CriarAresta(   VER_tppVertice pPartida ,
+                                    VER_tppVertice pDestino ,
+                                    void * pValorAresta ,
+                                    int (* ComparaValor) ( void * pA, void * pB) ,
+                                    void (* CopiaValor ) ( void ** pA, void * pB) ,
+                                    void (* ExcluirValor) ( void* p) ,
+                                    VER_tpRestAre Restricao ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Destruir aresta
+*
+*  $ED Descrição da função
+*     Destrói uma aresta dado valor de aresta e ponteiros dos vértices
+*     de destino e partida.
+*
+*  $AE Assertivas de entrada
+*     Os ponteiros pPartida e pDestino são nulos ou apontam
+*     para vértices existentes.
+*     A função ComparaValor recebe duas referências a valores do
+*     mesmo tipo referenciado por pValorAresta, retorna 0 se os valores 
+*     referenciados forem iguais e um valor diferente de 0 caso contrario.
+*
+*  $AS Assertivas de saída
+*     Se tanto pPartida quanto pDestino apontam para vértices válidos
+*     e existir uma aresta cujo valor é igual ao valor referenciado por
+*     pValor, parte do vértice referenciado por pPartida e chega no vértice
+*     referenciado por pDestino, esta aresta será excluída, junto o seu valor
+*     e todos os elementos de lista que a referenciavam.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para vértice de partida da aresta
+*     pVerDestino  - ponteiro para vértice de origem da aresta
+*     pValor       - ponteiro para valor armazenado na aresta
+*     ComparaValor - Ver descrição do módulo.
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - destruiu sem problemas
+*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*     VER_CondRetVerticeNaoExiste   - o vértice de partida da aresta não existe
+*     VER_CondRetFuncaoNula         - ponteiro para função ComparaValor é nulo
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_DestruirAresta( VER_tppVertice pVerPartida ,
+                                     VER_tppVertice pVerDestino ,
+                                     void * pValor ,
+                                     int (* ComparaValor) ( void * pA, void * pB) ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Percorrer aresta
+*
+*  $ED Descrição da função
+*     Percorre uma aresta partindo do vértice de partida fornecido
+*     segundo um valor também fornecido, e armazena no ponteiro pDestino
+*     o endereço do vértice de destino
+*
+*  $AE Assertivas de entrada
+*	  A função deve receber um ponteiro do vértice de partida,
+*	  o valor da aresta, um ponteiro que referencia o vertice destino,
+*     que também pode ser nulo, um ponteiro para a função que
+*     compara o valor de duas arestas e o sentido que irá andar.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice, valor e função não for nulo, não houver erro na estrutura,
+*     e o Sentido for válido, a função deverá alterar o ponteiro do vértice destino *pVerDestino
+*     com o valor do Vértice destino ou de partida (dependendo do sentido) e retornar VER_CondRetOK.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido e o ponteiro de
+*     vértice apontado por *pVerDestino não será modificado.
+*     Como consta da descrição do módulo, a função deverá caminhar pela primeira aresta que tenha
+*     prioridade > 0 no dado sentido, caso exista.
+*
+*  $EP Parâmetros
+*     pVerPartida     - ponteiro para o vértice de partida
+*     pValor          - valor da aresta que deseja-se percorrer
+*     pVerDestino     - endereço para ponteiro para o vértice de destino
+*     PercorrerAresta - Ver descrição do módulo.
+*     Sentido         - sentido de caminhamento da aresta
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - destruiu sem problemas
+*     VER_CondRetValorFornecidoNulo - foi fornecido um valor nulo
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - o ponteiro para aresta é nulo
+*     VER_CondRetErroEstrutura      - algum erro na estrutura do vértice ocorreu
+*     VER_CondRetFuncaoNula         - ponteiro para função ComparaValor é nulo
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_PercorrerAresta( VER_tppVertice pVerPartida ,
+                                      void * pValor ,
+                                      VER_tppVertice * pVerDestino ,
+                                      int (* PercorrerAresta) ( void * pA, void * pB) ,
+                                      VER_tpSentCam Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Percorrer aresta corrente
+*
+*  $ED Descrição da função
+*     Armazena em *pVerDestino o vértice no sentido fornecido em
+*     relação ao vértice fornecido.
+*
+*  $AE Assertivas de entrada
+*	   A função deve receber um ponteiro do vértice de partida ou NULO,
+*	   um ponteiro que referencia o vertice destino,
+*     que também pode ser nulo, e o sentido da aresta.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice não for nulo e o Sentido for válido,
+*     a função deverá alterar o ponteiro do vértice destino *pVerDestino
+*     para apontar para o vértice destino ou de partida dependendo do
+*     sentido e retornar VER_CondRetOK.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com
+*     o erro obtido - e a estrutura interna não será manipulada.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     pVerDestino  - endereço para ponteiro para o vértice de destino
+*     Sentido      - sentido de caminhamento da aresta corrente
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - obteve com sucesso
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetErroEstrutura      - algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_ObterArestaCorrente( VER_tppVertice pVerPartida ,
+                                          VER_tppVertice * pVerDestino ,
+                                          VER_tpSentCam Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Avançar aresta corrente
+*
+*  $ED Descrição da função
+*     Altera a aresta corrente do vértice fornecido para a aresta
+*     numArestas passos afrente (ou atrás, caso seja negativo),
+*     de um determinado sentido.
+*
+*  $AE Assertivas de entrada
+*	   A função recebe um ponteiro que aponta para o vértice de partida/
+*     destino ou um ponteiro NULO, o sentido da aresta em relação ao
+*     vértice fornecido, e o número de passos.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice não for nulo e o Sentido for válido,
+*     a função deverá alterar o ponteiro corrente da cabeça da lista de arestas correspondente
+*     ao Sentido fornecido para a aresta numArestas depois (ou antes, caso for negativo) da atual.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido,
+*     não alterando a estrutura interna alguma.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Sentido      - sentido de caminhamento das arestas cuja lista será manipulada
+*     numArestas   - número de passos
+*                    >> negativo, anda em direção ao início da lista
+*                    >> zero, checa apenas se há arestas no sentido
+*                    >> positivo, anda em direção ao fim da lista
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - avançou com sucesso
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetFimLista           - aresta corrente é origem ou última da lista
+*     VER_CondRetErroEstrutura      - algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_AvancarArestaCorrente( VER_tppVertice pVertice ,
+                                            VER_tpSentCam Sentido ,
+                                            int numArestas ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Avançar aresta corrente
+*
+*  $ED Descrição da função
+*     Altera a aresta corrente do vértice no sentido fornecido para
+*     a primeira aresta inserida no vértice.
+*
+*  $AE Assertivas de entrada
+*	   A função recebe um ponteiro que aponta para o vértice de partida/
+*     destino ou um ponteiro NULO e o sentido da aresta em relação ao
+*     vértice fornecido.
+*  
+*  $AS Assertivas de saída
+*     Caso o ponteiro para vértice não for nulo, o Sentido for válido,
+*     e a lista de arestas não for vazia,  a função alterará o ponteiro
+*     corrente da cabeça de lista de arestas correspondente ao sentido
+*     para o elemento origem.
+*	   Caso contrário, deverá retornar a condição de retorno de acordo com o erro obtido,
+*     não alterando a estrutura interna alguma.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Sentido      - sentido do caminhamento das arestas cuja lista está manipulada
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - avançou com sucesso
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice é nulo
+*     VER_CondRetArestaNaoExiste    - lista de arestas vazia
+*     VER_CondRetErroEstrutura      - algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_IrInicioArestaCorrente( VER_tppVertice pVertice ,
+                                             VER_tpSentCam Sentido ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Mudar flag
+*
+*  $ED Descrição da função
+*     Altera a flag do vértice para a fornecida.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para vértice ou NULO, e uma flag.  
+*
+*  $AS Assertivas de saída
+*     Caso o vértice exista, a flag é atualizada, e retorna VER_CondRetOK.
+*     Caso contrário a função retornará VER_CondRetVerticeNaoExiste.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Flag         - inteiro que identifica o vértice num caminhamento
+*
+*  $FV Valor retornado
+*     VER_CondRetOK
+*     VER_CondRetVerticeNaoExiste
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_MudarFlag( VER_tppVertice pVertice , int Flag ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Obter flag
+*
+*  $ED Descrição da função
+*     Obtém por referência a flag do vértice fornecido.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro para vértice ou NULO, e o endereço
+*     para um inteiro presente no módulo cliente.
+*
+*  $AS Assertivas de saída
+*     Caso o vértice exista e o ponteiro para flag não seja nulo,
+*     será armazenado em *Flag a flag do vértice.
+*     Caso contrário, uma condição de retorno adqueada ao erro
+*     será retornada.
+*
+*  $EP Parâmetros
+*     pVerPartida  - ponteiro para o vértice de partida
+*     Flag         - inteiro que identifica o vértice num caminhamento
+*
+*  $FV Valor retornado
+*     VER_CondRetOK
+*     VER_CondRetVerticeNaoExiste   - ponteiro para vértice nulo
+*     VER_CondRetValorFornecidoNulo - ponteiro para flag nulo
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_ObterFlag( VER_tppVertice pVertice , int * Flag ) ;
+
+/***********************************************************************
+*
+*  $FC Função: VER  &Compara flag dos vértices vizinhos (em um sentido)
+*
+*  $ED Descrição da função
+*     Certifica se todos os vértices que estão conectados a um dado
+*     vértice por arestas em um dado sentido têm uma dada flag.
+*
+*  $AE Assertivas de entrada
+*     Recebe um ponteiro apontando para vértice ou NULO, uma flag,
+*     e um sentido de caminhamento.
+*
+*  $AS Assertivas de saída
+*     Não modifica a estrutura interna dos vértice ou arestas.
+*     (a aresta corrente permanece a mesma e nenhum vértice ou
+*     aresta é modificado)
+*     Retorna a condição de retorno condizente com a análise.
+*
+*  $EP Parâmetros
+*     pVertice     - ponteiro para o vértice de partida
+*     Flag         - inteiro que identifica o vértice num caminhamento
+*     Sentido      - sentido de caminhamento das arestas para os vértices
+*                    a serem analisados
+*
+*  $FV Valor retornado
+*     VER_CondRetOK                 - todos os vértices conectados tem a flag
+*     VER_CondRetVerticeNaoExiste   - o ponteiro para o vértice é nulo
+*     VER_CondRetListaVazia         - o vértice não tem nenhuma aresta no sentido dado
+*     VER_CondRetFlagDiferente      - há ao menos uma aresta no sentido
+*                                     dado que possui flag diferente
+*     VER_CondRetErroEstrutura      - há algum erro na estrutura interna
+*
+***********************************************************************/
+
+   VER_tpCondRet VER_ComparaFlagsVizinhos( VER_tppVertice pVertice ,
+                                           int Flag ,
+                                           VER_tpSentCam Sentido );
+
+/********** Fim do módulo de definição: VER  Vértice **********/
