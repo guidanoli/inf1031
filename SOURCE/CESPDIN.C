@@ -31,9 +31,9 @@
 #undef CESPDIN_OWN
 
 #include    "Generico.h"
-#include    "GeraAlt.h"
+#include    "GERAALT.H"
 
-#include    "..\tabelas\IdTiposEspaco.def"
+#include    "Tabelas\IdTiposEspaco.def"
 
     /* O pragma é necessário para assegurar alinhamento a byte,
        uma vez que toda a aritmética com ponteiros assume isso */
