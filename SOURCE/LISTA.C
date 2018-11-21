@@ -10,13 +10,17 @@
 *  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores:   avs   Arndt Von Staa
+*             cai   Caique Molina Soares
+*             gui   Guilherme Dantas de Oliveira
+*             nag   Nagib Moura Suaid
 *
 *  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*     Versão  Autor        Data     Observações
+*     5       gui,nag   21/nov/2018 início da instrumentação
+*     4       avs       01/fev/2006 criar linguagem script simbólica
+*     3       avs       08/dez/2004 uniformização dos exemplos
+*     2       avs       07/jul/2003 unificação de todos os módulos em um só projeto
+*     1       avs       16/abr/2003 início desenvolvimento
 *
 ***************************************************************************/
 
@@ -25,6 +29,11 @@
 #include   <memory.h>
 #include   <malloc.h>
 #include   <assert.h>
+
+#ifdef _DEBUG
+#include "CESPDIN.H"
+#include "CONTA.H"
+#endif
 
 #define LISTA_OWN
 #include "LISTA.h"
@@ -47,6 +56,19 @@
 
          struct tagElemLista * pProx ;
                /* Ponteiro para o elemento sucessor */
+
+#ifdef _DEBUG
+
+         char TipoValor ;
+               /* Descritor de tipo do valor apontado pelo elemento de lista */
+
+         LIS_tppLista pCab ;
+               /* Ponteiro para cabeça da lista a qual o elemento pertence */
+
+         unsigned long tam ;
+               /* Tamanho da estrutura apontada pelo elemento */
+
+#endif
 
    } tpElemLista ;
 
@@ -74,6 +96,14 @@
          void ( * ExcluirValor ) ( void * pValor ) ;
                /* Ponteiro para a função de destruição do valor contido em um elemento */
 
+#ifdef _DEBUG
+
+         char TipoValor ;
+               /* Descritor de tipo do valor apontado pelo elemento de lista */
+
+#endif
+
+
    } LIS_tpLista ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -82,7 +112,12 @@
                                 tpElemLista  * pElem   ) ;
 
    static tpElemLista * CriarElemento( LIS_tppLista pLista ,
-                                       void *       pValor  ) ;
+                                       void *       pValor
+#ifdef _DEBUG
+                                       , char TipoValor
+                                       , unsigned long tam
+#endif
+      ) ;
 
    static void LimparCabeca( LIS_tppLista pLista ) ;
 
@@ -93,8 +128,11 @@
 *  Função: LIS  &Criar lista
 *  ****/
 
-   LIS_tppLista LIS_CriarLista(
-             void   ( * ExcluirValor ) ( void * pDado ) )
+   LIS_tppLista LIS_CriarLista( void   ( * ExcluirValor ) ( void * pDado )
+#ifdef _DEBUG
+                              , char TipoValor
+#endif
+      )
    {
 
       LIS_tpLista * pLista = NULL ;
@@ -106,6 +144,10 @@
       } /* if */
 
       LimparCabeca( pLista ) ;
+
+#ifdef _DEBUG
+      pLista->TipoValor = TipoValor;
+#endif
 
       pLista->ExcluirValor = ExcluirValor ;
 
@@ -164,7 +206,12 @@
 *  ****/
 
    LIS_tpCondRet LIS_InserirElementoAntes( LIS_tppLista pLista ,
-                                           void * pValor        )
+                                           void * pValor
+#ifdef _DEBUG
+                                          , char TipoValor
+                                          , unsigned tam
+#endif
+      )
    {
 
       tpElemLista * pElem ;
@@ -175,7 +222,14 @@
 
       /* Criar elemento a inerir antes */
 
-         pElem = CriarElemento( pLista , pValor ) ;
+         pElem = CriarElemento( pLista , pValor
+
+#ifdef _DEBUG
+                               , TipoValor
+                               , tam
+#endif 
+                               ) ;
+
          if ( pElem == NULL )
          {
             return LIS_CondRetFaltouMemoria ;
@@ -214,7 +268,12 @@
 *  ****/
 
    LIS_tpCondRet LIS_InserirElementoApos( LIS_tppLista pLista ,
-                                          void * pValor        )
+                                          void * pValor
+#ifdef _DEBUG
+                                          , char TipoValor
+                                          , unsigned long tam
+#endif
+      )
       
    {
 
@@ -226,7 +285,13 @@
 
       /* Criar elemento a inerir após */
 
-         pElem = CriarElemento( pLista , pValor ) ;
+         pElem = CriarElemento( pLista , pValor
+
+#ifdef _DEBUG
+                               , TipoValor
+                               , tam
+#endif 
+                               ) ;
          if ( pElem == NULL )
          {
             return LIS_CondRetFaltouMemoria ;
@@ -518,7 +583,12 @@
 ***********************************************************************/
 
    tpElemLista * CriarElemento( LIS_tppLista pLista ,
-                                void *       pValor  )
+                                void *       pValor
+#ifdef _DEBUG
+                              , char TipoValor
+                              , unsigned long tam
+#endif
+                              )
    {
 
       tpElemLista * pElem ;
@@ -532,6 +602,14 @@
       pElem->pValor = pValor ;
       pElem->pAnt   = NULL  ;
       pElem->pProx  = NULL  ;
+
+#ifdef _DEBUG
+
+      pElem->TipoValor = TipoValor; //WIP: CHECAR COM CAB
+      pElem->pCab = pLista;
+      pElem->tam = tam;
+
+#endif
 
       pLista->numElem ++ ;
 
