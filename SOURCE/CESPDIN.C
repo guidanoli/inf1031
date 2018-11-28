@@ -27,10 +27,10 @@
 #include    <string.h>
 
 #define CESPDIN_OWN
-#include "CESPDIN.h"
+#include "CESPDIN.H"
 #undef CESPDIN_OWN
 
-#include    "Generico.h"
+#include    "GENERICO.H"
 #include    "GERAALT.H"
 
 #include    "Tabelas\IdTiposEspaco.def"
@@ -781,7 +781,7 @@
 
       if ( Ponteiro == NULL )
       {
-         return CED_ID_TIPO_NULL ;
+         return CED_ID_TIPO_VALOR_NULO ;
       } /* if */
 
       pEspaco = ObterOrigemElemento( Ponteiro ) ;
