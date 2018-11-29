@@ -19,8 +19,8 @@
 *
 ***************************************************************************/
 
-      LIS_TipoEspacoElememento ,
-      LIS_TipoEspacoCabeca     ,
+      LIS_TipoEspacoElemento ,
+      LIS_TipoEspacoCabeca   ,
 
 /********** Fim do arquivo de definição: TiposEspacosLista.def  **********/
 

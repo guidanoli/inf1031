@@ -148,7 +148,10 @@
       LimparCabeca( pLista ) ;
 
 #ifdef _DEBUG
+
       pLista->TipoValor = TipoValor;
+      CED_DefinirTipoEspaco( pLista , LIS_TipoEspacoCabeca );
+
 #endif
 
       pLista->ExcluirValor = ExcluirValor ;
@@ -666,9 +669,11 @@
 
 #ifdef _DEBUG
 
-      pElem->TipoValor = TipoValor; //WIP: CHECAR COM CAB
+      pElem->TipoValor = TipoValor;
       pElem->pCab = pLista;
       pElem->tam = tam;
+      
+      CED_DefinirTipoEspaco( pElem , LIS_TipoEspacoElemento );
 
 #endif
 

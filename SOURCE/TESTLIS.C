@@ -47,10 +47,8 @@ static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
 
 // apenas para _DEBUG
 
-static const char VRF_LISTA_CMD           [ ] = "=verificarlista" ;
-static const char VRF_CORR_CMD            [ ] = "=verificarcorr"  ;
-static const char VRF_CAB_CMD             [ ] = "=verificarcab"   ;
-static const char DETURPAR_CMD            [ ] = "=deturpar"       ;
+static const char VRF_CMD                 [ ] = "=verificar"      ;
+static const char DETURPAR_CMD            [ ] = "=deturparlista"  ;
 
 
 #define TRUE  1
@@ -398,7 +396,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
       /* LIS &Verificar lista */
 
-         else if ( strcmp( ComandoTeste, VRF_LISTA_CMD ) == 0 )
+         else if ( strcmp( ComandoTeste, VRF_CMD ) == 0 )
          {
 
             numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
@@ -414,44 +412,6 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                       "Condicao de retorno errada ao verificar lista" ) ;
 
          } /* fim ativa: LIS  &Verificar lista */
-
-      /* LIS &Verificar elemento corrente */
-
-         else if ( strcmp( ComandoTeste, VRF_CORR_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
-
-            if( ( numLidos != 2 )
-             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            return TST_CompararInt( CondRetEsp ,
-                      LIS_VerificarCorrente( vtListas[ inxLista ] ) ,
-                      "Condicao de retorno errada ao verificar elemento corrente" ) ;
-
-         } /* fim ativa: LIS  &Verificar elemento corrente */
-
-      /* LIS &Verificar cabeça de lista */
-
-         else if ( strcmp( ComandoTeste, VRF_CAB_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
-
-            if( ( numLidos != 2 )
-             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            return TST_CompararInt( CondRetEsp ,
-                      LIS_VerificarCabeca( vtListas[ inxLista ] ) ,
-                      "Condicao de retorno errada ao verificar cabeca de lista" ) ;
-
-         } /* fim ativa: LIS  &Verificar cabeça de lista */
 
       /* LIS &Deturpar */
 
