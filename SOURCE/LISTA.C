@@ -547,6 +547,65 @@
 
    } /* Fim função: LIS  &Procurar elemento contendo valor */
 
+/***************************************************************************
+*
+*  Função: LIS  &Verificar Lista
+*  ****/
+
+   int LIS_VerificarLista( void * pLista )
+   {
+
+      int numFalhas = 0;
+
+
+
+      return numFalhas;
+
+   } /* Fim função: LIS  &Verificar Lista */
+
+/***************************************************************************
+*
+*  Função: LIS  &Verificar elemento corrente de Lista
+*  ****/
+
+   int LIS_VerificarCorrente( void * pLista )
+   {
+      
+      int numFalhas = 0;
+
+
+
+      return numFalhas;
+
+   } /* Fim função: LIS  &Verificar elemento corrente */
+
+/***************************************************************************
+*
+*  Função: LIS  &Verificar cabeça de Lista
+*  ****/
+
+   int LIS_VerificarCabeca( void * pLista )
+   {
+      
+      int numFalhas = 0;
+
+
+
+      return numFalhas;
+
+   } /* Fim função: LIS  &Verificar cabeça de Lista */
+
+/***************************************************************************
+*
+*  Função: LIS  &Deturpar lista
+*  ****/
+
+   void LIS_Deturpar( void * pLista ,
+                      LIS_tpModosDeturpacao ModoDeturpar )
+   {
+
+
+   } /* Fim função: LIS  &Deturpar lista */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
