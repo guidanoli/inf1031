@@ -7,3 +7,6 @@
 								desses valores aos seus devidos campos.
 21/11	1h			projetar			Fazer modelo da lista até o momento, com as
 								modificações descritas acima.
+28/11	1h			estudar				Li parte da documentação de CESPIN.H
+29/11	1h			codificar módulo		Protótipos das funções de debug no módulo LISTA
+								e os correspondentes comandos em TESTLIS.

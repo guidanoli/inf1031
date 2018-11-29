@@ -31,6 +31,7 @@
 
 #include    "Lista.h"
 
+// comandos de script
 
 static const char RESET_LISTA_CMD         [ ] = "=resetteste"     ;
 static const char CRIAR_LISTA_CMD         [ ] = "=criarlista"     ;
@@ -43,6 +44,13 @@ static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
 static const char IR_INICIO_CMD           [ ] = "=irinicio"       ;
 static const char IR_FIM_CMD              [ ] = "=irfinal"        ;
 static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
+
+// apenas para _DEBUG
+
+static const char VRF_LISTA_CMD           [ ] = "=verificarlista" ;
+static const char VRF_CORR_CMD            [ ] = "=verificarcorr"  ;
+static const char VRF_CAB_CMD             [ ] = "=verificarcab"   ;
+static const char DETURPAR_CMD            [ ] = "=deturpar"       ;
 
 
 #define TRUE  1
@@ -74,8 +82,8 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *
 *     Comandos disponíveis:
 *
-*     =resetteste
-*           - anula o vetor de listas. Provoca vazamento de memória
+*     =resetteste - anula o vetor de listas. Provoca vazamento de memória
+*
 *     =criarlista                   inxLista
 *     =destruirlista                inxLista
 *     =esvaziarlista                inxLista
@@ -86,6 +94,13 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *     =irinicio                     inxLista
 *     =irfinal                      inxLista
 *     =avancarelem                  inxLista  numElem CondRetEsp
+*
+*     Comandos para debug:
+*
+*     =deturpar                     inxLista  modoDeturpacao
+*     =verificarlista               inxLista  qtFalhasEsp
+*     =verificarcabeca              inxLista  qtFalhasEsp
+*     =verificarcorr                inxLista  qtFalhasEsp
 *
 ***********************************************************************/
 
@@ -378,6 +393,89 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                       "Condicao de retorno errada ao avancar" ) ;
 
          } /* fim ativa: LIS  &Avançar elemento */
+
+#ifdef _DEBUG
+
+      /* LIS &Verificar lista */
+
+         else if ( strcmp( ComandoTeste, VRF_LISTA_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
+
+            if( ( numLidos != 2 )
+             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            return TST_CompararInt( CondRetEsp ,
+                      LIS_VerificarLista( vtListas[ inxLista ] ) ,
+                      "Condicao de retorno errada ao verificar lista" ) ;
+
+         } /* fim ativa: LIS  &Verificar lista */
+
+      /* LIS &Verificar elemento corrente */
+
+         else if ( strcmp( ComandoTeste, VRF_CORR_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
+
+            if( ( numLidos != 2 )
+             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            return TST_CompararInt( CondRetEsp ,
+                      LIS_VerificarCorrente( vtListas[ inxLista ] ) ,
+                      "Condicao de retorno errada ao verificar elemento corrente" ) ;
+
+         } /* fim ativa: LIS  &Verificar elemento corrente */
+
+      /* LIS &Verificar cabeça de lista */
+
+         else if ( strcmp( ComandoTeste, VRF_CAB_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
+
+            if( ( numLidos != 2 )
+             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            return TST_CompararInt( CondRetEsp ,
+                      LIS_VerificarCabeca( vtListas[ inxLista ] ) ,
+                      "Condicao de retorno errada ao verificar cabeca de lista" ) ;
+
+         } /* fim ativa: LIS  &Verificar cabeça de lista */
+
+      /* LIS &Deturpar */
+
+         else if ( strcmp( ComandoTeste, DETURPAR_CMD ) == 0 )
+         {
+
+            LIS_tpModosDeturpacao modoDeturpacao;
+
+            numLidos = LER_LerParametros( "ii" , &inxLista, &modoDeturpacao ) ;
+
+            if( ( numLidos != 2 )
+             || ( modoDeturpacao < 0 ) || ( modoDeturpacao > 10 ) // AQUI É O MODO DE DETURPAÇÃO MÁXIMO
+             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            LIS_Deturpar( vtListas[ inxLista ] , modoDeturpacao );
+
+            return TST_CondRetOK ;
+
+         } /* fim ativa: LIS  &Verificar lista */
+
+#endif
 
       return TST_CondRetNaoConhec ;
 

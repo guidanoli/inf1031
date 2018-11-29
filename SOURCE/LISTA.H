@@ -13,9 +13,13 @@
 *  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores:   avs   Arndt Von Staa
+*             cai   Caique Molina
+*             gui   Guilherme Dantas
+*             nag   Nagib Suaid
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
+*     5       gui   29/nov/2018 início instrumentação
 *     4       avs   01/fev/2006 criar linguagem script simbólica
 *     3       avs   08/dez/2004 uniformização dos exemplos
 *     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
@@ -93,6 +97,50 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
    } LIS_tpCondRet ;
 
+/***********************************************************************
+*
+*  $TC Tipo de dados: LIS Modos de deturpar
+*
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+   typedef enum {
+
+         LIS_ModoDeturpacaoEliminaCorr = 1 ,
+            /* Elimina o elemento corrente da lista */
+
+         LIS_ModoDeturpacaoProxNULL = 2 ,
+            /* Atribui NULL ao ponteiro para o próximo nó */
+
+         LIS_ModoDeturpacaoAntNULL = 3 ,
+            /* Atribui NULL ao ponteiro para o nó anterior */
+
+         LIS_ModoDeturpacaoProxLixo = 4 ,
+            /* Atribui lixo ao ponteiro para o próximo nó */
+
+         LIS_ModoDeturpacaoAntLixo = 5 ,
+            /* Atribui lixo ao ponteiro para o nó anterior */
+
+         LIS_ModoDeturpacaoConteudoNULL = 6 ,
+            /* Atribui NULL ao ponteiro para o conteúdo do nó */
+
+         LIS_ModoDeturpacaoAlteraTipoNo = 7 ,
+            /* Altera o tipo de estrutura apontado no nó */
+
+         LIS_ModoDeturpacaoDesencadeiaNo = 8 ,
+            /* Desencadeia nó sem liberá-lo com free */
+
+         LIS_ModoDeturpacaoPontCorrNULL = 9 ,
+            /* Atribui NULL ao ponteiro corrente */
+
+         LIS_ModoDeturpacaoPontOrigNULL = 10
+            /* Atribui NULL ao ponteiro de origem */
+
+   } LIS_tpModosDeturpacao ;
+
+#endif
 
 /***********************************************************************
 *
@@ -349,6 +397,101 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
    LIS_tpCondRet LIS_ProcurarValor( LIS_tppLista pLista ,
                                     void * pValor        ) ;
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Verificar uma lista
+*
+*  $ED Descrição da função
+*     Função da interface de teste.
+*     Verifica completamente uma determinada lista.
+*     Também marca todos os espaços por ela ocupados.
+*
+*  $FV Valor retornado
+*     Quantidade de falhas encontradas.
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+   int LIS_VerificarLista( void * pLista ) ;
+
+#endif
+
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Verificar um elemento corrente da lista
+*
+*  $ED Descrição da função
+*     Função da interface de teste.
+*     Verifica a integridade do elemento corrente da lista.
+*
+*  $EP Parâmetros
+*     pLista - ponteiro para um espaço que deveria ser a cabeça
+*              de uma lista.
+*
+*  $FV Valor retornado
+*     Quantidade de falhas encontradas.
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+   int LIS_VerificarCorrente( void * pLista ) ;
+
+#endif
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Verificar cabeça de uma lista
+*
+*  $ED Descrição da função
+*     Função da interface de teste.
+*     Verifica a integridade da cabeça de uma lista.
+*
+*  $EP Parâmetros
+*     pLista - ponteiro para um espaço que deveria ser a cabeça
+*              de uma lista.
+*
+*  $FV Valor retornado
+*     Quantidade de falhas encontradas.
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+    int LIS_VerificarCabeca( void * pLista ) ;
+
+#endif
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Deturpar lista
+*
+*  $ED Descrição da função
+*     Função da interface de teste.
+*     Corrompe elementos específicos da estrutura da lista.
+*     Essa função destina-se a preparar os cenários de teste dos
+*     casos de teste utilizados ao testar os verificadores estruturais
+*     da lista.
+*     Esta função não tem proteção contra erros de uso, consequentemente
+*     poderá levar o programa a ser cancelado pelo sistema operacional.
+*
+*  $EP Parâmetros
+*     pLista       - ponteiro para cabeça da lista a ser deturpada
+*     ModoDeturpar - identifica como deve ser feita a deturpação
+*                    LIS_tpModosDeturpacao identifica os modos de
+*                    deturpação conhecidos
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+   void LIS_Deturpar( void * pLista ,
+                      LIS_tpModosDeturpacao ModoDeturpar ) ;
+
+#endif
 
 #undef LISTA_EXT
 

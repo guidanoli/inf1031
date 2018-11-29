@@ -16,7 +16,7 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor        Data     Observações
-*     5       gui,nag   21/nov/2018 início da instrumentação
+*     5       gui,nag   21/nov/2018 modificações na estrutura para ser auto-verificável
 *     4       avs       01/fev/2006 criar linguagem script simbólica
 *     3       avs       08/dez/2004 uniformização dos exemplos
 *     2       avs       07/jul/2003 unificação de todos os módulos em um só projeto
@@ -31,8 +31,10 @@
 #include   <assert.h>
 
 #ifdef _DEBUG
+#include "GENERICO.H"
 #include "CESPDIN.H"
 #include "CONTA.H"
+#include "Tabelas\\IdTiposEspaco.def"
 #endif
 
 #define LISTA_OWN
