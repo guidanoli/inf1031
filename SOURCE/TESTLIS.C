@@ -32,6 +32,7 @@
 
 #ifdef _DEBUG
 #include "CONTA.H"
+#include "CESPDIN.H"
 #include "INTRPCNT.H"
 #endif
 

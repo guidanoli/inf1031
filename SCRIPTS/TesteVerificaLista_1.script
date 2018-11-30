@@ -40,6 +40,13 @@
 == Ativar contagem
 =iniciarcontagem
 
+== Criar lista
+=criarlista lista0
+=verificar lista0 0
+
+== Destruir lsita
+=destruirlista lista0
+
 == Terminar contador
 =verificarcontagens 0
 =pararcontagem
