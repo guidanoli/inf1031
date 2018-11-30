@@ -23,3 +23,9 @@
 								estrutura não deturpada. Os contadores até agora
 								inseridos estão apenas no começo das funções.
 								+ Função "IrInicioLista" e "IrFinalLista" testados.
+30/11	2h			revisar código módulo		Descobri que não era para colocar contadores fora
+								da função verificadora. Retirei-os e também os
+								asserts. Coloquei os contadores dentro da função
+								verificadora. + Função recursiva "VerificaMemória"
+								que marca como ativos todos os espaços atrelados à
+								cabeça de Lista fornecida.
