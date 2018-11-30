@@ -28,8 +28,12 @@
 
 #include    "Generico.h"
 #include    "LerParm.h"
-
 #include    "Lista.h"
+
+#ifdef _DEBUG
+#include "CONTA.H"
+#include "INTRPCNT.H"
+#endif
 
 // comandos de script
 
@@ -44,12 +48,27 @@ static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
 static const char IR_INICIO_CMD           [ ] = "=irinicio"       ;
 static const char IR_FIM_CMD              [ ] = "=irfinal"        ;
 static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
+static const char PROCURAR_VALOR_CMD      [ ] = "=procurarvalor"  ;
 
 // apenas para _DEBUG
 
+static const char INICIALIZAR_CONTADORES_CMD [ ] = "=inicializarcontadores"   ;
+static const char TERMINAR_CONTADORES_CMD    [ ] = "=terminarcontadores"      ;
+static const char REGISTRAR_ACUMULADOR_CMD   [ ] = "=registraracumulador"     ;
+static const char LER_CONTADORES_CMD         [ ] = "=lercontadores"           ;
+static const char GRAVAR_CONTADORES_CMD      [ ] = "=gravarcontadores"        ;
+static const char ZERAR_CONTADORES_CMD       [ ] = "=zerartodoscontadores"    ;
+static const char ZERAR_CONTADOR_DADO_CMD    [ ] = "=zerarcontador"           ;
+static const char INICIAR_CONTAGEM_CMD       [ ] = "=iniciarcontagem"         ;
+static const char PARAR_CONTAGEM_CMD         [ ] = "=pararcontagem"           ;
+static const char OBTER_CONTAGEM_CMD         [ ] = "=contagemcontador"        ;
+static const char EXIBIR_CONTAGEM_CMD        [ ] = "=exibircontagem"          ;
+static const char OBTER_NUM_CONTADORES_CMD   [ ] = "=numcontadores"           ;
+static const char OBTER_TOTAL_CONTAGEM_CMD   [ ] = "=contagemtotal"           ;
+static const char VERIFICAR_CONTAGENS_CMD    [ ] = "=verificarcontagens" ;
+
 static const char VRF_CMD                 [ ] = "=verificar"      ;
 static const char DETURPAR_CMD            [ ] = "=deturparlista"  ;
-
 
 #define TRUE  1
 #define FALSE 0
@@ -59,6 +78,8 @@ static const char DETURPAR_CMD            [ ] = "=deturparlista"  ;
 
 #define DIM_VT_LISTA   10
 #define DIM_VALOR     100
+
+int contadoresInicializados = 0 ;
 
 LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
@@ -91,14 +112,56 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *     =excluirelem                  inxLista  CondRetEsp
 *     =irinicio                     inxLista
 *     =irfinal                      inxLista
+*     =procurarvalor                inxLista  string  CondRetEsp
 *     =avancarelem                  inxLista  numElem CondRetEsp
 *
-*     Comandos para debug:
+*     Comandos para _DEBUG:
+*
+*     =inicializarcontadores   <nome arquivo contadores acumulado>
+*          o nome do arquivo pode ser nulo.
+*          Se o nome do arquivo for ".", será também tratado como nulo.
+*
+*     =terminarcontadores    <número contadores iguais a zero esperado>
+*          Grava o arquivo de contadores acumulados, caso esteja
+*          definido (nome não vazio).
+*
+*     =registraracumulador   <nome arquivo contadores acumulado>
+*          substitui o nome registrado.
+*          o nome do arquivo pode ser nulo.
+*          Se o nome do arquivo for ".", será também tratado como nulo.
+*
+*     =lercontadores         <nome arquivo contadores>
+*          leê o arquivo e atribui os valores iniciais somente se
+*          o contador tiver sido lido de um arquivo acumulado.
+*
+*     =gravarcontadores      <nome arquivo contadores acumulado>
+*          grava o arquivo de contadores acumulado registrado.
+*          A gravação ocorre também ao terminar contadores
+*
+*     =zerartodoscontadores
+*
+*     =zerarcontador   <string nome do contador>
+*
+*     =iniciarcontagem
+*          Ativa a contagem. Este comando precisa ser dado.
+*          =inicializarcontadores não ativa a contagem, somente ativa
+*          o módulo
+*
+*     =pararcontagem
+*          Desativa a contagem
+*
+*     =contagemcontador   <número esperado>
+*
+*     =exibircontagem
+*
+*     =numcontadores      <número esperado>
+*
+*     =contagemtotal      <somatório das contagens esperado>
+*
+*     =verificarcontagens <número contadores zero iguais a zero esperado>
 *
 *     =deturpar                     inxLista  modoDeturpacao
-*     =verificarlista               inxLista  qtFalhasEsp
-*     =verificarcabeca              inxLista  qtFalhasEsp
-*     =verificarcorr                inxLista  qtFalhasEsp
+*     =verificar                    inxLista  qtFalhasEsp
 *
 ***********************************************************************/
 
@@ -109,7 +172,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
           numLidos   = -1 ,
           CondRetEsp = -1  ;
 
-      TST_tpCondRet CondRet ;
+      LIS_tpCondRet CondRet ;
 
       char   StringDado[  DIM_VALOR ] ;
       char * pDado ;
@@ -225,7 +288,6 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             strcpy( pDado , StringDado ) ;
 
-
             CondRet = LIS_InserirElementoAntes( vtListas[ inxLista ] , pDado 
 #ifdef _DEBUG
                , 's' , sizeof(pDado)
@@ -263,7 +325,6 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
             } /* if */
 
             strcpy( pDado , StringDado ) ;
-
 
             CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , pDado 
 #ifdef _DEBUG
@@ -392,6 +453,35 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
          } /* fim ativa: LIS  &Avançar elemento */
 
+      /* LIS &Procurar valor */
+
+         else if ( strcmp( ComandoTeste, PROCURAR_VALOR_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" , &inxLista , StringDado ,
+                                &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            if( strcmp( StringDado, "ElemCorr" ) == 0 )
+            {
+               pDado = (char *) LIS_ObterValor( vtListas[ inxLista ] );
+               CondRet = LIS_ProcurarValor( vtListas[ inxLista ] , pDado );
+            } /* if */
+            else
+            {
+               CondRet = LIS_ProcurarValor( vtListas[ inxLista ] , StringDado );
+            } /* else */
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                                    "Condicao de retorno errada ao procurar valor" );
+
+         } /* fim ativa: LIS  &Procurar valor */
+
 #ifdef _DEBUG
 
       /* LIS &Verificar lista */
@@ -433,7 +523,26 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: LIS  &Verificar lista */
+         } /* fim ativa: LIS  &Iniciar contador */
+
+         /* ICNT &Comandos do módulo de interpretador de contadores */
+
+         else if (   strcmp( ComandoTeste , INICIALIZAR_CONTADORES_CMD ) == 0 ||
+                     strcmp( ComandoTeste , TERMINAR_CONTADORES_CMD ) == 0 ||
+                     strcmp( ComandoTeste , REGISTRAR_ACUMULADOR_CMD ) == 0 ||
+                     strcmp( ComandoTeste , LER_CONTADORES_CMD ) == 0 ||
+                     strcmp( ComandoTeste , GRAVAR_CONTADORES_CMD ) == 0 ||
+                     strcmp( ComandoTeste , ZERAR_CONTADORES_CMD ) == 0 ||
+                     strcmp( ComandoTeste , INICIAR_CONTAGEM_CMD ) == 0 ||
+                     strcmp( ComandoTeste , PARAR_CONTAGEM_CMD ) == 0 ||
+                     strcmp( ComandoTeste , OBTER_CONTAGEM_CMD ) == 0 ||
+                     strcmp( ComandoTeste , EXIBIR_CONTAGEM_CMD ) == 0 ||
+                     strcmp( ComandoTeste , OBTER_NUM_CONTADORES_CMD ) == 0 ||
+                     strcmp( ComandoTeste , OBTER_TOTAL_CONTAGEM_CMD ) == 0 ||
+                     strcmp( ComandoTeste , VERIFICAR_CONTAGENS_CMD ) == 0 )
+         {
+            return ICNT_EfetuarComadoContagem( ComandoTeste );
+         } /* fim ativa: ICNT &Comandos do módulo de interpretador de contadores */
 
 #endif
 

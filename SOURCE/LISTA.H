@@ -95,8 +95,13 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_CondRetFaltouMemoria ,
                /* Faltou memória ao tentar criar um elemento de lista */
 
-         LIS_CondRetErroEstrutura
+#ifdef _DEBUG
+         LIS_CondRetErroEstrutura ,
                /* Algum erro na estrutura ocorreu */
+
+         LIS_CondRetErroParametro
+               /* Função recebeu um parâmetro inválido */
+#endif
 
    } LIS_tpCondRet ;
 
@@ -228,6 +233,9 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *  $FV Valor retornado
 *     LIS_CondRetOK
 *     LIS_CondRetFaltouMemoria
+*
+*     Para _DEBUG ativo:
+*     LIS_CondRetErroParametro
 *
 ***********************************************************************/
 

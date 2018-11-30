@@ -141,6 +141,10 @@
 
       LIS_tpLista * pLista = NULL ;
 
+      #ifdef _DEBUG
+         CNT_CONTAR( "LIS_CriarLista" ) ;
+      #endif
+
       pLista = ( LIS_tpLista * ) malloc( sizeof( LIS_tpLista )) ;
       if ( pLista == NULL )
       {
@@ -171,6 +175,7 @@
    {
 
       #ifdef _DEBUG
+         CNT_CONTAR( "LIS_DestruirLista" ) ;
          assert( pLista != NULL ) ;
       #endif
 
@@ -192,6 +197,7 @@
       tpElemLista * pProx ;
 
       #ifdef _DEBUG
+         CNT_CONTAR( "LIS_EsvaziarLista" ) ;
          assert( pLista != NULL ) ;
       #endif
 
@@ -224,7 +230,15 @@
       tpElemLista * pElem ;
 
       #ifdef _DEBUG
+
+         CNT_CONTAR( "LIS_InserirElementoAntes" ) ;
          assert( pLista != NULL ) ;
+
+         if( TipoValor != pLista->TipoValor )
+         {
+            return LIS_CondRetErroEstrutura;
+         } /* if */
+
       #endif
 
       /* Criar elemento a inerir antes */
@@ -287,7 +301,15 @@
       tpElemLista * pElem ;
 
       #ifdef _DEBUG
+
+         CNT_CONTAR( "LIS_InserirElementoApos" ) ;
          assert( pLista != NULL ) ;
+
+         if( TipoValor != pLista->TipoValor )
+         {
+            return LIS_CondRetErroEstrutura;
+         } /* if */
+
       #endif
 
       /* Criar elemento a inerir após */
@@ -343,6 +365,7 @@
       tpElemLista * pElem ;
 
       #ifdef _DEBUG
+         CNT_CONTAR( "LIS_ExcluirElemento" ) ;
          assert( pLista  != NULL ) ;
       #endif
 
@@ -389,6 +412,7 @@
    {
 
       #ifdef _DEBUG
+         CNT_CONTAR( "LIS_ObterValor" ) ;
          assert( pLista != NULL ) ;
       #endif
 
@@ -410,6 +434,7 @@
    {
 
       #ifdef _DEBUG
+         CNT_CONTAR( "IrInicioLista" ) ;
          assert( pLista != NULL ) ;
       #endif
 
@@ -426,6 +451,7 @@
    {
 
       #ifdef _DEBUG
+         CNT_CONTAR( "IrFinalLista" ) ;
          assert( pLista != NULL ) ;
       #endif
 
@@ -447,6 +473,7 @@
       tpElemLista * pElem ;
 
       #ifdef _DEBUG
+         CNT_CONTAR( "LIS_AvancarElementoCorrente" ) ;
          assert( pLista != NULL ) ;
       #endif
 
@@ -529,6 +556,7 @@
       tpElemLista * pElem ;
 
       #ifdef _DEBUG
+         CNT_CONTAR( "LIS_ProcurarValor" ) ;
          assert( pLista  != NULL ) ;
       #endif
 
@@ -565,7 +593,7 @@
       LIS_tppLista pCab = NULL;
       LIS_tppElemLista pCorr = NULL , pOrig = NULL , pFinal = NULL , pAux = NULL;
       char TipoValor;
-      int tam , numElem , calc_numElem ;
+      int achou , numElem , calc_numElem ;
 
       int numFalhas = 0;
 
@@ -599,108 +627,185 @@
 
       calc_numElem = 0;
       pAux = pOrig;
+      achou = 0;
       while( pAux != NULL )
       {
+         if( pAux == pCorr )
+         {
+            achou = 1;
+         } /* if */
          calc_numElem++;
          pAux = pAux->pProx;
       } /* while */
 
       if ( TST_CompararInt(  calc_numElem , numElem ,
-           "Campo de número de elementos incorreto (" ) != TST_CondRetOK )
+           "Campo de número de elementos incorreto (percorrendo pela origem)" ) != TST_CondRetOK )
+      {
+         numFalhas++;
+      } /* if */
+
+      if ( calc_numElem > 0 && TST_CompararInt( achou , 1 ,
+           "Não achou elemento corrente (percorrendo pela origem)" ) != TST_CondRetOK )
       {
          numFalhas++;
       } /* if */
 
       calc_numElem = 0;
       pAux = pFinal;
+      achou = 0;
       while( pAux != NULL )
       {
+         if( pAux == pCorr )
+         {
+            achou = 1;
+         } /* if */
          calc_numElem++;
          pAux = pAux->pAnt;
       } /* while */
 
       if ( TST_CompararInt(  calc_numElem , numElem ,
-           "Campo de número de elementos incorreto" ) != TST_CondRetOK )
+           "Campo de número de elementos incorreto (percorrendo pelo final)" ) != TST_CondRetOK )
       {
+         numFalhas++;
+      } /* if */
+
+      if ( calc_numElem > 0 && TST_CompararInt( achou , 1 ,
+           "Não achou elemento corrente (percorrendo pelo final)" ) != TST_CondRetOK )
+      {
+         numFalhas++;
+      } /* if */
+
+      if( numElem < 0 )
+      {
+         TST_NotificarFalha( "Número de elementos negativo" ) ;
          numFalhas++;
       } /* if */
 
       if( numElem == 0 )
       {
-         if(   TST_CompararPonteiro(
-               pCorr, NULL , "pCorr deve ser NULL para numElem = 0" )
-               != TST_CondRetOK )
+         if( pCorr != NULL  )
          {
+            TST_NotificarFalha( "pCorr deve ser NULL para numElem = 0" ) ;
             numFalhas++;
          } /* if */
-         if(   TST_CompararPonteiro(
-               pOrig, NULL , "pOrig deve ser NULL para numElem = 0" )
-               != TST_CondRetOK )
+         if( pOrig != NULL  )
          {
+            TST_NotificarFalha( "pOrig deve ser NULL para numElem = 0" ) ;
             numFalhas++;
          } /* if */
-         if(   TST_CompararPonteiro(
-               pFinal, NULL , "pFinal deve ser NULL para numElem = 0" )
-               != TST_CondRetOK )
+         if( pFinal != NULL  )
          {
+            TST_NotificarFalha( "pFinal deve ser NULL para numElem = 0" ) ;
             numFalhas++;
          } /* if */
       } /* if */
       else if( numElem == 1 )
       {
-         if(   TST_CompararPonteiro(
-               pCorr, NULL , "pCorr deve ser diferente de NULL para numElem = 1" )
-               == TST_CondRetOK )
+         if( pCorr == NULL  )
          {
+            TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem = 1" ) ;
             numFalhas++;
          } /* if */
-         if(   TST_CompararPonteiro(
-               pOrig, NULL , "pOrig deve ser diferente de NULL para numElem = 1" )
-               == TST_CondRetOK )
+         if( pOrig == NULL  )
          {
+            TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem = 1" ) ;
             numFalhas++;
          } /* if */
-         if(   TST_CompararPonteiro(
-               pFinal, NULL , "pFinal deve ser diferente de NULL para numElem = 1" )
-               == TST_CondRetOK )
+         if( pFinal == NULL  )
          {
+            TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem = 1" ) ;
             numFalhas++;
          } /* if */
-         if( !( pCorr == pOrig && pCorr == pFinal ) )
-         {
-            TST_NotificarFalha( "pCorr, pOrig e pFinal deveriam apontar para o único elemento de uma lista unitária" );
-            numFalhas++;
-         } /* if */
-      } /* else if */
-      else
-      {
-
-         if(   TST_CompararPonteiro(
-               pOrig, pFinal , "pOrig deve ser diferente de pFinal para n > 1" )
+         if(   TST_CompararPonteiro( pOrig , pFinal ,
+               "pOrig e pFinal devem apontar para o mesmo elemento para numElem = 1" )
                != TST_CondRetOK )
          {
             numFalhas++;
          } /* if */
-         if(   TST_CompararPonteiro(
-               pOrig, NULL , "pOrig deve ser diferente de NULL para numElem > 1" )
-               == TST_CondRetOK )
+         if(   TST_CompararPonteiro( pOrig , pCorr ,
+               "pOrig e pCorr devem apontar para o mesmo elemento para numElem = 1" )
+               != TST_CondRetOK )
          {
             numFalhas++;
          } /* if */
-         if(   TST_CompararPonteiro(
-               pFinal, NULL , "pFinal deve ser diferente de NULL para numElem > 1" )
-               == TST_CondRetOK )
+      } /* else if */
+      else if( numElem > 1 )
+      {
+         if( pCorr == NULL  )
          {
+            TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem > 1" ) ;
             numFalhas++;
          } /* if */
-         if(   TST_CompararInt( LIS_ProcurarValor( pCab , pCorr ) ,LIS_CondRetOK ,
-               "ponteiro para elemento corrente não aponta para elemento que está na lista" ) != TST_CondRetOK )
+         if( pOrig == NULL  )
          {
-             numFalhas++;
+            TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem > 1" ) ;
+            numFalhas++;
+         } /* if */
+         if( pFinal == NULL  )
+         {
+            TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem > 1" ) ;
+            numFalhas++;
          } /* if */
       } /* else */
       
-      /*  */
+      /* Verificar elemento corrente */
+
+      if( numElem > 0 )
+      {
+         if ( ! CED_VerificarEspaco( pCorr , NULL ) )
+         {
+            TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+            numFalhas++;
+         } /* if */
+         if ( TST_CompararInt( LIS_TipoEspacoElemento ,
+           CED_ObterTipoEspaco( pCorr ) ,
+           "Tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if( TST_CompararPonteiro( pCab , pCorr->pCab ,
+             "Elemento corrente não faz parte da lista" ) != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if( pCorr->pAnt == NULL )
+         {
+            if( TST_CompararPonteiro( pCorr , pCorr->pCab->pOrigemLista ,
+                "Elemento corrente não é origem da lista" ) != TST_CondRetOK )
+            {
+               numFalhas++;
+            } /* if */
+         } /* else */
+         else
+         {
+            if( TST_CompararPonteiro( pCorr , pCorr->pAnt->pProx ,
+                "Elemento corrente não está corretamente encadeado pela esquerda" ) != TST_CondRetOK )
+            {
+               numFalhas++;
+            } /* if */
+         } /* else */
+         if( pCorr->pProx == NULL )
+         {
+            if( TST_CompararPonteiro( pCorr , pCorr->pCab->pFimLista ,
+                "Elemento corrente não é fim da lista" ) != TST_CondRetOK )
+            {
+               numFalhas++;
+            } /* if */
+         } /* else */
+         else
+         {
+            if( TST_CompararPonteiro( pCorr , pCorr->pProx->pAnt ,
+                "Elemento corrente não está corretamente encadeado pela direita" ) != TST_CondRetOK )
+            {
+               numFalhas++;
+            } /* if */
+         } /* else */
+         if( TST_CompararChar( TipoValor , pCorr->TipoValor ,
+             "Elemento corrente tem tipo de valor diferente da cabeça" ) != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+      } /* if */
 
       return numFalhas;
 
@@ -714,8 +819,45 @@
    void LIS_Deturpar( void * pListaParam ,
                       LIS_tpModosDeturpacao ModoDeturpar )
    {
+      LIS_tppLista pLista = NULL;
+      LIS_tppElemLista pCorr = NULL;
 
+      if( pListaParam == NULL )
+      {
+         return ;
+      } /* if */
 
+      pLista = (LIS_tppLista) pListaParam;
+      pCorr = pLista->pElemCorr;
+
+      switch ( ModoDeturpar )
+      {
+
+      case LIS_ModoDeturpacaoEliminaCorr:
+         /* Elimina o elemento corrente da lista */
+
+         if( pCorr->pProx != NULL )
+         {
+            pCorr->pProx->pAnt = pCorr->pAnt;
+         } /* if */
+         else
+         {
+            pCorr->pCab->pFimLista = pCorr->pAnt;
+         } /* else */
+
+         if( pCorr->pAnt != NULL )
+         {
+            pCorr->pAnt->pProx = pCorr->pProx;
+         } /* if */
+         else
+         {
+            pCorr->pCab->pOrigemLista = pCorr->pProx;
+         } /* else */
+         
+         break;
+
+      } /* switch */
+      
    } /* Fim função: LIS  &Deturpar lista */
 
 #endif
