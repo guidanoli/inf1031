@@ -1,0 +1,48 @@
+// Script:    TesteVerificaLista_1.script
+// Autor:     Guilherme Dantas
+// Data:      30/11/2018
+// Propósito: Testa a função deturpa e verifica na estrutura de LISTA
+//
+
+== Inicializar valores
+=declararparm   lista0  int 0
+=declararparm   lista1  int 1
+=declararparm   lista2  int 2
+
+=declararparm   str0    string  "abcdefg"
+=declararparm   str1    string  "qwerty"
+=declararparm   str2    string  "xxx"
+=declararparm   str3    string  "xpto"
+
+=declararparm   corr	string  "ElemCorr"
+
+=declararparm   OK             int  0
+=declararparm   ListaVazia     int  1
+=declararparm   FimLista       int  2
+=declararparm   NaoAchou       int  3
+=declararparm   FaltouMemoria  int  4
+=declararparm   ErroEstrutura  int  5
+=declararparm   ErroParam      int  6
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+=declararparm	ArqDefCnt      	string "DefContadoresLista.def"
+=declararparm   ArqCntSaida     string "ContadoresLista.count"
+
+== Iniciar contador
+=inicializarcontadores ArqCntSaida
+
+== Ler contadores
+=lercontadores ArqDefCnt
+=registraracumulador ArqCntSaida
+
+== Ativar contagem
+=iniciarcontagem
+
+== Terminar contador
+=verificarcontagens 0
+=pararcontagem
+=terminarcontadores 0
+
+// fim

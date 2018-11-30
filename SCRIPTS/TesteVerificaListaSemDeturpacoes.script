@@ -27,19 +27,15 @@
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
 
-=declararparm	ArqCnt      	string "DefContadoresLista.def"
-=declararparm   ArqCntAcumul	string "DefContadoresAcumuladosLista.def"
+=declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
 
 == Iniciar contador
 =inicializarcontadores ArqCntSaida
-=contagemtotal 0
-=numcontadores 0
 
 == Ler contadores
-=lercontadores ArqCnt
-=registraracumulador ArqCntAcumul
-=numcontadores 11
+=lercontadores ArqDefCnt
+=registraracumulador ArqCntSaida
 
 == Ativar contagem
 =iniciarcontagem

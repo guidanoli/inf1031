@@ -10,3 +10,16 @@
 28/11	1h			estudar				Li parte da documentação de CESPIN.H
 29/11	1h			codificar módulo		Protótipos das funções de debug no módulo LISTA
 								e os correspondentes comandos em TESTLIS.
+30/11	3h			codificar módulo		Implementados contadores no módulo LISTA, através
+								do módulo disponibilizado pelo arcabouço que inter-
+								preta os comandos para contadores do módulo CONTA.
+								+ Verificador para lista (início do desenvolvimento
+								com bastantes assertivas executáveis implementadas)
+								+ Função "ProcurarValor" agora testável.
+30/11	1h			revisar script de teste		Adaptação do script de teste superficial que A.V.S.
+								havia redigido, com verificadores a cada comando
+								que interfirisse na estrutura da lista + contadores
+								funcionando corretamente, e com nenhum zerado para
+								estrutura não deturpada. Os contadores até agora
+								inseridos estão apenas no começo das funções.
+								+ Função "IrInicioLista" e "IrFinalLista" testados.
