@@ -92,8 +92,11 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_CondRetNaoAchou ,
                /* Não encontrou o valor procurado */
 
-         LIS_CondRetFaltouMemoria
+         LIS_CondRetFaltouMemoria ,
                /* Faltou memória ao tentar criar um elemento de lista */
+
+         LIS_CondRetErroEstrutura
+               /* Algum erro na estrutura ocorreu */
 
    } LIS_tpCondRet ;
 
@@ -407,29 +410,8 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     Verifica completamente uma determinada lista.
 *     Também marca todos os espaços por ela ocupados.
 *
-*  $FV Valor retornado
-*     Quantidade de falhas encontradas.
-*
-***********************************************************************/
-
-#ifdef _DEBUG
-
-   int LIS_VerificarLista( void * pLista ) ;
-
-#endif
-
-
-/***********************************************************************
-*
-*  $FC Função: LIS  &Verificar um elemento corrente da lista
-*
-*  $ED Descrição da função
-*     Função da interface de teste.
-*     Verifica a integridade do elemento corrente da lista.
-*
 *  $EP Parâmetros
-*     pLista - ponteiro para um espaço que deveria ser a cabeça
-*              de uma lista.
+*     pListaParam  - ponteiro para cabeça da lista a ser deturpada
 *
 *  $FV Valor retornado
 *     Quantidade de falhas encontradas.
@@ -438,30 +420,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
 #ifdef _DEBUG
 
-   int LIS_VerificarCorrente( void * pLista ) ;
-
-#endif
-
-/***********************************************************************
-*
-*  $FC Função: LIS  &Verificar cabeça de uma lista
-*
-*  $ED Descrição da função
-*     Função da interface de teste.
-*     Verifica a integridade da cabeça de uma lista.
-*
-*  $EP Parâmetros
-*     pLista - ponteiro para um espaço que deveria ser a cabeça
-*              de uma lista.
-*
-*  $FV Valor retornado
-*     Quantidade de falhas encontradas.
-*
-***********************************************************************/
-
-#ifdef _DEBUG
-
-    int LIS_VerificarCabeca( void * pLista ) ;
+   int LIS_VerificarLista( void * pListaParam ) ;
 
 #endif
 
@@ -479,7 +438,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     poderá levar o programa a ser cancelado pelo sistema operacional.
 *
 *  $EP Parâmetros
-*     pLista       - ponteiro para cabeça da lista a ser deturpada
+*     pListaParam  - ponteiro para cabeça da lista a ser deturpada
 *     ModoDeturpar - identifica como deve ser feita a deturpação
 *                    LIS_tpModosDeturpacao identifica os modos de
 *                    deturpação conhecidos
@@ -488,7 +447,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
 #ifdef _DEBUG
 
-   void LIS_Deturpar( void * pLista ,
+   void LIS_Deturpar( void * pListaParam ,
                       LIS_tpModosDeturpacao ModoDeturpar ) ;
 
 #endif

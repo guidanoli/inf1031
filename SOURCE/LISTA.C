@@ -110,6 +110,8 @@
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
+   typedef struct tagElemLista * LIS_tppElemLista;
+
    static void LiberarElemento( LIS_tppLista   pLista ,
                                 tpElemLista  * pElem   ) ;
 
@@ -550,17 +552,155 @@
 
    } /* Fim função: LIS  &Procurar elemento contendo valor */
 
+#ifdef _DEBUG
+
 /***************************************************************************
 *
 *  Função: LIS  &Verificar Lista
 *  ****/
 
-   int LIS_VerificarLista( void * pLista )
+   int LIS_VerificarLista( void * pListaParam )
    {
+
+      LIS_tppLista pCab = NULL;
+      LIS_tppElemLista pCorr = NULL , pOrig = NULL , pFinal = NULL , pAux = NULL;
+      char TipoValor;
+      int tam , numElem , calc_numElem ;
 
       int numFalhas = 0;
 
+      if( pListaParam == NULL )
+      {
+         TST_NotificarFalha( "Tentou verificar cabeça de lista inexistente." ) ;
+         numFalhas++;
+      } /* if */
 
+      if ( ! CED_VerificarEspaco( pListaParam , NULL ) )
+      {
+         TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+         numFalhas++;
+      } /* if */
+
+      if ( TST_CompararInt( LIS_TipoEspacoCabeca ,
+           CED_ObterTipoEspaco( pListaParam ) ,
+           "Tipo do espaço de dados não é cabeça de lista." ) != TST_CondRetOK )
+      {
+         numFalhas++;
+      } /* if */
+
+      pCab = (LIS_tppLista) pListaParam;
+      pCorr = pCab->pElemCorr;
+      pOrig = pCab->pOrigemLista;
+      pFinal = pCab->pFimLista;
+      TipoValor = pCab->TipoValor;
+      numElem = pCab->numElem;
+      
+      /* Verificar cabeça */
+
+      calc_numElem = 0;
+      pAux = pOrig;
+      while( pAux != NULL )
+      {
+         calc_numElem++;
+         pAux = pAux->pProx;
+      } /* while */
+
+      if ( TST_CompararInt(  calc_numElem , numElem ,
+           "Campo de número de elementos incorreto (" ) != TST_CondRetOK )
+      {
+         numFalhas++;
+      } /* if */
+
+      calc_numElem = 0;
+      pAux = pFinal;
+      while( pAux != NULL )
+      {
+         calc_numElem++;
+         pAux = pAux->pAnt;
+      } /* while */
+
+      if ( TST_CompararInt(  calc_numElem , numElem ,
+           "Campo de número de elementos incorreto" ) != TST_CondRetOK )
+      {
+         numFalhas++;
+      } /* if */
+
+      if( numElem == 0 )
+      {
+         if(   TST_CompararPonteiro(
+               pCorr, NULL , "pCorr deve ser NULL para numElem = 0" )
+               != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararPonteiro(
+               pOrig, NULL , "pOrig deve ser NULL para numElem = 0" )
+               != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararPonteiro(
+               pFinal, NULL , "pFinal deve ser NULL para numElem = 0" )
+               != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+      } /* if */
+      else if( numElem == 1 )
+      {
+         if(   TST_CompararPonteiro(
+               pCorr, NULL , "pCorr deve ser diferente de NULL para numElem = 1" )
+               == TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararPonteiro(
+               pOrig, NULL , "pOrig deve ser diferente de NULL para numElem = 1" )
+               == TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararPonteiro(
+               pFinal, NULL , "pFinal deve ser diferente de NULL para numElem = 1" )
+               == TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if( !( pCorr == pOrig && pCorr == pFinal ) )
+         {
+            TST_NotificarFalha( "pCorr, pOrig e pFinal deveriam apontar para o único elemento de uma lista unitária" );
+            numFalhas++;
+         } /* if */
+      } /* else if */
+      else
+      {
+
+         if(   TST_CompararPonteiro(
+               pOrig, pFinal , "pOrig deve ser diferente de pFinal para n > 1" )
+               != TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararPonteiro(
+               pOrig, NULL , "pOrig deve ser diferente de NULL para numElem > 1" )
+               == TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararPonteiro(
+               pFinal, NULL , "pFinal deve ser diferente de NULL para numElem > 1" )
+               == TST_CondRetOK )
+         {
+            numFalhas++;
+         } /* if */
+         if(   TST_CompararInt( LIS_ProcurarValor( pCab , pCorr ) ,LIS_CondRetOK ,
+               "ponteiro para elemento corrente não aponta para elemento que está na lista" ) != TST_CondRetOK )
+         {
+             numFalhas++;
+         } /* if */
+      } /* else */
+      
+      /*  */
 
       return numFalhas;
 
@@ -568,47 +708,17 @@
 
 /***************************************************************************
 *
-*  Função: LIS  &Verificar elemento corrente de Lista
-*  ****/
-
-   int LIS_VerificarCorrente( void * pLista )
-   {
-      
-      int numFalhas = 0;
-
-
-
-      return numFalhas;
-
-   } /* Fim função: LIS  &Verificar elemento corrente */
-
-/***************************************************************************
-*
-*  Função: LIS  &Verificar cabeça de Lista
-*  ****/
-
-   int LIS_VerificarCabeca( void * pLista )
-   {
-      
-      int numFalhas = 0;
-
-
-
-      return numFalhas;
-
-   } /* Fim função: LIS  &Verificar cabeça de Lista */
-
-/***************************************************************************
-*
 *  Função: LIS  &Deturpar lista
 *  ****/
 
-   void LIS_Deturpar( void * pLista ,
+   void LIS_Deturpar( void * pListaParam ,
                       LIS_tpModosDeturpacao ModoDeturpar )
    {
 
 
    } /* Fim função: LIS  &Deturpar lista */
+
+#endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
