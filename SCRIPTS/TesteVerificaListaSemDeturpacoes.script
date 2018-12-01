@@ -28,10 +28,10 @@
 =declararparm   pNaoNULL       int  1
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
-=declararparm   ArqCntSaida     string "ContadoresLista.count"
+=declararparm   ArqCntSaida     string "ContadoresLista.log"
 
 == Iniciar contador
-=inicializarcontadores ArqCntSaida
+=inicializarcontadores ""
 
 == Ler contadores
 =lercontadores ArqDefCnt
@@ -169,8 +169,8 @@
 =destruirlista   lista2
 
 == Terminar contador
-=verificarcontagens 0
 =pararcontagem
+=verificarcontagens 0
 =terminarcontadores 0
 
 // fim

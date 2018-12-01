@@ -16,7 +16,8 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor        Data     Observações
-*     6       gui       30/nov/2018 contadores, verificar e deturpar
+*     7       nag       30/nov/2018 deturpar
+*     6       gui       30/nov/2018 contadores, verificar
 *     5       gui,nag   21/nov/2018 modificações na estrutura para ser auto-verificável
 *     4       avs       01/fev/2006 criar linguagem script simbólica
 *     3       avs       08/dez/2004 uniformização dos exemplos
