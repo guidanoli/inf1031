@@ -45,3 +45,6 @@
 01/12	2h			redigir script de testes	Casos para modos de deturpação 4 a 10.
 01/12	2h			revisar código módulo		Feitos os ajustes necessários para casos de testes
 								para modos de deturpação 4 a 10.
+01/12	2h			redigir script de testes	Casos para modos de deturpação 11 e 12.
+01/12	2h			revisar código módulo		Feitos os ajustes necessários para casos de testes
+								para modos de deturpação 11 e 12.

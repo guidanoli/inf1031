@@ -158,8 +158,14 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_ModoDeturpacaoOrigLixo = 14 ,
             /* Atribui lixo ao ponteiro para nó origem */
 
-         LIS_ModoDeturpacaoFinalLixo = 15
+         LIS_ModoDeturpacaoFinalLixo = 15 ,
             /* Atribui lixo ao ponteiro para nó final */
+
+         LIS_ModoDeturpacaoNumElemNegativo = 16 ,
+            /* Atribui valor negativo ao contador de elementos */
+
+         LIS_ModoDeturpacaoCorrElemNovo = 17
+            /* Fazer ponteiro corrente apontar para novo elemento */
 
    } LIS_tpModosDeturpacao ;
 

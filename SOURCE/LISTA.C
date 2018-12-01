@@ -635,6 +635,20 @@
          LixoNosPonteiros = 1;
          numFalhas++;
       } /* if */
+      else if ( pCorr != NULL )
+      {
+         if( TST_CompararInt( LIS_TipoEspacoElemento ,
+             CED_ObterTipoEspaco( pCorr ) ,
+             "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
+         {
+            #ifdef _DEBUG
+               CNT_CONTAR( "4b" ) ;
+            #endif
+
+            /* Função é abortada antes que o programa voe. */
+            return 1;
+         } /* if */
+      } /* else if */
 
       /* Verificar espaço apontado por pOrig */
 
@@ -647,6 +661,20 @@
          LixoNosPonteiros = 1;
          numFalhas++;
       } /* if */
+      else if ( pOrig != NULL )
+      {
+         if( TST_CompararInt( LIS_TipoEspacoElemento ,
+             CED_ObterTipoEspaco( pOrig ) ,
+             "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
+         {
+            #ifdef _DEBUG
+               CNT_CONTAR( "5b" ) ;
+            #endif
+
+            /* Função é abortada antes que o programa voe. */
+            return 1;
+         } /* if */
+      } /* else if */
 
       /* Verificar espaço apontado por pFinal */
 
@@ -659,6 +687,20 @@
          LixoNosPonteiros = 1;
          numFalhas++;
       } /* if */
+      else if ( pFinal != NULL )
+      {
+         if( TST_CompararInt( LIS_TipoEspacoElemento ,
+             CED_ObterTipoEspaco( pFinal ) ,
+             "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
+         {
+            #ifdef _DEBUG
+               CNT_CONTAR( "6b" ) ;
+            #endif
+
+            /* Função é abortada antes que o programa voe. */
+            return 1;
+         } /* if */
+      } /* else if */
 
       if( LixoNosPonteiros ) 
       {
@@ -689,7 +731,7 @@
       } /* if */
 
       if ( TST_CompararInt(  calc_numElem , numElem ,
-           "Campo de número de elementos incorreto (percorrendo pela origem)" ) != TST_CondRetOK )
+           "Campo de número de elementos incorreto (percorrendo pela origem)." ) != TST_CondRetOK )
       {
          #ifdef _DEBUG
             CNT_CONTAR( "7" ) ;
@@ -704,7 +746,7 @@
             CNT_CONTAR( "8" ) ;
          #endif
 
-         TST_NotificarFalha( "Não achou elemento corrente (percorrendo pela origem)" );
+         TST_NotificarFalha( "Não achou elemento corrente (percorrendo pela origem)." );
          numFalhas++;
       } /* if */
 
@@ -742,7 +784,7 @@
       } /* if */
 
       if ( TST_CompararInt(  calc_numElem , numElem ,
-           "Campo de número de elementos incorreto (percorrendo pelo final)" ) != TST_CondRetOK )
+           "Campo de número de elementos incorreto (percorrendo pelo final)." ) != TST_CondRetOK )
       {
          #ifdef _DEBUG
             CNT_CONTAR( "9" ) ;
@@ -757,7 +799,7 @@
             CNT_CONTAR( "10" ) ;
          #endif
 
-         TST_NotificarFalha( "Não achou elemento corrente (percorrendo pelo final)" );
+         TST_NotificarFalha( "Não achou elemento corrente (percorrendo pelo final)." );
          numFalhas++;
       } /* if */
 
@@ -786,7 +828,7 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "MEM1" ) ;
                #endif
-               TST_NotificarFalha( "Vazamento de espaço de memória detectado" );
+               TST_NotificarFalha( "Vazamento de espaço de memória detectado." );
                CED_ExcluirEspacoCorrente( );
                numFalhas++;
             } /* if */
@@ -818,7 +860,7 @@
             #ifdef _DEBUG
                CNT_CONTAR( "11" ) ;
             #endif
-            TST_NotificarFalha( "Número de elementos negativo" ) ;
+            TST_NotificarFalha( "Número de elementos negativo." ) ;
             numFalhas++;
          } /* if */
 
@@ -829,25 +871,31 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "12" ) ;
                #endif
-               TST_NotificarFalha( "pCorr deve ser NULL para numElem = 0" ) ;
+               TST_NotificarFalha( "pCorr deve ser NULL para numElem = 0." ) ;
                numFalhas++;
             } /* if */
-            if( pOrig != NULL  )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "13" ) ;
-               #endif
-               TST_NotificarFalha( "pOrig deve ser NULL para numElem = 0" ) ;
-               numFalhas++;
-            } /* if */
-            if( pFinal != NULL  )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "14" ) ;
-               #endif
-               TST_NotificarFalha( "pFinal deve ser NULL para numElem = 0" ) ;
-               numFalhas++;
-            } /* if */
+            
+            /* --------------------------------------------------------------------------------
+
+               >> ESCLARECIMENTO
+            
+               Segundo as assertivas estruturais do modelo de lista auto-verificável,
+               é necessário que TODOS os ponteiros da cabeça de lista sejam NULOS.
+               Neste if, é verificado apenas se pCorr é nulo. Isso porque se chegou-se
+               até aqui, é porque: numElem == 0 , numElem_correto = 1. Se o segundo é
+               verdadeiro, então, com certeza, o contador atestado pela cabeça (numElem)
+               está correto, e é idêntico à calc_numElem, os contadores calculados ao
+               percorrer-se a lista pelos ponteiros pFinal e pOrigem. Se estes contadores
+               calculados são zero, isso significa que pFinal = pOrigem = NULL , pois,
+               caso não fossem, somariam 1 ao contador, e numElem_correto = 0. E, mesmo
+               que não fossem NULL, mas apontassem para lixo, o verificador abortaria
+               antes de chegar até este ponto do código. Portanto, essas assertivas
+               estruturais foram já verificadas e não deve haver contadores aqui para
+               verificar se pFinal != NULL ou pOrig != NULL , pois sempre serão e o contador
+               indicará zero.
+
+               -------------------------------------------------------------------------------*/
+
          } /* if */
          else if( numElem == 1 )
          {
@@ -856,7 +904,7 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "15" ) ;
                #endif
-               TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem = 1" ) ;
+               TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem = 1." ) ;
                numFalhas++;
             } /* if */
             if( pOrig == NULL  )
@@ -864,7 +912,7 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "16" ) ;
                #endif
-               TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem = 1" ) ;
+               TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem = 1." ) ;
                numFalhas++;
             } /* if */
             if( pFinal == NULL  )
@@ -872,11 +920,11 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "17" ) ;
                #endif
-               TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem = 1" ) ;
+               TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem = 1." ) ;
                numFalhas++;
             } /* if */
             if(   TST_CompararPonteiro( pOrig , pFinal ,
-                  "pOrig e pFinal devem apontar para o mesmo elemento para numElem = 1" )
+                  "pOrig e pFinal devem apontar para o mesmo elemento para numElem = 1." )
                   != TST_CondRetOK )
             {
                #ifdef _DEBUG
@@ -885,7 +933,7 @@
                numFalhas++;
             } /* if */
             if(   TST_CompararPonteiro( pOrig , pCorr ,
-                  "pOrig e pCorr devem apontar para o mesmo elemento para numElem = 1" )
+                  "pOrig e pCorr devem apontar para o mesmo elemento para numElem = 1." )
                   != TST_CondRetOK )
             {
                #ifdef _DEBUG
@@ -901,7 +949,7 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "20" ) ;
                #endif
-               TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem > 1" ) ;
+               TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem > 1." ) ;
                numFalhas++;
             } /* if */
             if( pOrig == NULL  )
@@ -909,7 +957,7 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "21" ) ;
                #endif
-               TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem > 1" ) ;
+               TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem > 1." ) ;
                numFalhas++;
             } /* if */
             if( pFinal == NULL  )
@@ -917,7 +965,7 @@
                #ifdef _DEBUG
                   CNT_CONTAR( "22" ) ;
                #endif
-               TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem > 1" ) ;
+               TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem > 1." ) ;
                numFalhas++;
             } /* if */
          } /* else */
@@ -944,7 +992,7 @@
                numFalhas++;
             } /* if */
             if( TST_CompararPonteiro( pCab , pCorr->pCab ,
-                "Elemento corrente não faz parte da lista" ) != TST_CondRetOK )
+                "Elemento corrente não faz parte da lista." ) != TST_CondRetOK )
             {
                #ifdef _DEBUG
                   CNT_CONTAR( "25" ) ;
@@ -954,7 +1002,7 @@
             if( pCorr->pAnt == NULL )
             {
                if( TST_CompararPonteiro( pCorr , pCorr->pCab->pOrigemLista ,
-                   "Elemento corrente não é origem da lista" ) != TST_CondRetOK )
+                   "Elemento corrente não é origem da lista." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
                      CNT_CONTAR( "26" ) ;
@@ -965,7 +1013,7 @@
             else
             {
                if( TST_CompararPonteiro( pCorr , pCorr->pAnt->pProx ,
-                   "Elemento corrente não está corretamente encadeado pela esquerda" ) != TST_CondRetOK )
+                   "Elemento corrente não está corretamente encadeado pela esquerda." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
                      CNT_CONTAR( "27" ) ;
@@ -976,7 +1024,7 @@
             if( pCorr->pProx == NULL )
             {
                if( TST_CompararPonteiro( pCorr , pCorr->pCab->pFimLista ,
-                   "Elemento corrente não é fim da lista" ) != TST_CondRetOK )
+                   "Elemento corrente não é fim da lista." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
                      CNT_CONTAR( "28" ) ;
@@ -987,7 +1035,7 @@
             else
             {
                if( TST_CompararPonteiro( pCorr , pCorr->pProx->pAnt ,
-                   "Elemento corrente não está corretamente encadeado pela direita" ) != TST_CondRetOK )
+                   "Elemento corrente não está corretamente encadeado pela direita." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
                      CNT_CONTAR( "29" ) ;
@@ -996,7 +1044,7 @@
                } /* if */
             } /* else */
             if( TST_CompararChar( TipoValor , pCorr->TipoValor ,
-                "Elemento corrente tem tipo de valor diferente da cabeça" ) != TST_CondRetOK )
+                "Elemento corrente tem tipo de valor diferente da cabeça." ) != TST_CondRetOK )
             {
                #ifdef _DEBUG
                   CNT_CONTAR( "30" ) ;
@@ -1010,7 +1058,7 @@
          #ifdef _DEBUG
             CNT_CONTAR( "31" ) ;
          #endif
-         TST_NotificarFalha( "O número de elementos é inconsistente" ) ;
+         TST_NotificarFalha( "O número de elementos é inconsistente." ) ;
          numFalhas++;
       } /* else */
 
@@ -1028,6 +1076,8 @@
    {
       LIS_tppLista pLista = NULL;
       LIS_tppElemLista pCorr = NULL;
+      LIS_tppElemLista Elem = NULL;
+      char * pValorDummy = NULL;
 
       /* Se o pListaParam for nulo, a função é abortada 
          para que o programa não voe */
@@ -1044,7 +1094,11 @@
       if( ModoDeturpar != LIS_ModoDeturpacaoPontCorrNULL &&
           ModoDeturpar != LIS_ModoDeturpacaoPontOrigNULL &&
           ModoDeturpar != LIS_ModoDeturpacaoPontFimNULL  &&
-          ModoDeturpar != LIS_ModoDeturpacaoEliminaLista )
+          ModoDeturpar != LIS_ModoDeturpacaoEliminaLista &&
+          ModoDeturpar != LIS_ModoDeturpacaoCorrLixo &&
+          ModoDeturpar != LIS_ModoDeturpacaoOrigLixo &&
+          ModoDeturpar != LIS_ModoDeturpacaoFinalLixo &&
+          ModoDeturpar != LIS_ModoDeturpacaoCorrElemNovo )
       {
          if( pCorr == NULL )
          {
@@ -1190,6 +1244,33 @@
 
          break;
 
+      case LIS_ModoDeturpacaoNumElemNegativo:
+         /* Atribui valor negativo ao contador de elementos */
+
+         pLista->numElem = -1;
+
+         break;
+
+      case LIS_ModoDeturpacaoCorrElemNovo:
+         /* Fazer ponteiro corrente apontar para novo elemento */
+
+         pValorDummy = (char *) malloc(8);
+         
+         if( pValorDummy == NULL )
+         {
+            TST_NotificarFalha( "Faltou memória" );
+            return;
+         } /* if */
+
+         strcpy(pValorDummy,"dummy");
+
+         Elem = CriarElemento( pLista, pValorDummy, 's', sizeof(pValorDummy) );
+
+         pLista->pElemCorr = Elem;
+         pLista->numElem --;
+
+         break;
+
       default:
          
          TST_NotificarFalha( "Modo de deturpação não reconhecido" );
@@ -1218,6 +1299,13 @@
       LIS_tppLista pLista = NULL;
       LIS_tppElemLista pElem = NULL, pElemLoop = NULL;
       LIS_tpCondRet RetLis = LIS_CondRetOK;
+
+      /* VVVVVVVVV SUSPEITO NÃO PRECISAR VERIFICAR PORQUE ESTA FUNÇÃO
+         SÓ É CHAMADA PASSANDO PONTEIROS QUE ESTÃO NA LEA, PORTANTO,
+         CONTROLADOS. ENTÃO O CONTADOR 32 NÃO DEVERIA EXISTIR
+         
+         Mas vou deixar até o final do desenvolvimento, caso
+         achemos algum caso em que ocorra deste contador não ficar zerado */
 
       if( ! CED_VerificarEspaco( Ponteiro , NULL ) )
       {
@@ -1361,6 +1449,7 @@
       pElem->pCab = pLista;
       pElem->tam = tam;
       
+      CED_DefinirTipoEspaco( pValor , LIS_TipoEspacoEstrutura );
       CED_DefinirTipoEspaco( pElem , LIS_TipoEspacoElemento );
 
 #endif
