@@ -549,7 +549,7 @@
 
    int LIS_VerificarLista( void * pListaParam )
    {
-
+      
       LIS_tppLista pCab = NULL;
       LIS_tppElemLista pCorr = NULL , pOrig = NULL , pFinal = NULL , pAux = NULL;
       char TipoValor;
@@ -702,8 +702,38 @@
          numElem_correto = 1;
       } /* if */
 
+      /* Verificar espaços alocados dinamicamente */
+
       CED_MarcarTodosEspacosInativos();
       VerificaMemoria( pCab , LIS_TipoEspacoCabeca );
+
+      CED_InicializarIteradorEspacos();
+
+      while ( CED_ExisteEspacoCorrente() )
+      {
+         void * Ponteiro = CED_ObterPonteiroEspacoCorrente();
+
+         if( ! CED_EhEspacoAtivo( Ponteiro ) )
+         {
+            int tipo = CED_ObterTipoEspaco( Ponteiro );
+
+            if( tipo == LIS_TipoEspacoElemento  ||
+                tipo == LIS_TipoEspacoCabeca    ||
+                tipo == LIS_TipoEspacoEstrutura )
+            {
+               TST_NotificarFalha( "Vazamento de espaço de memória detectado" );
+               numFalhas++;
+            } /* if */
+
+         } /* if */
+
+         CED_AvancarProximoEspaco();
+
+      } /* while */
+
+      CED_TerminarIteradorEspacos();
+
+      /* Assertivas quanto ao número de elementos e elemento corrente */
 
       if( numElem_correto == -1 )
       {
@@ -1000,18 +1030,35 @@
    void VerificaMemoria ( void * Ponteiro , int IdTipoEspaco )
    {
       LIS_tppLista pLista = NULL;
-      LIS_tppElemLista pElem = NULL;
+      LIS_tppElemLista pElem = NULL, pElemLoop = NULL;
       LIS_tpCondRet RetLis = LIS_CondRetOK;
+
+      if( ! CED_VerificarEspaco( Ponteiro , NULL ) )
+      {
+         #ifdef _DEBUG
+            CNT_CONTAR( "32" ) ;
+         #endif
+         return;
+      } /* if */
 
       if ( Ponteiro == NULL || CED_EhEspacoAtivo( Ponteiro ) )
       {
+         #ifdef _DEBUG
+            CNT_CONTAR( "33" ) ;
+         #endif
          return;
       } /* if */
+
+      CED_DefinirTipoEspaco( Ponteiro , IdTipoEspaco );
 
       switch( IdTipoEspaco )
       {
          case LIS_TipoEspacoEstrutura:
             /* Estrutura apontada por elemento */
+
+            #ifdef _DEBUG
+               CNT_CONTAR( "34" ) ;
+            #endif
 
             CED_MarcarEspacoAtivo( Ponteiro );
             break;
@@ -1019,21 +1066,21 @@
          case LIS_TipoEspacoCabeca:
             /* Cabeça de lista */
 
+            #ifdef _DEBUG
+               CNT_CONTAR( "35" ) ;
+            #endif
+
             pLista = (LIS_tppLista) Ponteiro;
 
             CED_MarcarEspacoAtivo( pLista );
 
-            if( LIS_AvancarElementoCorrente( pLista , 0 ) == LIS_CondRetOK )
+            pElemLoop = pLista->pOrigemLista;
+            while( pElemLoop != NULL )
             {
-               IrInicioLista( pLista );
-               while( RetLis == LIS_CondRetOK )
-               {
-                  void * pElem = LIS_ObterValor( pLista );
-                  VerificaMemoria( pElem , LIS_TipoEspacoElemento );
-                  RetLis = LIS_AvancarElementoCorrente( pLista , 1 );
-               } /* while */
-            } /* if */
-            
+               VerificaMemoria( pElem , LIS_TipoEspacoElemento );
+               pElemLoop = pElemLoop->pProx;
+            } /* while */
+
             VerificaMemoria( pLista->pElemCorr , LIS_TipoEspacoElemento );
             VerificaMemoria( pLista->pFimLista , LIS_TipoEspacoElemento );
             VerificaMemoria( pLista->pOrigemLista , LIS_TipoEspacoElemento );
@@ -1042,6 +1089,10 @@
 
          case LIS_TipoEspacoElemento:
             /* Elemento de lista */
+
+            #ifdef _DEBUG
+               CNT_CONTAR( "36" ) ;
+            #endif
 
             pElem = (LIS_tppElemLista) Ponteiro;
 

@@ -29,3 +29,9 @@
 								verificadora. + Função recursiva "VerificaMemória"
 								que marca como ativos todos os espaços atrelados à
 								cabeça de Lista fornecida.
+30/11	1h			revisar código módulo		Consertada função VerificaMemória, que estava obtendo
+								o valor do elemento, ao invés do endereço do mesmo
+								para percorrer pela lista, resultando em crash.
+								+ Criado laço em VerificaLista para achar espaços
+								alocados dinamicamento com alguns dos tipos de
+								espaços definidos em TiposEspacosLista.def.

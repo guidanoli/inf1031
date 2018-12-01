@@ -44,7 +44,11 @@
 =criarlista lista0
 =verificar lista0 0
 
-== Destruir lsita
+== Inserir elemento
+=inselemapos lista0 str0 OK
+=verificar lista0 0
+
+== Destruir lista
 =destruirlista lista0
 
 == Terminar contador
