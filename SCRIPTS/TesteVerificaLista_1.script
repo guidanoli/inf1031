@@ -9,6 +9,8 @@
 =declararparm   lista1  int 1
 =declararparm   lista2  int 2
 
+=declararparm   espacolixo int 999
+
 =declararparm   str0    string  "abcdefg"
 =declararparm   str1    string  "qwerty"
 =declararparm   str2    string  "xxx"
@@ -38,6 +40,8 @@
 =declararparm   DeturpaPontCorrNULL   int 9
 =declararparm   DeturpaPontOrigNULL   int 10
 =declararparm   DeturpaPontFimNULL    int 11
+=declararparm   DeturpaEliminaLista   int 12
+=declararparm   DeturpaListaPtElem    int 13
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
@@ -47,6 +51,10 @@
 =lercontadores ArqDefCnt
 =registraracumulador ArqCntSaida
 =iniciarcontagem
+
+== Verificar lista vazia
+=verificar lista0 1
+=AceitaFalhasAcumuladas 1
 
 == Criar lista
 =criarlista lista0
@@ -71,6 +79,28 @@
 
 == Destruir lista
 =destruirlista lista0
+
+== Criar lista de novo
+=criarlista lista0
+=verificar lista0 0
+
+== Deturpar ponteiro para lista, liberando-a
+// Agora o ponteiro da lista 0 aponta para lixo
+=deturpar lista0 DeturpaEliminaLista
+=verificar lista0 1
+=AceitaFalhasAcumuladas 1
+
+== Verificar lixo
+=verificar espacolixo 1
+=AceitaFalhasAcumuladas 1
+
+== Criar lista nova
+=criarlista lista1
+=verificar lista1 0
+
+== Inserir elemento
+=inselemapos lista1 str0 OK
+=verificar lista1 OK
 
 == Terminar contador
 =pararcontagem

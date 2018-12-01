@@ -76,11 +76,21 @@ static const char DETURPAR_CMD            [ ] = "=deturpar"  ;
 
 #define VAZIO     0
 #define NAO_VAZIO 1
+#define NAO_CHECA 2
 
 #define DIM_VT_LISTA   10
 #define DIM_VALOR     100
 
 int contadoresInicializados = 0 ;
+
+#define ID_ESPACO_LIXO 999
+
+#ifdef _DEBUG
+
+static char *EspacoLixo;
+      /* Espaço de dados lixo usado ao testar */
+
+#endif
 
 LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
@@ -492,15 +502,28 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
 
-            if( ( numLidos != 2 )
-             || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            if( ( numLidos != 2 ) )
             {
                return TST_CondRetParm ;
             } /* if */
 
-            return TST_CompararInt( CondRetEsp ,
+            if( inxLista == ID_ESPACO_LIXO )
+            {
+               EspacoLixo = (char *) malloc(256);
+               strcpy(EspacoLixo,"lixo");
+               return TST_CompararInt( CondRetEsp ,
+                      LIS_VerificarLista( EspacoLixo ) ,
+                      "Condicao de retorno errada ao verificar lista" ) ;
+               free(EspacoLixo);
+            } /* if */
+            else if( ValidarInxLista( inxLista , NAO_CHECA ) )
+            {
+               return TST_CompararInt( CondRetEsp ,
                       LIS_VerificarLista( vtListas[ inxLista ] ) ,
                       "Condicao de retorno errada ao verificar lista" ) ;
+            } /* if */
+
+            return TST_CondRetParm ;
 
          } /* fim ativa: LIS  &Verificar lista */
 
@@ -519,7 +542,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            LIS_Deturpar( vtListas[ inxLista ] , modoDeturpacao );
+            LIS_Deturpar( (void **) &( vtListas[ inxLista ] ) , modoDeturpacao );
 
             return TST_CondRetOK ;
 
@@ -582,20 +605,25 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
       {
          return FALSE ;
       } /* if */
-         
-      if ( Modo == VAZIO )
+      
+      if( Modo == NAO_CHECA )
+      {
+         return TRUE ;
+      } /* else */
+      else if ( Modo == VAZIO )
       {
          if ( vtListas[ inxLista ] != 0 )
          {
             return FALSE ;
          } /* if */
-      } else
+      } /* else-if */
+      else
       {
          if ( vtListas[ inxLista ] == 0 )
          {
             return FALSE ;
          } /* if */
-      } /* if */
+      } /* else */
          
       return TRUE ;
 

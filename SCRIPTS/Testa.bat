@@ -26,11 +26,15 @@ if not exist %var% (
 
 start notepad "saida.log"
 
+goto fim
+
 :loop
-IF EXIST "ContadoresLista.count" goto fim
+IF EXIST "ContadoresLista.count" goto abrir
 timeout /t 1 >nul
 goto loop
 
-:fim
+:abrir
 
 start notepad "ContadoresLista.count"
+
+:fim

@@ -35,3 +35,10 @@
 								+ Criado laço em VerificaLista para achar espaços
 								alocados dinamicamento com alguns dos tipos de
 								espaços definidos em TiposEspacosLista.def.
+01/12	1h			revisar código módulo		Exceção em código de Deturpar para modos de Deturp.
+								que acessem ponteiro do elemento corrente, para
+								que a função aborte antes de o programa voar.
+								+ Testa.bat abrindo acumulador de contadores.
+01/12	1h			redigir script de testes	Casos para modos de deturpação 1, 2 e 3.
+01/12	1h			revisar código módulo		Feitos os ajustes necessários para casos de testes
+								para modos de deturpação 1, 2 e 3.

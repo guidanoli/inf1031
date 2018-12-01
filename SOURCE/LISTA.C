@@ -119,6 +119,7 @@
             /* Espaço de dados lixo usado ao testar */
 
       #endif
+
 /***** Protótipos das funções encapuladas no módulo *****/
 
    typedef struct tagElemLista * LIS_tppElemLista;
@@ -573,7 +574,9 @@
             CNT_CONTAR( "1" ) ;
          #endif
          TST_NotificarFalha( "Tentou verificar cabeça de lista inexistente." ) ;
-         numFalhas++;
+
+         /* Função é abortada antes que o programa voe. */
+         return 1;
       } /* if */
 
       if ( ! CED_VerificarEspaco( pListaParam , NULL ) )
@@ -582,7 +585,9 @@
             CNT_CONTAR( "2" ) ;
          #endif
          TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
-         numFalhas++;
+         
+         /* Função é abortada antes que o programa voe. */
+         return 1;
       } /* if */
 
       if ( TST_CompararInt( LIS_TipoEspacoCabeca ,
@@ -592,7 +597,9 @@
          #ifdef _DEBUG
             CNT_CONTAR( "3" ) ;
          #endif
-         numFalhas++;
+
+         /* Função é abortada antes que o programa voe. */
+         return 1;
       } /* if */
 
       pCab = (LIS_tppLista) pListaParam;
@@ -732,12 +739,19 @@
                 tipo == LIS_TipoEspacoEstrutura )
             {
                TST_NotificarFalha( "Vazamento de espaço de memória detectado" );
+               CED_ExcluirEspacoCorrente( );
                numFalhas++;
             } /* if */
+            else
+            {
+               CED_AvancarProximoEspaco();
+            } /* else */
 
          } /* if */
-
-         CED_AvancarProximoEspaco();
+         else
+         {
+            CED_AvancarProximoEspaco();
+         } /* else */
 
       } /* while */
 
@@ -980,7 +994,7 @@
 *  Função: LIS  &Deturpar lista
 *  ****/
 
-   void LIS_Deturpar( void * pListaParam ,
+   void LIS_Deturpar( void ** pListaParam ,
                       LIS_tpModosDeturpacao ModoDeturpar )
    {
       LIS_tppLista pLista = NULL;
@@ -988,19 +1002,20 @@
 
       /* Se o pListaParam for nulo, a função é abortada 
          para que o programa não voe */
-      if( pListaParam == NULL )
+      if( pListaParam == NULL || *pListaParam == NULL )
       {
          return ;
       } /* if */
 
-      pLista = (LIS_tppLista) pListaParam;
+      pLista = (LIS_tppLista) *pListaParam;
       pCorr = pLista->pElemCorr;
 
       /* Modos de deturpação que usam pCorr não podem ser rodados
          quando pCorr for nulo, senão o programa voa */
       if( ModoDeturpar != LIS_ModoDeturpacaoPontCorrNULL &&
           ModoDeturpar != LIS_ModoDeturpacaoPontOrigNULL &&
-          ModoDeturpar != LIS_ModoDeturpacaoPontFimNULL )
+          ModoDeturpar != LIS_ModoDeturpacaoPontFimNULL  &&
+          ModoDeturpar != LIS_ModoDeturpacaoEliminaLista )
       {
          if( pCorr == NULL )
          {
@@ -1116,6 +1131,20 @@
 
          break;
          /* fim ativa: Atribui NULL ao ponteiro de final */
+
+      case LIS_ModoDeturpacaoEliminaLista:
+         /* Elimina lista */
+
+         free(pLista);
+
+         break;
+
+      case LIS_ModoDeturpacaoListaApontaCorr:
+            /* Faz ponteiro referenciar elemento corrente */
+
+         *pListaParam = EspacoLixo;
+
+         break;
 
       default:
          

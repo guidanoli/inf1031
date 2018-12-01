@@ -146,8 +146,14 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_ModoDeturpacaoPontOrigNULL = 10 ,
             /* Atribui NULL ao ponteiro de origem */
 
-         LIS_ModoDeturpacaoPontFimNULL = 11
+         LIS_ModoDeturpacaoPontFimNULL = 11 ,
             /* Atribui NULL ao ponteiro de final */
+
+         LIS_ModoDeturpacaoEliminaLista = 12 ,
+            /* Elimina lista */
+
+         LIS_ModoDeturpacaoListaApontaCorr = 13 ,
+            /* Faz ponteiro referenciar elemento corrente */
 
    } LIS_tpModosDeturpacao ;
 
@@ -458,7 +464,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
 #ifdef _DEBUG
 
-   void LIS_Deturpar( void * pListaParam ,
+   void LIS_Deturpar( void ** pListaParam ,
                       LIS_tpModosDeturpacao ModoDeturpar ) ;
 
 #endif
