@@ -109,6 +109,15 @@
 
    } LIS_tpLista ;
 
+/*****  Dados encapsulados no módulo  *****/
+
+      #ifdef _DEBUG
+
+      static char EspacoLixo[ 256 ] =
+             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
+            /* Espaço de dados lixo usado ao testar */
+
+      #endif
 /***** Protótipos das funções encapuladas no módulo *****/
 
    typedef struct tagElemLista * LIS_tppElemLista;
@@ -990,25 +999,109 @@
       case LIS_ModoDeturpacaoEliminaCorr:
          /* Elimina o elemento corrente da lista */
 
-         if( pCorr->pProx != NULL )
-         {
-            pCorr->pProx->pAnt = pCorr->pAnt;
-         } /* if */
-         else
-         {
-            pCorr->pCab->pFimLista = pCorr->pAnt;
-         } /* else */
+         free( pCorr );
 
-         if( pCorr->pAnt != NULL )
+         break;
+         /* fim ativa: Elimina o elemento corrente da lista */
+
+      case LIS_ModoDeturpacaoProxNULL:
+         /* Atribui NULL ao ponteiro para o próximo nó */
+
+         pCorr->pProx = NULL;
+
+         break;
+         /* fim ativa: Atribui NULL ao ponteiro para o próximo nó */
+
+      case LIS_ModoDeturpacaoAntNULL:
+         /* Atribui NULL ao ponteiro para o nó anterior */
+
+         pCorr->pAnt = NULL;
+
+         break;
+         /* fim ativa: Atribui NULL ao ponteiro para o nó anterior */
+
+      case LIS_ModoDeturpacaoProxLixo:
+         /* Atribui lixo ao ponteiro para o próximo nó */
+
+         pCorr->pProx = ( LIS_tppElemLista )( EspacoLixo );
+
+         break;
+         /* fim ativa: Atribui lixo ao ponteiro para o próximo nó */
+
+      case LIS_ModoDeturpacaoAntLixo:
+         /* Atribui lixo ao ponteiro para o nó anterior */
+
+          pCorr->pAnt = ( LIS_tppElemLista )( EspacoLixo );
+
+         break;
+         /* fim ativa: Atribui lixo ao ponteiro para o nó anterior */
+
+      case LIS_ModoDeturpacaoConteudoNULL:
+         /* Atribui NULL ao ponteiro para o conteúdo do nó */
+
+         pCorr->pValor = NULL;
+
+         break;
+         /* fim ativa: Atribui NULL ao ponteiro para o conteúdo do nó */
+
+      case LIS_ModoDeturpacaoAlteraTipoNo:
+         /* Altera o tipo de estrutura apontado no nó */
+
+         pCorr->TipoValor += 1;
+
+         break;
+         /* fim ativa: Altera o tipo de estrutura apontado no nó */
+
+      case LIS_ModoDeturpacaoDesencadeiaNo:
+         /* Desencadeia nó sem liberá-lo com free */
+
+         if ( pCorr->pAnt == NULL )
          {
-            pCorr->pAnt->pProx = pCorr->pProx;
-         } /* if */
+            pLista->pOrigemLista = pCorr->pProx;
+            pLista->pElemCorr = pCorr->pProx;
+         }/* if */
          else
          {
-            pCorr->pCab->pOrigemLista = pCorr->pProx;
-         } /* else */
-         
+            pCorr->pAnt->pProx = pCorr-> pProx;
+            pLista->pElemCorr = pCorr->pAnt;
+         }/* else */
+
+
+         if ( pCorr->pProx == NULL )
+         {
+            pLista->pFimLista = pCorr->pAnt;
+         }/* if */
+         else
+         {
+            pCorr->pProx->pAnt = pCorr-> pAnt;
+         }/* else */
+
          break;
+         /* fim ativa: Desencadeia nó sem liberá-lo com free */
+
+      case LIS_ModoDeturpacaoPontCorrNULL:
+         /* Atribui NULL ao ponteiro corrente */
+
+         pLista->pElemCorr = NULL;
+
+         break;
+         /* fim ativa: Atribui NULL ao ponteiro corrente */
+
+      case LIS_ModoDeturpacaoPontOrigNULL:
+         /* Atribui NULL ao ponteiro de origem */
+
+         pLista->pOrigemLista = NULL;
+
+         break;
+         /* fim ativa: Atribui NULL ao ponteiro de origem */
+
+      case LIS_ModoDeturpacaoPontFimNULL:
+         /* Atribui NULL ao ponteiro de final */
+
+         pLista->pFimLista = NULL;
+
+         break;
+         /* fim ativa: Atribui NULL ao ponteiro de final */
 
       } /* switch */
       

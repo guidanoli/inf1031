@@ -143,8 +143,11 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_ModoDeturpacaoPontCorrNULL = 9 ,
             /* Atribui NULL ao ponteiro corrente */
 
-         LIS_ModoDeturpacaoPontOrigNULL = 10
+         LIS_ModoDeturpacaoPontOrigNULL = 10 ,
             /* Atribui NULL ao ponteiro de origem */
+
+         LIS_ModoDeturpacaoPontFimNULL = 11
+            /* Atribui NULL ao ponteiro de final */
 
    } LIS_tpModosDeturpacao ;
 
