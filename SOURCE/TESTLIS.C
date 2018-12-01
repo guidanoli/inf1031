@@ -68,8 +68,8 @@ static const char OBTER_NUM_CONTADORES_CMD   [ ] = "=numcontadores"           ;
 static const char OBTER_TOTAL_CONTAGEM_CMD   [ ] = "=contagemtotal"           ;
 static const char VERIFICAR_CONTAGENS_CMD    [ ] = "=verificarcontagens" ;
 
-static const char VRF_CMD                 [ ] = "=verificar"      ;
-static const char DETURPAR_CMD            [ ] = "=deturparlista"  ;
+static const char VRF_CMD                 [ ] = "=verificar" ;
+static const char DETURPAR_CMD            [ ] = "=deturpar"  ;
 
 #define TRUE  1
 #define FALSE 0
@@ -514,7 +514,6 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
             numLidos = LER_LerParametros( "ii" , &inxLista, &modoDeturpacao ) ;
 
             if( ( numLidos != 2 )
-             || ( modoDeturpacao < 0 ) || ( modoDeturpacao > 10 ) // AQUI É O MODO DE DETURPAÇÃO MÁXIMO
              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;

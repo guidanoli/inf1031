@@ -27,33 +27,55 @@
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
 
+=declararparm   DeturpaEliminaCorr    int 1
+=declararparm   DeturpaProxNULL       int 2
+=declararparm   DeturpaAntNULL        int 3
+=declararparm   DeturpaProxLixo       int 4
+=declararparm   DeturpaAntLixo        int 5
+=declararparm   DeturpaConteudoNULL   int 6
+=declararparm   DeturpaAlteraTipoNo   int 7
+=declararparm   DeturpaDesencadeiaNo  int 8
+=declararparm   DeturpaPontCorrNULL   int 9
+=declararparm   DeturpaPontOrigNULL   int 10
+=declararparm   DeturpaPontFimNULL    int 11
+
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
 
-== Iniciar contador
-=inicializarcontadores ArqCntSaida
-
-== Ler contadores
+== Inicializar contador
+=inicializarcontadores ""
 =lercontadores ArqDefCnt
 =registraracumulador ArqCntSaida
-
-== Ativar contagem
 =iniciarcontagem
 
 == Criar lista
 =criarlista lista0
 =verificar lista0 0
 
+== Deturpar ponteiro fim, orig e corr, e não acontecer nada pois lista vazia tem estes ponteiros nulos mesmo
+=deturpar lista0 DeturpaPontCorrNULL
+=deturpar lista0 DeturpaPontOrigNULL
+=deturpar lista0 DeturpaPontFimNULL
+=verificar lista0 0
+
 == Inserir elemento
 =inselemapos lista0 str0 OK
 =verificar lista0 0
+
+== Deturpar ponteiro fim, orig e corr, e ocorrer erros
+=deturpar lista0 DeturpaPontCorrNULL
+=deturpar lista0 DeturpaPontOrigNULL
+=deturpar lista0 DeturpaPontFimNULL
+=verificar lista0 5
+=AceitaFalhasAcumuladas 5
 
 == Destruir lista
 =destruirlista lista0
 
 == Terminar contador
-=verificarcontagens 0
 =pararcontagem
-=terminarcontadores 0
+=gravarcontadores ArqCntSaida
+=verificarcontagens 0
+=terminarcontadores
 
 // fim

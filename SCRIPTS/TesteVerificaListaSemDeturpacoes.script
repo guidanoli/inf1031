@@ -30,14 +30,10 @@
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.log"
 
-== Iniciar contador
+== Inicializar contador
 =inicializarcontadores ""
-
-== Ler contadores
 =lercontadores ArqDefCnt
 =registraracumulador ArqCntSaida
-
-== Ativar contagem
 =iniciarcontagem
 
 == Criar a lista 0
@@ -170,7 +166,8 @@
 
 == Terminar contador
 =pararcontagem
+=gravarcontadores ArqCntSaida
 =verificarcontagens 0
-=terminarcontadores 0
+=terminarcontadores
 
 // fim

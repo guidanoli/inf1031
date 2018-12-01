@@ -986,6 +986,8 @@
       LIS_tppLista pLista = NULL;
       LIS_tppElemLista pCorr = NULL;
 
+      /* Se o pListaParam for nulo, a função é abortada 
+         para que o programa não voe */
       if( pListaParam == NULL )
       {
          return ;
@@ -993,6 +995,18 @@
 
       pLista = (LIS_tppLista) pListaParam;
       pCorr = pLista->pElemCorr;
+
+      /* Modos de deturpação que usam pCorr não podem ser rodados
+         quando pCorr for nulo, senão o programa voa */
+      if( ModoDeturpar != LIS_ModoDeturpacaoPontCorrNULL &&
+          ModoDeturpar != LIS_ModoDeturpacaoPontOrigNULL &&
+          ModoDeturpar != LIS_ModoDeturpacaoPontFimNULL )
+      {
+         if( pCorr == NULL )
+         {
+            return ;
+         } /* if */
+      } /* if */
 
       switch ( ModoDeturpar )
       {
@@ -1060,22 +1074,21 @@
          {
             pLista->pOrigemLista = pCorr->pProx;
             pLista->pElemCorr = pCorr->pProx;
-         }/* if */
+         } /* if */
          else
          {
             pCorr->pAnt->pProx = pCorr-> pProx;
             pLista->pElemCorr = pCorr->pAnt;
-         }/* else */
-
+         } /* else */
 
          if ( pCorr->pProx == NULL )
          {
             pLista->pFimLista = pCorr->pAnt;
-         }/* if */
+         } /* if */
          else
          {
             pCorr->pProx->pAnt = pCorr-> pAnt;
-         }/* else */
+         } /* else */
 
          break;
          /* fim ativa: Desencadeia nó sem liberá-lo com free */
@@ -1103,6 +1116,12 @@
 
          break;
          /* fim ativa: Atribui NULL ao ponteiro de final */
+
+      default:
+         
+         TST_NotificarFalha( "Modo de deturpação não reconhecido" );
+
+         break;
 
       } /* switch */
       
