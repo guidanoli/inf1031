@@ -152,8 +152,14 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_ModoDeturpacaoEliminaLista = 12 ,
             /* Elimina lista */
 
-         LIS_ModoDeturpacaoListaApontaCorr = 13 ,
-            /* Faz ponteiro referenciar elemento corrente */
+         LIS_ModoDeturpacaoCorrLixo = 13 ,
+            /* Atribui lixo ao ponteiro para nó corrente */
+
+         LIS_ModoDeturpacaoOrigLixo = 14 ,
+            /* Atribui lixo ao ponteiro para nó origem */
+
+         LIS_ModoDeturpacaoFinalLixo = 15
+            /* Atribui lixo ao ponteiro para nó final */
 
    } LIS_tpModosDeturpacao ;
 

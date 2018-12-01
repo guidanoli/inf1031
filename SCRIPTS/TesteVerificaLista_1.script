@@ -41,7 +41,9 @@
 =declararparm   DeturpaPontOrigNULL   int 10
 =declararparm   DeturpaPontFimNULL    int 11
 =declararparm   DeturpaEliminaLista   int 12
-=declararparm   DeturpaListaPtElem    int 13
+=declararparm   DeturpaCorrLixo       int 13
+=declararparm   DeturpaOrigLixo       int 14
+=declararparm   DeturpaFinalLixo      int 15
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
@@ -66,41 +68,61 @@
 =deturpar lista0 DeturpaPontFimNULL
 =verificar lista0 0
 
-== Inserir elemento
+== CONTADOR 1 >> Deturpar ponteiro fim, orig e corr para lista com um elemento
 =inselemapos lista0 str0 OK
 =verificar lista0 0
-
-== Deturpar ponteiro fim, orig e corr, e ocorrer erros
 =deturpar lista0 DeturpaPontCorrNULL
 =deturpar lista0 DeturpaPontOrigNULL
 =deturpar lista0 DeturpaPontFimNULL
 =verificar lista0 5
 =AceitaFalhasAcumuladas 5
-
-== Destruir lista
 =destruirlista lista0
 
-== Criar lista de novo
+== CONTADOR 2 >> Deturpar ponteiro para lista, liberando-a com free ( pLista não é atribuído NULL )
 =criarlista lista0
 =verificar lista0 0
-
-== Deturpar ponteiro para lista, liberando-a
-// Agora o ponteiro da lista 0 aponta para lixo
 =deturpar lista0 DeturpaEliminaLista
 =verificar lista0 1
 =AceitaFalhasAcumuladas 1
+// Não é preciso destruir a lista, pois já foi liberada
 
-== Verificar lixo
+== CONTADOR 3 >> Verificar ponteiro que não aponta para uma lista
 =verificar espacolixo 1
 =AceitaFalhasAcumuladas 1
 
-== Criar lista nova
+== CONTADOR 4,5,6 >> Deturpar lista para que ponteiros da cabeça aponte para lixo
 =criarlista lista1
 =verificar lista1 0
-
-== Inserir elemento
 =inselemapos lista1 str0 OK
-=verificar lista1 OK
+=verificar lista1 0
+=deturpar lista1 DeturpaCorrLixo
+=deturpar lista1 DeturpaOrigLixo
+=deturpar lista1 DeturpaFinalLixo
+=verificar lista1 3
+=AceitaFalhasAcumuladas 3
+// [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
+// acessa ao ponteiro origem, que está com LIXO!
+
+== Libera espaços referentes a estruturas, elementos e cabeças inativos
+=criarlista lista2
+=verificar lista2 3
+=AceitaFalhasAcumuladas 3
+// As três estruturas liberadas foram: cabeça, elemento e estrutura da lista anterior
+
+== CONTADOR 7 >> Deturpa lista, desencadeando nó corrente, mas sem liberá-lo
+=inselemapos lista2 str0 OK
+=inselemapos lista2 str1 OK
+=inselemapos lista2 str2 OK
+=avancarelem lista2 -1 OK
+=obtervalorelem lista2 str1 pNaoNULL
+=verificar lista2 0
+=deturpar lista2 DeturpaDesencadeiaNo
+=verificar lista2 5
+=AceitaFalhasAcumuladas 5
+// Os dois vazamentos correspondem ao elemento desencadeado e à estrutura a ele atrelado
+// Como perecebeu-se a contagem de elementos diferiu da calculada através do percorrimento
+// da lista por ambos os sentidos.
+=destruirlista lista2
 
 == Terminar contador
 =pararcontagem

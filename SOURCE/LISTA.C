@@ -564,7 +564,22 @@
       LIS_tppLista pCab = NULL;
       LIS_tppElemLista pCorr = NULL , pOrig = NULL , pFinal = NULL , pAux = NULL;
       char TipoValor;
-      int achou , numElem , calc_numElem, numElem_correto = 0 ;
+      int achou , numElem , calc_numElem, numElem_correto = 0 , LixoNosPonteiros = 0 ;
+
+      /*
+      
+      Variáveis locais:
+      
+      achou             1 se achou pCorr percorrendo a lista, 0 caso contrário.
+      numElem           número de elementos acusado pela cabeça da lista
+      calc_numElem      número de elementos calculado ao percorrer a lista pelos dois sentidos.
+      num_Elem_correto  -1, se numElem == calc_numElem ao percorrer por pOrig
+                        1, se numElem == calc_numElem ao percorrer por pOrig e por pFinal
+                        0, se algum dos dois percursos resultou em numElem != calc_numElem
+      LixoNosPonteiros  0, se nenhum ponteiro aponta para lixo
+                        1, se algum ponteiro aponta para lixo
+
+      */
 
       int numFalhas = 0;
 
@@ -592,7 +607,7 @@
 
       if ( TST_CompararInt( LIS_TipoEspacoCabeca ,
            CED_ObterTipoEspaco( pListaParam ) ,
-           "Tipo do espaço de dados não é cabeça de lista." ) != TST_CondRetOK )
+           "Id do tipo do espaço de dados não é cabeça de lista." ) != TST_CondRetOK )
       {
          #ifdef _DEBUG
             CNT_CONTAR( "3" ) ;
@@ -617,12 +632,9 @@
             CNT_CONTAR( "4" ) ;
          #endif
          TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+         LixoNosPonteiros = 1;
          numFalhas++;
       } /* if */
-      else
-      {
-         CED_MarcarEspacoAtivo( pCorr );
-      } /* else */
 
       /* Verificar espaço apontado por pOrig */
 
@@ -632,12 +644,9 @@
             CNT_CONTAR( "5" ) ;
          #endif
          TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+         LixoNosPonteiros = 1;
          numFalhas++;
       } /* if */
-      else
-      {
-         CED_MarcarEspacoAtivo( pOrig );
-      } /* else */
 
       /* Verificar espaço apontado por pFinal */
 
@@ -647,12 +656,14 @@
             CNT_CONTAR( "6" ) ;
          #endif
          TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+         LixoNosPonteiros = 1;
          numFalhas++;
       } /* if */
-      else
+
+      if( LixoNosPonteiros ) 
       {
-         CED_MarcarEspacoAtivo( pFinal );
-      } /* else */
+         return numFalhas;
+      } /* if */
 
       /* Verificar cabeça */
 
@@ -683,15 +694,17 @@
          #ifdef _DEBUG
             CNT_CONTAR( "7" ) ;
          #endif
+
          numFalhas++;
       } /* if */
 
-      if ( calc_numElem > 0 && TST_CompararInt( achou , 1 ,
-           "Não achou elemento corrente (percorrendo pela origem)" ) != TST_CondRetOK )
+      if ( calc_numElem > 0 && achou != 1 )
       {
          #ifdef _DEBUG
             CNT_CONTAR( "8" ) ;
          #endif
+
+         TST_NotificarFalha( "Não achou elemento corrente (percorrendo pela origem)" );
          numFalhas++;
       } /* if */
 
@@ -714,15 +727,47 @@
 
       } /* while */
 
+      /* Este if certifica-se que, mesmo não tendo nenhum elemento,
+         uma lista vazia está com o número correto de elementos (0) */
       if( calc_numElem == 0 && numElem == 0 && numElem_correto == -1 )
       {
          numElem_correto = 1;
+      } /* if */
+
+      /* Assertivas quanto ao número de elementos e elemento corrente */
+
+      if( numElem_correto == -1 )
+      {
+         numElem_correto = 0;
+      } /* if */
+
+      if ( TST_CompararInt(  calc_numElem , numElem ,
+           "Campo de número de elementos incorreto (percorrendo pelo final)" ) != TST_CondRetOK )
+      {
+         #ifdef _DEBUG
+            CNT_CONTAR( "9" ) ;
+         #endif
+
+         numFalhas++;
+      } /* if */
+
+      if ( calc_numElem > 0 && achou != 1 )
+      {
+         #ifdef _DEBUG
+            CNT_CONTAR( "10" ) ;
+         #endif
+
+         TST_NotificarFalha( "Não achou elemento corrente (percorrendo pelo final)" );
+         numFalhas++;
       } /* if */
 
       /* Verificar espaços alocados dinamicamente */
 
       CED_MarcarTodosEspacosInativos();
       VerificaMemoria( pCab , LIS_TipoEspacoCabeca );
+
+      /* Sempre haverá ao menos um espaço corrente, pois se chegou até aqui, é porque
+         o ponteiro para lista aponta para um espaço de dados válido */
 
       CED_InicializarIteradorEspacos();
 
@@ -738,49 +783,33 @@
                 tipo == LIS_TipoEspacoCabeca    ||
                 tipo == LIS_TipoEspacoEstrutura )
             {
+               #ifdef _DEBUG
+                  CNT_CONTAR( "MEM1" ) ;
+               #endif
                TST_NotificarFalha( "Vazamento de espaço de memória detectado" );
                CED_ExcluirEspacoCorrente( );
                numFalhas++;
             } /* if */
             else
             {
+               #ifdef _DEBUG
+                  CNT_CONTAR( "MEM2" ) ;
+               #endif
                CED_AvancarProximoEspaco();
             } /* else */
 
          } /* if */
          else
          {
+            #ifdef _DEBUG
+               CNT_CONTAR( "MEM3" ) ;
+            #endif
             CED_AvancarProximoEspaco();
          } /* else */
 
       } /* while */
 
       CED_TerminarIteradorEspacos();
-
-      /* Assertivas quanto ao número de elementos e elemento corrente */
-
-      if( numElem_correto == -1 )
-      {
-         numElem_correto = 0;
-      } /* if */
-
-      if ( TST_CompararInt(  calc_numElem , numElem ,
-           "Campo de número de elementos incorreto (percorrendo pelo final)" ) != TST_CondRetOK )
-      {
-         #ifdef _DEBUG
-            CNT_CONTAR( "9" ) ;
-         #endif
-         numFalhas++;
-      } /* if */
-
-      if ( calc_numElem > 0 && TST_CompararInt( achou , 1 ,
-           "Não achou elemento corrente (percorrendo pelo final)" ) != TST_CondRetOK )
-      {
-         #ifdef _DEBUG
-            CNT_CONTAR( "10" ) ;
-         #endif
-         numFalhas++;
-      } /* if */
 
       if( numElem_correto )
       {
@@ -1085,15 +1114,16 @@
       case LIS_ModoDeturpacaoDesencadeiaNo:
          /* Desencadeia nó sem liberá-lo com free */
 
+         // Não faz pLista->pElemCorr apontar para pProx
+         // Assim, o contador 8 e 10 será atendido
+
          if ( pCorr->pAnt == NULL )
          {
             pLista->pOrigemLista = pCorr->pProx;
-            pLista->pElemCorr = pCorr->pProx;
          } /* if */
          else
          {
             pCorr->pAnt->pProx = pCorr-> pProx;
-            pLista->pElemCorr = pCorr->pAnt;
          } /* else */
 
          if ( pCorr->pProx == NULL )
@@ -1139,10 +1169,24 @@
 
          break;
 
-      case LIS_ModoDeturpacaoListaApontaCorr:
-            /* Faz ponteiro referenciar elemento corrente */
+      case LIS_ModoDeturpacaoCorrLixo:
+         /* Atribui lixo ao ponteiro para nó corrente */
 
-         *pListaParam = EspacoLixo;
+         pLista->pElemCorr = (LIS_tppElemLista)( EspacoLixo );
+
+         break;
+
+      case LIS_ModoDeturpacaoOrigLixo:
+         /* Atribui lixo ao ponteiro para nó origem */
+
+         pLista->pOrigemLista = (LIS_tppElemLista)( EspacoLixo );
+
+         break;
+
+      case LIS_ModoDeturpacaoFinalLixo:
+         /* Atribui lixo ao ponteiro para nó final */
+
+         pLista->pFimLista = (LIS_tppElemLista)( EspacoLixo );
 
          break;
 
