@@ -10,11 +10,9 @@ Para trabalhar no Visual Studio 2010 com estes arquivos, basta arrastá-los para
 
 `Alt+F7 > Configuration Properties > C/C++ > Precompiled Headers > Precompiled Header > Not Using Precompiled Headers`
 
-Vale lembrar que se o seu projeto incluir as duas bibliotecas estáticas (ArcaboucoTeste.lib e MinhaBiblioteca.lib), **__não é necessário incluir também os módulos GRAFO, LISTA, PILHA e VERTICE.__**
-
 ## Scripts
 
-Na pasta **_SCRIPTS_** se encontram todos os scripts de teste. Você pode editar um arquivo de script seu ou criar um novo. Para testar o script, rode o batch  **__LimpaDistribuicao.bat__** e, em seguida, **__Distruibui.bat__**. Dentro da pasta **DISTRIBUICAO**, rode o batch **__Testa.bat__**, e escreva o nome do seu arquivo de script (Dica: use TAB para auto-completar) e a saída estará salva como **__saida.log__** na mesma pasta.
+Na pasta **_SCRIPTS_** se encontram todos os scripts de teste. Você pode editar um arquivo de script seu ou criar um novo. Para testar o script, rode o batch  **__LimpaDistribuicao.bat__** e, em seguida, **__Distruibui.bat__**. Dentro da pasta **DISTRIBUICAO**, rode o batch **__Testa.bat__**, e escreva o nome do seu arquivo de script (Dica: use TAB para auto-completar) e a saída estará salva como **__saida.log__** na mesma pasta. Para scripts de debug, é capaz de mais de um arquivo ser gerado. Geralmente este arquivo extra compreende os contadores inseridos no código.
 
 ## Executável
 
