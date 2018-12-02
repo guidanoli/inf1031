@@ -10,6 +10,8 @@
 =declararparm   lista2  int 2
 =declararparm   lista3  int 3
 =declararparm   lista4  int 4
+=declararparm   lista5  int 5
+=declararparm   lista6  int 6
 
 =declararparm   espacolixo int 999
 
@@ -51,6 +53,7 @@
 =declararparm   DeturpaCorrPontLista  int 18
 =declararparm   DeturpaOrigPontLista  int 19
 =declararparm   DeturpaFinalPontLista int 20
+=declararparm   DeturpaOrigElemNovo   int 21
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
@@ -156,10 +159,10 @@
 // elemento corrente mas sim do ponteiro origem.
 =inselemapos lista3 str0 OK
 =deturpar lista3 DeturpaNumElemNeg
-=verificar lista3 3
-=AceitaFalhasAcumuladas 3
+=verificar lista3 4
+=AceitaFalhasAcumuladas 4
 // Além de verificado que o número não corresponde ao número real de elementos na lista,
-// o verificador percebe que o número de elementos é negativo -- o que é ilógico!!
+// o verificador percebe que o número de elementos é negativo.
 =destruirlista lista3
 
 == CONTADOR 12 >> Deturpa ponteiro corrente de lista vazia para apontar para novo elemento
@@ -168,6 +171,39 @@
 =verificar lista4 1
 =AceitaFalhasAcumuladas 1
 =destruirlista lista4
+=tornarinativos
+=liberarinativos 2
+=AceitaFalhasAcumuladas 2
+// É necessário liberar o elemento e a estrutura, pois a função DestruirLista não
+// leva em consideração o ponteiro pCorr porque assume que este aponta para um elemento
+// pertecente à lista (através dos ponteiros pOrigem e pFinal)
+
+== CONTADOR 15, 17, 19 >> Deturpa lista unitária ao anular ponteiro corrente
+=criarlista lista5
+=verificar lista5 0
+=inselemapos lista5 str0 OK
+=verificar lista5 0
+=deturpar lista5 DeturpaPontCorrNULL
+=verificar lista5 5
+=AceitaFalhasAcumuladas 5
+=destruirlista lista5
+// Como o ponteiro corrente é nulo, não é possível localizá-lo ao percorrer a lista
+// Além disso, foi sinalizado que pCorr = pOrig para numElem = 1 e que pCorr = pFinal
+// para numElem = 1, o que é coerente.
+
+== CONTADOR 18 >> Deturpa lista unitária com origem apontando para outro elemento
+=criarlista lista6
+=verificar lista6 0
+=inselemapos lista6 str0 OK
+=verificar lista6 0
+=deturpar lista6 DeturpaOrigElemNovo
+=verificar lista6 4
+=AceitaFalhasAcumuladas 4
+=destruirlista lista6
+// Não achou elemento corrente ao pecorrer pela origem pois a origem aponta para
+// outro elemento. Já pelo final, o elemento corrente foi achado normalmente.
+// Naturalmente, pOrigem e pFinal são diferente, como é o foco principal desse caso
+// de teste. A mesma coisa para pOrigem e pCorr.
 
 == Terminar contador
 =pararcontagem

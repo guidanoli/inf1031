@@ -176,6 +176,9 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_ModoDeturpacaoFinalTipoErrado = 20 ,
             /* Fazer ponteiro final apontar para lista */
 
+         LIS_ModoDeturpacaoOrigElemNovo = 21
+            /* Fazer ponteiro origem apontar para novo elemento */
+
    } LIS_tpModosDeturpacao ;
 
 #endif

@@ -42,13 +42,14 @@
 01/12	1h			redigir script de testes	Casos para contadores 1, 2 e 3.
 01/12	1h			revisar código módulo		Feitos os ajustes necessários para casos de testes
 								para contadores 1, 2 e 3.
-01/12	2h			redigir script de testes	Casos para contadores 4 a 10.
-01/12	2h			revisar código módulo		Feitos os ajustes necessários para casos de testes
+01/12	1h			redigir script de testes	Casos para contadores 4 a 10.
+01/12	1h			revisar código módulo		Feitos os ajustes necessários para casos de testes
 								para contadores 4 a 10.
-01/12	2h			redigir script de testes	Casos para contadores 11 e 12.
-01/12	2h			revisar código módulo		Feitos os ajustes necessários para casos de testes
+01/12	1h			redigir script de testes	Casos para contadores 11 e 12.
+01/12	1h			revisar código módulo		Feitos os ajustes necessários para casos de testes
 								para contadores 11 e 12.
 01/12	1h			redigir script de testes	Casos para contadores 4b, 5b e 6b.
 01/12	1h			redigir código módulo		Comandos que facilitam a redação dos scripts de
 								teste -- liberarinativos e tornarinativos
-01/12	1h			revisar código módulo		Adaptações necessárias para contadores 4b, 5b e 6b.
+01/12	1h			redigir script de testes	Casos para contadores 15,17,18,19.
+01/12	1h			revisar código módulo		Adaptações necessárias para contadores 15,17,18,19.

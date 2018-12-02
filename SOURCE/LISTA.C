@@ -719,7 +719,6 @@
       {
          if( pAux == pCorr )
          {
-            numElem_correto = -1;
             achou = 1;
          } /* if */
 
@@ -728,7 +727,7 @@
 
       } /* while */
 
-      if( calc_numElem == 0 && numElem == 0 )
+      if( calc_numElem == numElem )
       {
          numElem_correto = -1;
       } /* if */
@@ -760,10 +759,6 @@
       {
          if( pAux == pCorr )
          {
-            if( numElem_correto == -1 )
-            {
-               numElem_correto = 1;
-            } /* if */
             achou = 1;
          } /* if */
 
@@ -774,7 +769,7 @@
 
       /* Este if certifica-se que, mesmo não tendo nenhum elemento,
          uma lista vazia está com o número correto de elementos (0) */
-      if( calc_numElem == 0 && numElem == 0 && numElem_correto == -1 )
+      if( calc_numElem == numElem && numElem_correto == -1 )
       {
          numElem_correto = 1;
       } /* if */
@@ -816,18 +811,18 @@
          entrará no loop da função LIS_LiberarEspacosInativos ao menos uma vez */
 
       numFalhas += LIS_LiberarEspacosInativos();
+      
+      if( numElem < 0 )
+      {
+         #ifdef _DEBUG
+            CNT_CONTAR( "11" ) ;
+         #endif
+         TST_NotificarFalha( "Número de elementos negativo." ) ;
+         numFalhas++;
+      } /* if */
 
       if( numElem_correto )
       {
-         if( numElem < 0 )
-         {
-            #ifdef _DEBUG
-               CNT_CONTAR( "11" ) ;
-            #endif
-            TST_NotificarFalha( "Número de elementos negativo." ) ;
-            numFalhas++;
-         } /* if */
-
          if( numElem == 0 )
          {
             if( pCorr != NULL  )
@@ -871,22 +866,29 @@
                TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem = 1." ) ;
                numFalhas++;
             } /* if */
-            if( pOrig == NULL  )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "16" ) ;
-               #endif
-               TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem = 1." ) ;
-               numFalhas++;
-            } /* if */
-            if( pFinal == NULL  )
+            
+            /* --------------------------------------------------------------------------------
+
+               >> ESCLARECIMENTO
+            
+               De forma similar ao esclarecimento anterior, não é possível chegar aqui com
+               uma cabeça de lista com ambos pFinal e pOrigem nulos, porque isso causaria
+               em calc_numElem = 0, mas como o número na cabeça é 1, numElem_correto = 0.
+               Como não é possível constatar o número de elementos da lista, as assertivas
+               estruturais quanto a uma lista unitária não serão verificadas.
+
+               -------------------------------------------------------------------------------*/
+            
+            if(   TST_CompararPonteiro( pFinal , pCorr ,
+                  "pFinal e pCorr devem apontar para o mesmo elemento para numElem = 1." )
+                  != TST_CondRetOK )
             {
                #ifdef _DEBUG
                   CNT_CONTAR( "17" ) ;
                #endif
-               TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem = 1." ) ;
                numFalhas++;
             } /* if */
+
             if(   TST_CompararPonteiro( pOrig , pFinal ,
                   "pOrig e pFinal devem apontar para o mesmo elemento para numElem = 1." )
                   != TST_CondRetOK )
@@ -896,6 +898,7 @@
                #endif
                numFalhas++;
             } /* if */
+
             if(   TST_CompararPonteiro( pOrig , pCorr ,
                   "pOrig e pCorr devem apontar para o mesmo elemento para numElem = 1." )
                   != TST_CondRetOK )
@@ -905,6 +908,7 @@
                #endif
                numFalhas++;
             } /* if */
+
          } /* else if */
          else if( numElem > 1 )
          {
@@ -938,82 +942,74 @@
 
          if( numElem > 0 )
          {
-            if ( ! CED_VerificarEspaco( pCorr , NULL ) )
+            /* Por mais que seja óbvio que para uma lista não-vazia, o ponteiro
+               corrento não pode ser nulo, é necessário esta verificação pois
+               há casos de teste justamente com este cenário, que já foi checado
+               e apresentado como falha pelo verificador. Portanto, este if é
+               apenas para o programa não voar. */
+
+            if( pCorr != NULL )
             {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "23" ) ;
-               #endif
-               TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
-               numFalhas++;
-            } /* if */
-            if ( TST_CompararInt( LIS_TipoEspacoElemento ,
-              CED_ObterTipoEspaco( pCorr ) ,
-              "Tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "24" ) ;
-               #endif
-               numFalhas++;
-            } /* if */
-            if( TST_CompararPonteiro( pCab , pCorr->pCab ,
-                "Elemento corrente não faz parte da lista." ) != TST_CondRetOK )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "25" ) ;
-               #endif
-               numFalhas++;
-            } /* if */
-            if( pCorr->pAnt == NULL )
-            {
-               if( TST_CompararPonteiro( pCorr , pCorr->pCab->pOrigemLista ,
-                   "Elemento corrente não é origem da lista." ) != TST_CondRetOK )
+               if( TST_CompararPonteiro( pCab , pCorr->pCab ,
+                   "Elemento corrente não faz parte da lista." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
-                     CNT_CONTAR( "26" ) ;
+                     CNT_CONTAR( "25" ) ;
                   #endif
                   numFalhas++;
                } /* if */
-            } /* else */
-            else
-            {
-               if( TST_CompararPonteiro( pCorr , pCorr->pAnt->pProx ,
-                   "Elemento corrente não está corretamente encadeado pela esquerda." ) != TST_CondRetOK )
+               if( pCorr->pAnt == NULL )
+               {
+                  if( TST_CompararPonteiro( pCorr , pCorr->pCab->pOrigemLista ,
+                      "Elemento corrente tem pAnt nulo mas não é origem da lista." ) != TST_CondRetOK )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "26" ) ;
+                     #endif
+                     numFalhas++;
+                  } /* if */
+               } /* else */
+               else
+               {
+                  if( TST_CompararPonteiro( pCorr , pCorr->pAnt->pProx ,
+                      "Elemento corrente não está corretamente encadeado pela esquerda." ) != TST_CondRetOK )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "27" ) ;
+                     #endif
+                     numFalhas++;
+                  } /* if */
+               } /* else */
+               if( pCorr->pProx == NULL )
+               {
+                  if( TST_CompararPonteiro( pCorr , pCorr->pCab->pFimLista ,
+                      "Elemento corrente tem pProx nulo mas não é fim da lista." ) != TST_CondRetOK )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "28" ) ;
+                     #endif
+                     numFalhas++;
+                  } /* if */
+               } /* else */
+               else
+               {
+                  if( TST_CompararPonteiro( pCorr , pCorr->pProx->pAnt ,
+                      "Elemento corrente não está corretamente encadeado pela direita." ) != TST_CondRetOK )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "29" ) ;
+                     #endif
+                     numFalhas++;
+                  } /* if */
+               } /* else */
+               if( TST_CompararChar( TipoValor , pCorr->TipoValor ,
+                   "Elemento corrente tem tipo de valor diferente da cabeça." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
-                     CNT_CONTAR( "27" ) ;
+                     CNT_CONTAR( "30" ) ;
                   #endif
                   numFalhas++;
                } /* if */
-            } /* else */
-            if( pCorr->pProx == NULL )
-            {
-               if( TST_CompararPonteiro( pCorr , pCorr->pCab->pFimLista ,
-                   "Elemento corrente não é fim da lista." ) != TST_CondRetOK )
-               {
-                  #ifdef _DEBUG
-                     CNT_CONTAR( "28" ) ;
-                  #endif
-                  numFalhas++;
-               } /* if */
-            } /* else */
-            else
-            {
-               if( TST_CompararPonteiro( pCorr , pCorr->pProx->pAnt ,
-                   "Elemento corrente não está corretamente encadeado pela direita." ) != TST_CondRetOK )
-               {
-                  #ifdef _DEBUG
-                     CNT_CONTAR( "29" ) ;
-                  #endif
-                  numFalhas++;
-               } /* if */
-            } /* else */
-            if( TST_CompararChar( TipoValor , pCorr->TipoValor ,
-                "Elemento corrente tem tipo de valor diferente da cabeça." ) != TST_CondRetOK )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "30" ) ;
-               #endif
-               numFalhas++;
             } /* if */
          } /* if */
       } /* if */
@@ -1256,6 +1252,26 @@
             /* Fazer ponteiro final apontar para lista */
 
          pLista->pFimLista = (LIS_tppElemLista) pLista;
+
+         break;
+
+      case LIS_ModoDeturpacaoOrigElemNovo:
+            /* Fazer ponteiro origem apontar para novo elemento */
+
+         pValorDummy = (char *) malloc(8);
+         
+         if( pValorDummy == NULL )
+         {
+            TST_NotificarFalha( "Faltou memória" );
+            return;
+         } /* if */
+
+         strcpy(pValorDummy,"dummy");
+
+         Elem = CriarElemento( pLista, pValorDummy, 's', sizeof(pValorDummy) );
+
+         pLista->pOrigemLista = Elem;
+         pLista->numElem --;
 
          break;
 
