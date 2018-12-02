@@ -69,7 +69,7 @@
          LIS_tppLista pCab ;
                /* Ponteiro para cabeça da lista a qual o elemento pertence */
 
-         unsigned long tam ;
+         int tam ;
                /* Tamanho da estrutura apontada pelo elemento */
 
 #endif
@@ -133,7 +133,7 @@
                                        void *       pValor
 #ifdef _DEBUG
                                        , char TipoValor
-                                       , unsigned long tam
+                                       , int tam
 #endif
       ) ;
 
@@ -222,7 +222,7 @@
                                            void * pValor
 #ifdef _DEBUG
                                           , char TipoValor
-                                          , unsigned tam
+                                          , int tam
 #endif
       )
    {
@@ -291,7 +291,7 @@
                                           void * pValor
 #ifdef _DEBUG
                                           , char TipoValor
-                                          , unsigned long tam
+                                          , int tam
 #endif
       )
       
@@ -649,6 +649,59 @@
             LixoNosPonteiros = 1;
             numFalhas++;
          } /* if */
+         else
+         {
+            if ( ! CED_VerificarEspaco( pCorr->pAnt , NULL ) )
+            {
+               #ifdef _DEBUG
+                  CNT_CONTAR( "CorrAntLixo" ) ;
+               #endif
+               TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+               LixoNosPonteiros = 1;
+               numFalhas++;
+            } /* if */
+            else if ( pCorr->pAnt != NULL )
+            {
+               if( TST_CompararInt( LIS_TipoEspacoElemento ,
+                     CED_ObterTipoEspaco( pCorr->pAnt ) ,
+                     "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
+               {
+                  #ifdef _DEBUG
+                     CNT_CONTAR( "CorrAntNaoElem" ) ;
+                  #endif
+
+                  /* Função é abortada antes que o programa voe. */
+                  LixoNosPonteiros = 1;
+                  numFalhas++;
+               } /* if */
+            } /* else if */
+
+            if ( ! CED_VerificarEspaco( pCorr->pProx , NULL ) )
+            {
+               #ifdef _DEBUG
+                  CNT_CONTAR( "CorrProxLixo" ) ;
+               #endif
+               TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+               LixoNosPonteiros = 1;
+               numFalhas++;
+            } /* if */
+            else if ( pCorr->pProx != NULL )
+            {
+               if( TST_CompararInt( LIS_TipoEspacoElemento ,
+                     CED_ObterTipoEspaco( pCorr->pProx ) ,
+                     "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
+               {
+                  #ifdef _DEBUG
+                     CNT_CONTAR( "CorrProxNaoElem" ) ;
+                  #endif
+
+                  /* Função é abortada antes que o programa voe. */
+                  LixoNosPonteiros = 1;
+                  numFalhas++;
+               } /* if */
+            } /* else if */
+         } /* else */
+
       } /* else if */
 
       /* Verificar espaço apontado por pOrig */
@@ -704,7 +757,7 @@
             numFalhas++;
          } /* if */
       } /* else if */
-
+      
       if( LixoNosPonteiros ) 
       {
          return numFalhas;
@@ -955,6 +1008,9 @@
                   #endif
                   numFalhas++;
                } /* if */
+
+               /* Verificar pAnt */
+
                if( pCorr->pAnt == NULL )
                {
                   if( pCorr->pCab != NULL )
@@ -980,6 +1036,9 @@
                      numFalhas++;
                   } /* if */
                } /* else */
+
+               /* Verificar pProx */
+
                if( pCorr->pProx == NULL )
                {
                   if( pCorr->pCab != NULL )
@@ -1005,6 +1064,9 @@
                      numFalhas++;
                   } /* if */
                } /* else */
+
+               /* Verificar TipoValor */
+
                if( TST_CompararChar( TipoValor , pCorr->TipoValor ,
                    "Elemento corrente tem tipo de valor diferente da cabeça." ) != TST_CondRetOK )
                {
@@ -1013,6 +1075,77 @@
                   #endif
                   numFalhas++;
                } /* if */
+               
+               /* Verificar tamanho negativo */
+
+               if( pCorr->tam < 0 )
+               {
+                  #ifdef _DEBUG
+                     CNT_CONTAR( "TAM1" ) ;
+                  #endif
+                  TST_NotificarFalha( "Elemento corrente acusa tamanho negativo" );
+                  numFalhas++;
+               } /* if */
+
+               if ( ! CED_VerificarEspaco( pCorr->pValor , NULL ) )
+               {
+                  #ifdef _DEBUG
+                     CNT_CONTAR( "TAM2" ) ;
+                  #endif
+                  TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+                  LixoNosPonteiros = 1;
+                  numFalhas++;
+               } /* if */
+               else if ( pCorr->pValor != NULL )
+               {
+                  if( TST_CompararInt( LIS_TipoEspacoEstrutura ,
+                      CED_ObterTipoEspaco( pCorr->pValor ) ,
+                      "Id do tipo do espaço de dados não é estrutura." ) != TST_CondRetOK )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "TAM3" ) ;
+                     #endif
+
+                     /* Função é abortada antes que o programa voe. */
+                     LixoNosPonteiros = 1;
+                     numFalhas++;
+                  } /* if */
+               } /* else if */
+
+               /* Abortar caso pValor não aponte
+                  para estrutura ou aponte para lixo */
+
+               if( LixoNosPonteiros )
+               {
+                  return numFalhas;
+               } /* if */
+
+               /* Verificar tamanho dependendo de pValor */
+
+               if( pCorr->pValor == NULL )
+               {
+                  if( pCorr->tam != 0 )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "TAM4" ) ;
+                     #endif
+                     TST_NotificarFalha( "Elemento corrente sem estrutura acusa tamanho diferente de zero" );
+                     numFalhas++;
+                  } /* if */
+               } /* if */
+               else
+               {
+                  if( TST_CompararInt( pCorr->tam ,
+                     CED_ObterTamanhoValor( pCorr->pValor ) ,
+                     "Tamanho da estrutura apontara pelo elemento corrente não confere" ) != TST_CondRetOK )
+                  {
+                     #ifdef _DEBUG
+                        CNT_CONTAR( "TAM5" ) ;
+                     #endif
+                     numFalhas++;
+                  } /* if */
+               } /* else */
+
             } /* if */
          } /* if */
       } /* if */
@@ -1230,7 +1363,7 @@
 
          strcpy(pValorDummy,"dummy");
 
-         Elem = CriarElemento( pLista, pValorDummy, 's', sizeof(pValorDummy) );
+         Elem = CriarElemento( pLista, pValorDummy, 's', 8 );
 
          pLista->pElemCorr = Elem;
          pLista->numElem --;
@@ -1261,7 +1394,7 @@
       case LIS_ModoDeturpacaoOrigElemNovo:
             /* Fazer ponteiro origem apontar para novo elemento */
 
-         pValorDummy = (char *) malloc(8);
+         pValorDummy = (char *) malloc( 8 );
          
          if( pValorDummy == NULL )
          {
@@ -1271,7 +1404,7 @@
 
          strcpy(pValorDummy,"dummy");
 
-         Elem = CriarElemento( pLista, pValorDummy, 's', sizeof(pValorDummy) );
+         Elem = CriarElemento( pLista, pValorDummy, 's', 8 );
 
          pLista->pOrigemLista = Elem;
          pLista->numElem --;
@@ -1287,7 +1420,7 @@
 
       case LIS_ModoDeturpacaoDuplicarElem:
          /* Duplica elemento de modo que se possa continuar
-               a percorrer em ambos os sentidos */
+               a percorrer em ambos os sentidos por caminhos diferentes */
 
          pValorDummy = (char *) malloc(8);
          
@@ -1299,7 +1432,7 @@
 
          strcpy(pValorDummy,"dummy");
 
-         Elem = CriarElemento( pLista, pValorDummy, 's', sizeof(pValorDummy) );
+         Elem = CriarElemento( pLista, pValorDummy, 's', 8 );
 
          if( pCorr->pProx != NULL )
          {
@@ -1310,6 +1443,48 @@
          Elem->pAnt = pCorr->pAnt;
 
          pLista->numElem --;
+
+         break;
+
+      case LIS_ModoDeturpacaoTamNegativo:
+         /* Faz tam = -1 */
+
+         pCorr->tam = -1;
+
+         break;
+
+      case LIS_ModoDeturpacaoTamUm:
+         /* Faz tam = 1 */
+
+         pCorr->tam = 1;
+
+         break;
+
+      case LIS_ModoDeturpacaoConteudoLixo:
+         /* Faz pValor apontar para lixo */
+
+         pCorr->pValor = EspacoLixo;
+
+         break;
+
+      case LIS_ModoDeturpacaoConteudoApontaElem:
+         /* Faz pValor apontar para elemento */
+
+         pCorr->pValor = pCorr;
+
+         break;
+
+      case LIS_ModoDeturpacaoAntApontaCab:
+         /* Faz pAnt do elemento corrente apontar para cabeça */
+
+         pCorr->pAnt = ( LIS_tppElemLista ) pLista;
+
+         break;
+
+      case LIS_ModoDeturpacaoProxApontaCab:
+         /* Faz pProx do elemento corrente apontar para cabeça */
+
+         pCorr->pProx = ( LIS_tppElemLista ) pLista;
 
          break;
 
@@ -1508,7 +1683,7 @@
                                 void *       pValor
 #ifdef _DEBUG
                               , char TipoValor
-                              , unsigned long tam
+                              , int tam
 #endif
                               )
    {

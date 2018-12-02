@@ -62,3 +62,11 @@
 								estava depois do return. Assim que concertado este
 								pequeno problema, o total de espaços ainda alocados
 								se tornou zero.
+02/12	1h			revisar script de testes	Percebeu-se que não foram usados todos os modos
+								de deturpação passados pelo enunciado. Viu-se,
+								então, que também deveriam ser testados alguns
+								casos de testes remetentes ao campo tam, pValor,
+								pProx e pAnt...
+02/12	2h			redigir script de testes	Regididos os casos que estavam faltando
+02/12	2h			redigir código de módulo	Implementados os modos de deturpação que faltavam
+								+ verificações necessárias para campo tam.

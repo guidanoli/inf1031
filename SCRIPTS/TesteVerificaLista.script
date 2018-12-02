@@ -13,6 +13,8 @@
 =declararparm   lista5  int 5
 =declararparm   lista6  int 6
 =declararparm   lista7  int 7
+=declararparm   lista8  int 8
+=declararparm   lista9  int 9
 
 =declararparm   espacolixo int 999
 
@@ -57,6 +59,12 @@
 =declararparm   DeturpaOrigElemNovo   int 21
 =declararparm   DeturpaElemCabNULL    int 22
 =declararparm   DeturpaDuplicaElem    int 23
+=declararparm   DeturpaTamNegativo    int 24
+=declararparm   DeturpaTamUm          int 25
+=declararparm   DeturpaConteudoLixo   int 26
+=declararparm   DeturpaConteudoElem   int 27
+=declararparm   DeturpaAntApontaCab   int 28
+=declararparm   DeturpaProxApontaCab  int 29
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
@@ -111,7 +119,7 @@
 =verificar lista1 3
 =AceitaFalhasAcumuladas 3
 =tornarinativos
-=liberarinativos 3
+=liberaresplista 3
 =AceitaFalhasAcumuladas 3
 // Os três espaços que vazaram são a lista, a estrutura e o elemento.
 // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
@@ -126,7 +134,7 @@
 =verificar lista2 3
 =AceitaFalhasAcumuladas 3
 =tornarinativos
-=liberarinativos 3
+=liberaresplista 3
 =AceitaFalhasAcumuladas 3
 // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
 // acessa ao ponteiro origem, que está apontando para LISTA!
@@ -146,7 +154,7 @@
 // da lista por ambos os sentidos.
 =destruirlista lista3
 =tornarinativos
-=liberarinativos 2
+=liberaresplista 2
 =AceitaFalhasAcumuladas 2
 // Aqui são liberados dois espaços: o elemento e estrutura desencadeados.
 // Não foram liberados na função Destruirlista pois esta não faz uso do ponteiro para
@@ -169,7 +177,7 @@
 =AceitaFalhasAcumuladas 1
 =destruirlista lista4
 =tornarinativos
-=liberarinativos 2
+=liberaresplista 2
 =AceitaFalhasAcumuladas 2
 // É necessário liberar o elemento e a estrutura, pois a função DestruirLista não
 // leva em consideração o ponteiro pCorr porque assume que este aponta para um elemento
@@ -194,7 +202,7 @@
 =AceitaFalhasAcumuladas 4
 =destruirlista lista6
 =tornarinativos
-=liberarinativos 2
+=liberaresplista 2
 =AceitaFalhasAcumuladas 2
 // Não achou elemento corrente ao pecorrer pela origem pois a origem aponta para
 // outro elemento. Já pelo final, o elemento corrente foi achado normalmente.
@@ -259,7 +267,7 @@
 // clonado pela configuração dos ponteiros pAnt e pProx.
 =destruirlista lista6
 =tornarinativos
-=liberarinativos 2
+=liberaresplista 2
 =AceitaFalhasAcumuladas 2
 // O espaço clonado não é liberado pois quando a lista é percorrida pela
 // função DestruirLista, vai da origem para o final. Portanto, deve-se
@@ -272,8 +280,99 @@
 =verificar lista7 1
 =AceitaFalhasAcumuladas 1
 =destruirlista lista7
+
+== CONTADORES TAM1, TAM5 >> Deturpa tamanho para número negativo
+=criarlista lista7
+=inselemapos lista7 str0 OK
+=deturpar lista7 DeturpaTamNegativo
+=verificar lista7 2
+=AceitaFalhasAcumuladas 2
+// Veja que, além de acusar que o número é negativo, acusa que é diferente
+// do real tamanho do espaço alocado
+=destruirlista lista7
+
+== CONTADOR TAM2 >> Deturpar pValor, apontando para lixo
+=criarlista lista7
+=inselemapos lista7 str0 OK
+=deturpar lista7 DeturpaConteudoLixo
+=verificar lista7 2
+=AceitaFalhasAcumuladas 2
+// Como o ponteiro pValor aponta para lixo, a antiga estrutura antes apontada
+// por pCorr->pValor agora está "perdida no limbo"... Por isso o verificador
+// acusa vazamento de memória, que é sanada logo em seguida, sendo liberada.
+// Além disso, o verificador acusa que há espaço apontado por pValor -- o que
+// é óbvio, pois aponta para lixo.
 =tornarinativos
-=liberarinativos 0
+=liberaresplista 2
+=AceitaFalhasAcumuladas 2
+// Não é chamada a função destruirLista, pois esta tentaria liberar pValor,
+// que aponta para lixo... Então liberamos a memória do jeito "burocrático".
+// Duas estruturas são liberadas: a cabeça e o elemento.
+// Como o ponteiro para lista não é nula, o módulo de teste não
+// permitirá que uma nova lista será criada neste lugar, por isso, como
+// já se fez neste mesmo script diversas vezes, será usado outro índice do
+// vetor de listas para alocar a nova lista.
+
+== CONTADOR TAM3 >> Deturpa pValor, apontando para o próprio elemento
+=criarlista lista8
+=inselemapos lista8 str0 OK
+=deturpar lista8 DeturpaConteudoElem
+=verificar lista8 2
+=AceitaFalhasAcumuladas 2
+// Duas falhas são levantadas: a estrutura é "perdida no limbo" pois nenhum
+// ponteiro na estrutura aponta para ela, e o espaço apontado por pValor não
+// corresponde a uma estrutura, mas sim a um elemento. A estrutura é liberada
+// ao percorrer a LEA.
+=tornarinativos
+=liberaresplista 2
+=AceitaFalhasAcumuladas 2
+// Novamente não é chamada a função destruirLista, pois tentaria liberar o
+// espaço do elemento duas vezes. Na segunda vez, o programa voaria.
+// Duas estruturas são liberadas: a cabeça e o elemento.
+
+== CONTADOR TAM4 >> Deturpar lista com elemento com pValor nulo, modificando tam para 1.
+=criarlista lista9
+=inselemapos lista9 str0 OK
+=deturpar lista9 DeturpaConteudoNULL
+=deturpar lista9 DeturpaTamUm
+=verificar lista9 2
+=AceitaFalhasAcumuladas 2
+// Duas falhas ocorrem: vazamento de memória da estrutura que para de ser apontada
+// por pCorr->pValor, que é logo em seguida liberada, e tamanho diferente de zero
+// para elemento com pValor NULL.
+=destruirlista lista9
+
+== CONTADOR CorrAntLixo, CorrProxLixo >> Fazendo pAnt e pProx apontarem para lixo
+=criarlista lista9
+=inselemapos lista9 str0 OK
+=deturpar lista9 DeturpaProxLixo
+=deturpar lista9 DeturpaAntLixo
+=verificar lista9 2
+=AceitaFalhasAcumuladas 2
+// Foram acusadas duas falhas pois os dois ponteiros pAnt e pProx apontam para lixo
+=deturpar lista9 DeturpaProxNULL
+=deturpar lista9 DeturpaAntNULL
+// Escolheu-se deturpar os ponteiros pProx e pAnt para NULL novamente somente para
+// a última lista do vetor ser reutilizada para o próximo caso de teste, mas poder-se-ia
+// ter usado os comandos de varredura de espaços inativos, como tem-se empregado ao
+// decorrer desse script... Desse modo, pode-se usar a função DestruirLista
+=destruirlista lista9
+
+== CONTADOR CorrAntNaoElem, CorrProxNaoElem >> Fazer pAnt e pProx apontarem para cabeça
+=criarlista lista9
+=inselemapos lista9 str0 OK
+=deturpar lista9 DeturpaAntApontaCab
+=deturpar lista9 DeturpaProxApontaCab
+=verificar lista9 2
+=AceitaFalhasAcumuladas 2
+// Foram acusadas duas falhas pois os dois ponteiros pAnt e pProx apontam para cabeça
+=deturpar lista9 DeturpaProxNULL
+=deturpar lista9 DeturpaAntNULL
+// Escolheu-se deturpar os ponteiros pProx e pAnt para NULL novamente somente para
+// a última lista do vetor ser reutilizada para o próximo caso de teste, mas poder-se-ia
+// ter usado os comandos de varredura de espaços inativos, como tem-se empregado ao
+// decorrer desse script... Desse modo, pode-se usar a função DestruirLista
+=destruirlista lista9
 
 == Terminar contador
 =pararcontagem

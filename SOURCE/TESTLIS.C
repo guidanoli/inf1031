@@ -85,18 +85,21 @@ static const char EXIBIR_ESPACOS_CMD      [ ] = "=exibirespacos"     ;
 #define DIM_VT_LISTA   10
 #define DIM_VALOR     100
 
-int contadoresInicializados = 0 ;
+/************** Variáveis globais *****************/
 
-#define ID_ESPACO_LIXO 999
+   int contadoresInicializados = 0 ;
 
-#ifdef _DEBUG
+   #define ID_ESPACO_LIXO 999
 
-static char *EspacoLixo;
+   #ifdef _DEBUG
+
+   static char *EspacoLixo;
       /* Espaço de dados lixo usado ao testar */
 
-#endif
+   #endif
 
-LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
+   LIS_tppLista vtListas[ DIM_VT_LISTA ] ;
+      /* Vetor de listas */
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -112,7 +115,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *  $FC Função: TLIS &Testar lista
 *
 *  $ED Descrição da função
-*     Podem ser criadas até 10 listas, identificadas pelos índices 0 a 10
+*     Podem ser criadas até 10 listas, identificadas pelos índices de 0 a 9
 *
 *     Comandos disponíveis:
 *
@@ -176,8 +179,25 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *     =verificarcontagens <número contadores zero iguais a zero esperado>
 *
 *     =deturpar                     inxLista  modoDeturpacao
+*        Deturpa lista de índice inxLista com o modo de deturpação
+*        indicado pelo identificador modoDeturpacao.
+*        [ ! ] Deve-se ter cuidado para, ao usar outras funções
+*              do módulo lista depois de deturpada a lista, não
+*              usar espaços com lixo ou nulos indevidamente, pois
+*              há alto risco do programa voar.
+*
 *     =verificar                    inxLista  qtFalhasEsp
+*        Verifica a lista de índice inxLista de acordo com as assertivas
+*        estruturais do modelo de lista auto-verificável, e compara a
+*        qt. de falhas acusadas pela função com qtFalhasEsp.
+*
 *     =liberarinativos              qtFalhasEsp
+*        Percorre a LEA e libera todos os seus espaços inativos que estão
+*        marcados com tipos de espaços de dados pertencentes ao módulo
+*        Lista ( vide TiposEspacosLista.def ).
+*
+*     =tornarinativos
+*        Torna todos os espaços presentes na LEA inativos.
 *
 ***********************************************************************/
 
@@ -306,7 +326,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             CondRet = LIS_InserirElementoAntes( vtListas[ inxLista ] , pDado 
 #ifdef _DEBUG
-               , 's' , sizeof(pDado)
+               , 's' , strlen( StringDado ) + 1
 #endif
                ) ;
 
@@ -345,7 +365,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , pDado 
 #ifdef _DEBUG
-               , 's' , sizeof(pDado)
+               , 's' , strlen( StringDado ) + 1
 #endif
                ) ;
 

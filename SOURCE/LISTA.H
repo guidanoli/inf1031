@@ -184,7 +184,25 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
          LIS_ModoDeturpacaoDuplicarElem = 23 ,
             /* Duplica elemento de modo que se possa continuar
-               a percorrer em ambos os sentidos */
+               a percorrer em ambos os sentidos por caminhos diferentes */
+
+         LIS_ModoDeturpacaoTamNegativo = 24 ,
+            /* Faz tam = -1 */
+
+         LIS_ModoDeturpacaoTamUm = 25 ,
+            /* Faz tam = 1 */
+
+         LIS_ModoDeturpacaoConteudoLixo = 26 ,
+            /* Faz pValor apontar para lixo */
+
+         LIS_ModoDeturpacaoConteudoApontaElem = 27 ,
+            /* Faz pValor apontar para elemento */
+
+         LIS_ModoDeturpacaoAntApontaCab = 28 ,
+            /* Faz pAnt do elemento corrente apontar para cabeça */
+
+         LIS_ModoDeturpacaoProxApontaCab = 29 
+            /* Faz pProx do elemento corrente apontar para cabeça */
 
    } LIS_tpModosDeturpacao ;
 
@@ -283,7 +301,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
                                            void * pValor
 #ifdef _DEBUG
                                           , char TipoValor
-                                          , unsigned tam
+                                          , int tam
 #endif
       ) ;
 
@@ -314,7 +332,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
                                           void * pValor
 #ifdef _DEBUG
                                           , char TipoValor
-                                          , unsigned long tam
+                                          , int tam
 #endif
       ) ;
 
