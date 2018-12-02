@@ -642,7 +642,7 @@
              "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
          {
             #ifdef _DEBUG
-               CNT_CONTAR( "4b" ) ;
+               CNT_CONTAR( "5" ) ;
             #endif
 
             /* Função é abortada antes que o programa voe. */
@@ -654,7 +654,7 @@
             if ( ! CED_VerificarEspaco( pCorr->pAnt , NULL ) )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "CorrAntLixo" ) ;
+                  CNT_CONTAR( "6" ) ;
                #endif
                TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
                LixoNosPonteiros = 1;
@@ -667,7 +667,7 @@
                      "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
-                     CNT_CONTAR( "CorrAntNaoElem" ) ;
+                     CNT_CONTAR( "7" ) ;
                   #endif
 
                   /* Função é abortada antes que o programa voe. */
@@ -679,7 +679,7 @@
             if ( ! CED_VerificarEspaco( pCorr->pProx , NULL ) )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "CorrProxLixo" ) ;
+                  CNT_CONTAR( "8" ) ;
                #endif
                TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
                LixoNosPonteiros = 1;
@@ -692,7 +692,7 @@
                      "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
                {
                   #ifdef _DEBUG
-                     CNT_CONTAR( "CorrProxNaoElem" ) ;
+                     CNT_CONTAR( "9" ) ;
                   #endif
 
                   /* Função é abortada antes que o programa voe. */
@@ -709,7 +709,7 @@
       if ( ! CED_VerificarEspaco( pOrig , NULL ) )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "5" ) ;
+            CNT_CONTAR( "10" ) ;
          #endif
          TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
          LixoNosPonteiros = 1;
@@ -722,7 +722,7 @@
              "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
          {
             #ifdef _DEBUG
-               CNT_CONTAR( "5b" ) ;
+               CNT_CONTAR( "11" ) ;
             #endif
 
             /* Função é abortada antes que o programa voe. */
@@ -736,7 +736,7 @@
       if ( ! CED_VerificarEspaco( pFinal , NULL ) )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "6" ) ;
+            CNT_CONTAR( "12" ) ;
          #endif
          TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
          LixoNosPonteiros = 1;
@@ -749,7 +749,7 @@
              "Id do tipo do espaço de dados não é elemento." ) != TST_CondRetOK )
          {
             #ifdef _DEBUG
-               CNT_CONTAR( "6b" ) ;
+               CNT_CONTAR( "13" ) ;
             #endif
 
             /* Função é abortada antes que o programa voe. */
@@ -789,7 +789,7 @@
            "Campo de número de elementos incorreto (percorrendo pela origem)." ) != TST_CondRetOK )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "7" ) ;
+            CNT_CONTAR( "14" ) ;
          #endif
 
          numFalhas++;
@@ -798,7 +798,7 @@
       if ( calc_numElem > 0 && achou != 1 )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "8" ) ;
+            CNT_CONTAR( "15" ) ;
          #endif
 
          TST_NotificarFalha( "Não achou elemento corrente (percorrendo pela origem)." );
@@ -838,7 +838,7 @@
            "Campo de número de elementos incorreto (percorrendo pelo final)." ) != TST_CondRetOK )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "9" ) ;
+            CNT_CONTAR( "16" ) ;
          #endif
 
          numFalhas++;
@@ -847,7 +847,7 @@
       if ( calc_numElem > 0 && achou != 1 )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "10" ) ;
+            CNT_CONTAR( "17" ) ;
          #endif
 
          TST_NotificarFalha( "Não achou elemento corrente (percorrendo pelo final)." );
@@ -868,7 +868,7 @@
       if( numElem < 0 )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "11" ) ;
+            CNT_CONTAR( "18" ) ;
          #endif
          TST_NotificarFalha( "Número de elementos negativo." ) ;
          numFalhas++;
@@ -881,7 +881,7 @@
             if( pCorr != NULL  )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "12" ) ;
+                  CNT_CONTAR( "19" ) ;
                #endif
                TST_NotificarFalha( "pCorr deve ser NULL para numElem = 0." ) ;
                numFalhas++;
@@ -914,7 +914,7 @@
             if( pCorr == NULL  )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "15" ) ;
+                  CNT_CONTAR( "20" ) ;
                #endif
                TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem = 1." ) ;
                numFalhas++;
@@ -937,7 +937,7 @@
                   != TST_CondRetOK )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "17" ) ;
+                  CNT_CONTAR( "21" ) ;
                #endif
                numFalhas++;
             } /* if */
@@ -947,7 +947,7 @@
                   != TST_CondRetOK )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "18" ) ;
+                  CNT_CONTAR( "22" ) ;
                #endif
                numFalhas++;
             } /* if */
@@ -957,7 +957,7 @@
                   != TST_CondRetOK )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "19" ) ;
+                  CNT_CONTAR( "23" ) ;
                #endif
                numFalhas++;
             } /* if */
@@ -968,7 +968,7 @@
             if( pCorr == NULL  )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "20" ) ;
+                  CNT_CONTAR( "24" ) ;
                #endif
                TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem > 1." ) ;
                numFalhas++;
@@ -1081,7 +1081,7 @@
                if( pCorr->tam < 0 )
                {
                   #ifdef _DEBUG
-                     CNT_CONTAR( "TAM1" ) ;
+                     CNT_CONTAR( "31" ) ;
                   #endif
                   TST_NotificarFalha( "Elemento corrente acusa tamanho negativo" );
                   numFalhas++;
@@ -1090,7 +1090,7 @@
                if ( ! CED_VerificarEspaco( pCorr->pValor , NULL ) )
                {
                   #ifdef _DEBUG
-                     CNT_CONTAR( "TAM2" ) ;
+                     CNT_CONTAR( "32" ) ;
                   #endif
                   TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
                   LixoNosPonteiros = 1;
@@ -1103,7 +1103,7 @@
                       "Id do tipo do espaço de dados não é estrutura." ) != TST_CondRetOK )
                   {
                      #ifdef _DEBUG
-                        CNT_CONTAR( "TAM3" ) ;
+                        CNT_CONTAR( "33" ) ;
                      #endif
 
                      /* Função é abortada antes que o programa voe. */
@@ -1127,7 +1127,7 @@
                   if( pCorr->tam != 0 )
                   {
                      #ifdef _DEBUG
-                        CNT_CONTAR( "TAM4" ) ;
+                        CNT_CONTAR( "34" ) ;
                      #endif
                      TST_NotificarFalha( "Elemento corrente sem estrutura acusa tamanho diferente de zero" );
                      numFalhas++;
@@ -1140,7 +1140,7 @@
                      "Tamanho da estrutura apontara pelo elemento corrente não confere" ) != TST_CondRetOK )
                   {
                      #ifdef _DEBUG
-                        CNT_CONTAR( "TAM5" ) ;
+                        CNT_CONTAR( "35" ) ;
                      #endif
                      numFalhas++;
                   } /* if */
@@ -1152,7 +1152,7 @@
       else
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "31" ) ;
+            CNT_CONTAR( "36" ) ;
          #endif
          TST_NotificarFalha( "O número de elementos é inconsistente." ) ;
          numFalhas++;
@@ -1524,7 +1524,7 @@
                 tipo == LIS_TipoEspacoEstrutura )
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "MEM1" ) ;
+                  CNT_CONTAR( "37" ) ;
                #endif
                TST_NotificarFalha( "Vazamento de espaço de memória detectado." );
                CED_ExcluirEspacoCorrente( );
@@ -1533,7 +1533,7 @@
             else
             {
                #ifdef _DEBUG
-                  CNT_CONTAR( "MEM2" ) ;
+                  CNT_CONTAR( "38" ) ;
                #endif
                CED_AvancarProximoEspaco();
             } /* else */
@@ -1542,7 +1542,7 @@
          else
          {
             #ifdef _DEBUG
-               CNT_CONTAR( "MEM3" ) ;
+               CNT_CONTAR( "39" ) ;
             #endif
             CED_AvancarProximoEspaco();
          } /* else */
@@ -1575,7 +1575,7 @@
       if ( Ponteiro == NULL || CED_EhEspacoAtivo( Ponteiro ) )
       {
          #ifdef _DEBUG
-            CNT_CONTAR( "33" ) ;
+            CNT_CONTAR( "40" ) ;
          #endif
          return;
       } /* if */
@@ -1588,7 +1588,7 @@
             /* Estrutura apontada por elemento */
 
             #ifdef _DEBUG
-               CNT_CONTAR( "34" ) ;
+               CNT_CONTAR( "41" ) ;
             #endif
 
             CED_MarcarEspacoAtivo( Ponteiro );
@@ -1598,7 +1598,7 @@
             /* Cabeça de lista */
 
             #ifdef _DEBUG
-               CNT_CONTAR( "35" ) ;
+               CNT_CONTAR( "42" ) ;
             #endif
 
             pLista = (LIS_tppLista) Ponteiro;
@@ -1622,7 +1622,7 @@
             /* Elemento de lista */
 
             #ifdef _DEBUG
-               CNT_CONTAR( "36" ) ;
+               CNT_CONTAR( "43" ) ;
             #endif
 
             pElem = (LIS_tppElemLista) Ponteiro;

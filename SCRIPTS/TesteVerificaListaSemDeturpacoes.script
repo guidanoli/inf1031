@@ -3,6 +3,7 @@
 // Data:      02/abr/2008, 30/11/2018
 // Propósito: Testar superficialmente o módulo lista genérica duplamente encadeada e verificar a estrutura.
 //            Este módulo não tem como intuito contribuir para os casos testes. Nenhum contador é alterado.
+//            Prova no final que não há vazamento de memória (quanto ao módulo LISTA ou TESTLIS).
 
 == Inicializar valores
 =declararparm   lista0  int 0
@@ -28,7 +29,7 @@
 =declararparm   pNaoNULL       int  1
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
-=declararparm   ArqCntSaida     string "ContadoresLista.log"
+=declararparm   ArqCntSaida     string "ContadoresLista.count"
 
 == Inicializar contador
 =inicializarcontadores ""
