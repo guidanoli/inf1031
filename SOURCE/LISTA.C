@@ -1505,6 +1505,8 @@
 *  Função: LIS  &Liberar espaços inativos relativos ao módulo Lista
 *  ****/
 
+#ifdef _DEBUG
+
    int LIS_LiberarEspacosInativos ( void )
    {
       int numFalhas = 0;
@@ -1555,6 +1557,8 @@
 
    } /* Fim função: LIS  -Liberar espaços inativos relativos ao módulo Lista */
 
+#endif
+
 /*****  Código das funções encapsuladas no módulo  *****/
 
 /***********************************************************************
@@ -1565,6 +1569,8 @@
 *     Recursivamente marca espaços ativos no LEA.
 *
 ***********************************************************************/
+
+#ifdef _DEBUG
 
    void VerificaMemoria ( void * Ponteiro , int IdTipoEspaco )
    {
@@ -1645,6 +1651,8 @@
       } /* switch */
 
    } /* Fim função: LIS  -Verificar memória */
+
+#endif
 
 /***********************************************************************
 *
