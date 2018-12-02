@@ -68,8 +68,10 @@ static const char OBTER_NUM_CONTADORES_CMD   [ ] = "=numcontadores"           ;
 static const char OBTER_TOTAL_CONTAGEM_CMD   [ ] = "=contagemtotal"           ;
 static const char VERIFICAR_CONTAGENS_CMD    [ ] = "=verificarcontagens" ;
 
-static const char VRF_CMD                 [ ] = "=verificar" ;
-static const char DETURPAR_CMD            [ ] = "=deturpar"  ;
+static const char VRF_CMD                 [ ] = "=verificar"         ;
+static const char DETURPAR_CMD            [ ] = "=deturpar"          ;
+static const char LIBERA_INATIVOS_CMD     [ ] = "=liberarinativos"   ;
+static const char TORNAR_INATIVOS_CMD     [ ] = "=tornarinativos"    ;
 
 #define TRUE  1
 #define FALSE 0
@@ -173,6 +175,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *
 *     =deturpar                     inxLista  modoDeturpacao
 *     =verificar                    inxLista  qtFalhasEsp
+*     =liberarinativos              qtFalhasEsp
 *
 ***********************************************************************/
 
@@ -502,7 +505,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxLista , &CondRetEsp ) ;
 
-            if( ( numLidos != 2 ) )
+            if( numLidos != 2 )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -548,7 +551,35 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
          } /* fim ativa: LIS  &Iniciar contador */
 
-         /* ICNT &Comandos do módulo de interpretador de contadores */
+      /* LIS &Liberar espaços inativos */
+
+         else if ( strcmp( ComandoTeste , LIBERA_INATIVOS_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "i" , &CondRetEsp );
+
+            if( numLidos != 1 )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            return TST_CompararInt( CondRetEsp , LIS_LiberarEspacosInativos() ,
+                                    "Quantidade de falhas diferente da esparada" );
+
+         } /* fim ativa: LIS &Liberar espaços inativos */
+
+      /* CED &Tornar todos os espaços na LEA inativos */
+
+         else if ( strcmp( ComandoTeste , TORNAR_INATIVOS_CMD ) == 0 )
+         {
+
+            CED_MarcarTodosEspacosInativos();
+
+            return TST_CondRetOK;
+
+         } /* fim ativa: CED &Tornar todos os espaços na LEA inativos */
+
+      /* ICNT &Comandos do módulo de interpretador de contadores */
 
          else if (   strcmp( ComandoTeste , INICIALIZAR_CONTADORES_CMD ) == 0 ||
                      strcmp( ComandoTeste , TERMINAR_CONTADORES_CMD ) == 0 ||

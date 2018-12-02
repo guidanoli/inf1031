@@ -104,51 +104,67 @@
 =deturpar lista1 DeturpaFinalLixo
 =verificar lista1 3
 =AceitaFalhasAcumuladas 3
+=tornarinativos
+=liberarinativos 3
+=AceitaFalhasAcumuladas 3
+// Os três espaços que vazaram são a lista, a estrutura e o elemento.
 // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
 // acessa ao ponteiro origem, que está com LIXO!
 
-== Libera espaços referentes a estruturas, elementos e cabeças inativos
+== CONTADOR 4b,5b,6b >> Deturpar lista para que ponteiros da cabeça aponte para a lista
 =criarlista lista2
+=verificar lista2 0
+=inselemantes lista2 str0 OK
+=verificar lista2 0
+=deturpar lista2 DeturpaCorrLixo
+=deturpar lista2 DeturpaOrigLixo
+=deturpar lista2 DeturpaFinalLixo
 =verificar lista2 3
 =AceitaFalhasAcumuladas 3
-// As três estruturas liberadas foram: cabeça, elemento e estrutura da lista anterior
+=tornarinativos
+=liberarinativos 3
+=AceitaFalhasAcumuladas 3
+// [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
+// acessa ao ponteiro origem, que está apontando para LISTA!
 
 == CONTADOR 7-10 >> Deturpa lista, desencadeando nó corrente, mas sem liberá-lo
-=inselemapos lista2 str0 OK
-=inselemapos lista2 str1 OK
-=inselemapos lista2 str2 OK
-=avancarelem lista2 -1 OK
-=obtervalorelem lista2 str1 pNaoNULL
-=verificar lista2 0
-=deturpar lista2 DeturpaDesencadeiaNo
-=verificar lista2 5
+=criarlista lista3
+=verificar lista3 0
+=inselemapos lista3 str0 OK
+=inselemapos lista3 str1 OK
+=inselemapos lista3 str2 OK
+=avancarelem lista3 -1 OK
+=obtervalorelem lista3 str1 pNaoNULL
+=verificar lista3 0
+=deturpar lista3 DeturpaDesencadeiaNo
+=verificar lista3 5
 =AceitaFalhasAcumuladas 5
 // Não há vazamento pois o ponteiro pCorr da cabeça ainda aponta para o elemento desencadeado
 // Como perecebeu-se a contagem de elementos diferiu da calculada através do percorrimento
 // da lista por ambos os sentidos.
-=destruirlista lista2
+=destruirlista lista3
 
 == CONTADOR 11 >> Deturpa contador de elementos para número negativo
-=criarlista lista2
-=verificar lista2 2
+=criarlista lista3
+=verificar lista3 2
 =AceitaFalhasAcumuladas 2
 // Aqui são liberados dois espaços: o elemento e estrutura desencadeados no caso anterior
 // Não foram liberados na função Destruirlista pois esta não faz uso do ponteiro para
 // elemento corrente mas sim do ponteiro origem.
-=inselemapos lista2 str0 OK
-=deturpar lista2 DeturpaNumElemNeg
-=verificar lista2 3
+=inselemapos lista3 str0 OK
+=deturpar lista3 DeturpaNumElemNeg
+=verificar lista3 3
 =AceitaFalhasAcumuladas 3
 // Além de verificado que o número não corresponde ao número real de elementos na lista,
 // o verificador percebe que o número de elementos é negativo -- o que é ilógico!!
-=destruirlista lista2
+=destruirlista lista3
 
 == CONTADOR 12 >> Deturpa ponteiro corrente de lista vazia para apontar para novo elemento
-=criarlista lista3
-=deturpar lista3 DeturpaCorrElemNovo
-=verificar lista3 1
+=criarlista lista4
+=deturpar lista4 DeturpaCorrElemNovo
+=verificar lista4 1
 =AceitaFalhasAcumuladas 1
-=destruirlista lista3
+=destruirlista lista4
 
 == Terminar contador
 =pararcontagem

@@ -809,49 +809,10 @@
       VerificaMemoria( pCab , LIS_TipoEspacoCabeca );
 
       /* Sempre haverá ao menos um espaço corrente, pois se chegou até aqui, é porque
-         o ponteiro para lista aponta para um espaço de dados válido */
+         o ponteiro para lista aponta para um espaço de dados válido, portanto sempre
+         entrará no loop da função LIS_LiberarEspacosInativos ao menos uma vez */
 
-      CED_InicializarIteradorEspacos();
-
-      while ( CED_ExisteEspacoCorrente() )
-      {
-         void * Ponteiro = CED_ObterPonteiroEspacoCorrente();
-
-         if( ! CED_EhEspacoAtivo( Ponteiro ) )
-         {
-            int tipo = CED_ObterTipoEspaco( Ponteiro );
-
-            if( tipo == LIS_TipoEspacoElemento  ||
-                tipo == LIS_TipoEspacoCabeca    ||
-                tipo == LIS_TipoEspacoEstrutura )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "MEM1" ) ;
-               #endif
-               TST_NotificarFalha( "Vazamento de espaço de memória detectado." );
-               CED_ExcluirEspacoCorrente( );
-               numFalhas++;
-            } /* if */
-            else
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "MEM2" ) ;
-               #endif
-               CED_AvancarProximoEspaco();
-            } /* else */
-
-         } /* if */
-         else
-         {
-            #ifdef _DEBUG
-               CNT_CONTAR( "MEM3" ) ;
-            #endif
-            CED_AvancarProximoEspaco();
-         } /* else */
-
-      } /* while */
-
-      CED_TerminarIteradorEspacos();
+      numFalhas += LIS_LiberarEspacosInativos();
 
       if( numElem_correto )
       {
@@ -1098,7 +1059,10 @@
           ModoDeturpar != LIS_ModoDeturpacaoCorrLixo &&
           ModoDeturpar != LIS_ModoDeturpacaoOrigLixo &&
           ModoDeturpar != LIS_ModoDeturpacaoFinalLixo &&
-          ModoDeturpar != LIS_ModoDeturpacaoCorrElemNovo )
+          ModoDeturpar != LIS_ModoDeturpacaoCorrElemNovo &&
+          ModoDeturpar != LIS_ModoDeturpacaoCorrTipoErrado && 
+          ModoDeturpar != LIS_ModoDeturpacaoOrigTipoErrado && 
+          ModoDeturpar != LIS_ModoDeturpacaoFinalTipoErrado )
       {
          if( pCorr == NULL )
          {
@@ -1271,6 +1235,27 @@
 
          break;
 
+      case LIS_ModoDeturpacaoCorrTipoErrado:
+            /* Fazer ponteiro corrente apontar para lista */
+
+         pLista->pElemCorr = (LIS_tppElemLista) pLista;
+
+         break;
+
+      case LIS_ModoDeturpacaoOrigTipoErrado:
+            /* Fazer ponteiro origem apontar para lista */
+
+         pLista->pOrigemLista = (LIS_tppElemLista) pLista;
+
+         break;
+
+      case LIS_ModoDeturpacaoFinalTipoErrado:
+            /* Fazer ponteiro final apontar para lista */
+
+         pLista->pFimLista = (LIS_tppElemLista) pLista;
+
+         break;
+
       default:
          
          TST_NotificarFalha( "Modo de deturpação não reconhecido" );
@@ -1282,6 +1267,61 @@
    } /* Fim função: LIS  &Deturpar lista */
 
 #endif
+
+/***************************************************************************
+*
+*  Função: LIS  &Liberar espaços inativos relativos ao módulo Lista
+*  ****/
+
+   int LIS_LiberarEspacosInativos ( void )
+   {
+      int numFalhas = 0;
+
+      CED_InicializarIteradorEspacos();
+
+      while ( CED_ExisteEspacoCorrente() )
+      {
+         void * Ponteiro = CED_ObterPonteiroEspacoCorrente();
+
+         if( ! CED_EhEspacoAtivo( Ponteiro ) )
+         {
+            int tipo = CED_ObterTipoEspaco( Ponteiro );
+
+            if( tipo == LIS_TipoEspacoElemento  ||
+                tipo == LIS_TipoEspacoCabeca    ||
+                tipo == LIS_TipoEspacoEstrutura )
+            {
+               #ifdef _DEBUG
+                  CNT_CONTAR( "MEM1" ) ;
+               #endif
+               TST_NotificarFalha( "Vazamento de espaço de memória detectado." );
+               CED_ExcluirEspacoCorrente( );
+               numFalhas++;
+            } /* if */
+            else
+            {
+               #ifdef _DEBUG
+                  CNT_CONTAR( "MEM2" ) ;
+               #endif
+               CED_AvancarProximoEspaco();
+            } /* else */
+
+         } /* if */
+         else
+         {
+            #ifdef _DEBUG
+               CNT_CONTAR( "MEM3" ) ;
+            #endif
+            CED_AvancarProximoEspaco();
+         } /* else */
+
+      } /* while */
+
+      CED_TerminarIteradorEspacos();
+
+      return numFalhas;
+
+   } /* Fim função: LIS  -Liberar espaços inativos relativos ao módulo Lista */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

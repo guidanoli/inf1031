@@ -164,8 +164,17 @@ typedef struct LIS_tagLista * LIS_tppLista ;
          LIS_ModoDeturpacaoNumElemNegativo = 16 ,
             /* Atribui valor negativo ao contador de elementos */
 
-         LIS_ModoDeturpacaoCorrElemNovo = 17
+         LIS_ModoDeturpacaoCorrElemNovo = 17 ,
             /* Fazer ponteiro corrente apontar para novo elemento */
+
+         LIS_ModoDeturpacaoCorrTipoErrado = 18 ,
+            /* Fazer ponteiro corrente apontar para lista */
+
+         LIS_ModoDeturpacaoOrigTipoErrado = 19 ,
+            /* Fazer ponteiro origem apontar para lista */
+
+         LIS_ModoDeturpacaoFinalTipoErrado = 20 ,
+            /* Fazer ponteiro final apontar para lista */
 
    } LIS_tpModosDeturpacao ;
 
@@ -478,6 +487,35 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
    void LIS_Deturpar( void ** pListaParam ,
                       LIS_tpModosDeturpacao ModoDeturpar ) ;
+
+#endif
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Liberar espaços inativos relativos ao módulo Lista
+*
+*  $ED Descrição da função
+*     Função da interface de teste.
+*     Libera da memória todo espaço de memória inativo na LEA
+*     que tenha como tipo de espaço de dados um dos seguintes:
+*
+*     - LIS_TipoEspacoElemento
+*     - LIS_TipoEspacoCabeca
+*     - LIS_TipoEspacoEstrutura
+*
+*  $AE Assertivas de Entrada:
+*     Implicitamente é usada a LEA, componente do módulo
+*     CESPDIN.H, importado apenas para _DEBUG.
+*
+*  $AS Assertivas de Saída:
+*     Se houver outros espaços apontados por esta estrutura,
+*     e não forem dos tipos citados, não serão tratadas.
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+   int LIS_LiberarEspacosInativos ( void ) ;
 
 #endif
 
