@@ -1,6 +1,6 @@
-// Script:    TesteVerificaLista_1.script
+// Script:    TesteVerificaLista.script
 // Autor:     Guilherme Dantas
-// Data:      30/11/2018
+// Data:      30/11/2018 - 02/11/2018
 // Propósito: Testa a função deturpa e verifica na estrutura de LISTA
 //
 
@@ -111,7 +111,7 @@
 =verificar lista1 3
 =AceitaFalhasAcumuladas 3
 =tornarinativos
-=liberaresplista 3
+=liberarinativos 3
 =AceitaFalhasAcumuladas 3
 // Os três espaços que vazaram são a lista, a estrutura e o elemento.
 // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
@@ -126,7 +126,7 @@
 =verificar lista2 3
 =AceitaFalhasAcumuladas 3
 =tornarinativos
-=liberaresplista 3
+=liberarinativos 3
 =AceitaFalhasAcumuladas 3
 // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que
 // acessa ao ponteiro origem, que está apontando para LISTA!
@@ -146,7 +146,7 @@
 // da lista por ambos os sentidos.
 =destruirlista lista3
 =tornarinativos
-=liberaresplista 2
+=liberarinativos 2
 =AceitaFalhasAcumuladas 2
 // Aqui são liberados dois espaços: o elemento e estrutura desencadeados.
 // Não foram liberados na função Destruirlista pois esta não faz uso do ponteiro para
@@ -169,7 +169,7 @@
 =AceitaFalhasAcumuladas 1
 =destruirlista lista4
 =tornarinativos
-=liberaresplista 2
+=liberarinativos 2
 =AceitaFalhasAcumuladas 2
 // É necessário liberar o elemento e a estrutura, pois a função DestruirLista não
 // leva em consideração o ponteiro pCorr porque assume que este aponta para um elemento
@@ -194,7 +194,7 @@
 =AceitaFalhasAcumuladas 4
 =destruirlista lista6
 =tornarinativos
-=liberaresplista 2
+=liberarinativos 2
 =AceitaFalhasAcumuladas 2
 // Não achou elemento corrente ao pecorrer pela origem pois a origem aponta para
 // outro elemento. Já pelo final, o elemento corrente foi achado normalmente.
@@ -259,7 +259,7 @@
 // clonado pela configuração dos ponteiros pAnt e pProx.
 =destruirlista lista6
 =tornarinativos
-=liberaresplista 2
+=liberarinativos 2
 =AceitaFalhasAcumuladas 2
 // O espaço clonado não é liberado pois quando a lista é percorrida pela
 // função DestruirLista, vai da origem para o final. Portanto, deve-se
@@ -272,6 +272,8 @@
 =verificar lista7 1
 =AceitaFalhasAcumuladas 1
 =destruirlista lista7
+=tornarinativos
+=liberarinativos 0
 
 == Terminar contador
 =pararcontagem

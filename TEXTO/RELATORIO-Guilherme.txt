@@ -53,3 +53,12 @@
 								teste -- liberarinativos e tornarinativos
 01/12	1h			redigir script de testes	Casos para contadores 15,17,18,19.
 01/12	1h			revisar código módulo		Adaptações necessárias para contadores 15,17,18,19.
+02/12   1h                      redigir script de testes        Todos os contadores testados. Contudo, ainda há
+                                                                um espaço alocado ainda...
+02/12	1h			revisar código módulo		Descobri o espaço alocado. Criei um comando no
+								módulo TESTLIS que chama a função que exibe todos
+								os espaços da LEA. O espaço que sobrava era o vetor
+								EspacoLixo, que não era liberado porque o free
+								estava depois do return. Assim que concertado este
+								pequeno problema, o total de espaços ainda alocados
+								se tornou zero.

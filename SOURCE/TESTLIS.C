@@ -34,6 +34,7 @@
 #include "CONTA.H"
 #include "CESPDIN.H"
 #include "INTRPCNT.H"
+#include "Tabelas\\IdTiposEspaco.def"
 #endif
 
 // comandos de script
@@ -70,8 +71,9 @@ static const char VERIFICAR_CONTAGENS_CMD    [ ] = "=verificarcontagens" ;
 
 static const char VRF_CMD                 [ ] = "=verificar"         ;
 static const char DETURPAR_CMD            [ ] = "=deturpar"          ;
-static const char LIBERA_INATIVOS_CMD     [ ] = "=liberarinativos"   ;
+static const char LIBERA_ESP_LISTA_CMD    [ ] = "=liberaresplista"   ;
 static const char TORNAR_INATIVOS_CMD     [ ] = "=tornarinativos"    ;
+static const char EXIBIR_ESPACOS_CMD      [ ] = "=exibirespacos"     ;
 
 #define TRUE  1
 #define FALSE 0
@@ -338,6 +340,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetMemoria ;
             } /* if */
 
+
             strcpy( pDado , StringDado ) ;
 
             CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , pDado 
@@ -512,12 +515,14 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             if( inxLista == ID_ESPACO_LIXO )
             {
+               TST_tpCondRet retorno;
                EspacoLixo = (char *) malloc(256);
                strcpy(EspacoLixo,"lixo");
-               return TST_CompararInt( CondRetEsp ,
-                      LIS_VerificarLista( EspacoLixo ) ,
-                      "Condicao de retorno errada ao verificar lista" ) ;
+               retorno = TST_CompararInt( CondRetEsp ,
+                         LIS_VerificarLista( EspacoLixo ) ,
+                         "Condicao de retorno errada ao verificar lista" ) ;
                free(EspacoLixo);
+               return retorno;
             } /* if */
             else if( ValidarInxLista( inxLista , NAO_CHECA ) )
             {
@@ -553,7 +558,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
       /* LIS &Liberar espaços inativos */
 
-         else if ( strcmp( ComandoTeste , LIBERA_INATIVOS_CMD ) == 0 )
+         else if ( strcmp( ComandoTeste , LIBERA_ESP_LISTA_CMD ) == 0 )
          {
 
             numLidos = LER_LerParametros( "i" , &CondRetEsp );
@@ -578,6 +583,17 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
             return TST_CondRetOK;
 
          } /* fim ativa: CED &Tornar todos os espaços na LEA inativos */
+
+      /* CED &Exibir espaços alocados dinamicamente */
+
+         else if ( strcmp( ComandoTeste , EXIBIR_ESPACOS_CMD ) == 0 )
+         {
+
+            CED_ExibirTodosEspacos( CED_ExibirTodos );
+
+            return TST_CondRetOK;
+
+         } /* fim ativa: CED &Exibir espaços alocados dinamicamente */
 
       /* ICNT &Comandos do módulo de interpretador de contadores */
 

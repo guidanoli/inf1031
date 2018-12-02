@@ -1,8 +1,8 @@
 // Script:    TesteLista.script
 // Autor:     Arndt von Staa, Guilherme Dantas
 // Data:      02/abr/2008, 30/11/2018
-// Propósito: Testar superficialmente o módulo lista genérica duplamente encadeada e verificá-la a estrutura.
-//
+// Propósito: Testar superficialmente o módulo lista genérica duplamente encadeada e verificar a estrutura.
+//            Este módulo não tem como intuito contribuir para os casos testes. Nenhum contador é alterado.
 
 == Inicializar valores
 =declararparm   lista0  int 0
@@ -163,6 +163,9 @@
 
 == Destruir a lista
 =destruirlista   lista2
+// Veja que nenhum dos espaços ainda alocados são do módulo LISTA ou do módulo TESTLIS.
+// São do CONTA e TABSIMB.
+=exibirespacos
 
 == Terminar contador
 =pararcontagem

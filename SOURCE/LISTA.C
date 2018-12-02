@@ -920,22 +920,19 @@
                TST_NotificarFalha( "pCorr deve ser diferente de NULL para numElem > 1." ) ;
                numFalhas++;
             } /* if */
-            if( pOrig == NULL  )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "21" ) ;
-               #endif
-               TST_NotificarFalha( "pOrig deve ser diferente de NULL para numElem > 1." ) ;
-               numFalhas++;
-            } /* if */
-            if( pFinal == NULL  )
-            {
-               #ifdef _DEBUG
-                  CNT_CONTAR( "22" ) ;
-               #endif
-               TST_NotificarFalha( "pFinal deve ser diferente de NULL para numElem > 1." ) ;
-               numFalhas++;
-            } /* if */
+
+            /* --------------------------------------------------------------------------------
+
+               >> ESCLARECIMENTO
+            
+               De forma similar ao esclarecimento anterior, não é possível chegar aqui com
+               uma cabeça de lista com ambos pFinal e pOrigem nulos, porque isso causaria
+               em calc_numElem = 0, mas como o número na cabeça é >1, numElem_correto = 0.
+               Como não é possível constatar o número de elementos da lista, as assertivas
+               estruturais quanto a uma lista com mais de um elemento não serão verificadas.
+
+               -------------------------------------------------------------------------------*/
+
          } /* else */
       
          /* Verificar elemento corrente */
@@ -960,13 +957,16 @@
                } /* if */
                if( pCorr->pAnt == NULL )
                {
-                  if( TST_CompararPonteiro( pCorr , pCorr->pCab->pOrigemLista ,
-                      "Elemento corrente tem pAnt nulo mas não é origem da lista." ) != TST_CondRetOK )
+                  if( pCorr->pCab != NULL )
                   {
-                     #ifdef _DEBUG
-                        CNT_CONTAR( "26" ) ;
-                     #endif
-                     numFalhas++;
+                     if( TST_CompararPonteiro( pCorr , pCorr->pCab->pOrigemLista ,
+                         "Elemento corrente tem pAnt nulo mas não é origem da lista." ) != TST_CondRetOK )
+                     {
+                        #ifdef _DEBUG
+                           CNT_CONTAR( "26" ) ;
+                        #endif
+                        numFalhas++;
+                     } /* if */
                   } /* if */
                } /* else */
                else
@@ -982,13 +982,16 @@
                } /* else */
                if( pCorr->pProx == NULL )
                {
-                  if( TST_CompararPonteiro( pCorr , pCorr->pCab->pFimLista ,
-                      "Elemento corrente tem pProx nulo mas não é fim da lista." ) != TST_CondRetOK )
+                  if( pCorr->pCab != NULL )
                   {
-                     #ifdef _DEBUG
-                        CNT_CONTAR( "28" ) ;
-                     #endif
-                     numFalhas++;
+                     if( TST_CompararPonteiro( pCorr , pCorr->pCab->pFimLista ,
+                         "Elemento corrente tem pProx nulo mas não é fim da lista." ) != TST_CondRetOK )
+                     {
+                        #ifdef _DEBUG
+                           CNT_CONTAR( "28" ) ;
+                        #endif
+                        numFalhas++;
+                     } /* if */
                   } /* if */
                } /* else */
                else
@@ -1275,6 +1278,41 @@
 
          break;
 
+      case LIS_ModoDeturpacaoElemCorrCabNULL:
+         /* Fazer pCab do elemento corrente NULL */
+
+         pCorr->pCab = NULL;
+
+         break;
+
+      case LIS_ModoDeturpacaoDuplicarElem:
+         /* Duplica elemento de modo que se possa continuar
+               a percorrer em ambos os sentidos */
+
+         pValorDummy = (char *) malloc(8);
+         
+         if( pValorDummy == NULL )
+         {
+            TST_NotificarFalha( "Faltou memória" );
+            return;
+         } /* if */
+
+         strcpy(pValorDummy,"dummy");
+
+         Elem = CriarElemento( pLista, pValorDummy, 's', sizeof(pValorDummy) );
+
+         if( pCorr->pProx != NULL )
+         {
+            pCorr->pProx->pAnt = Elem;
+         } /* if */
+
+         Elem->pProx = pCorr->pProx;
+         Elem->pAnt = pCorr->pAnt;
+
+         pLista->numElem --;
+
+         break;
+
       default:
          
          TST_NotificarFalha( "Modo de deturpação não reconhecido" );
@@ -1358,21 +1396,6 @@
       LIS_tppLista pLista = NULL;
       LIS_tppElemLista pElem = NULL, pElemLoop = NULL;
       LIS_tpCondRet RetLis = LIS_CondRetOK;
-
-      /* VVVVVVVVV SUSPEITO NÃO PRECISAR VERIFICAR PORQUE ESTA FUNÇÃO
-         SÓ É CHAMADA PASSANDO PONTEIROS QUE ESTÃO NA LEA, PORTANTO,
-         CONTROLADOS. ENTÃO O CONTADOR 32 NÃO DEVERIA EXISTIR
-         
-         Mas vou deixar até o final do desenvolvimento, caso
-         achemos algum caso em que ocorra deste contador não ficar zerado */
-
-      if( ! CED_VerificarEspaco( Ponteiro , NULL ) )
-      {
-         #ifdef _DEBUG
-            CNT_CONTAR( "32" ) ;
-         #endif
-         return;
-      } /* if */
 
       if ( Ponteiro == NULL || CED_EhEspacoAtivo( Ponteiro ) )
       {
