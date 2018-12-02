@@ -39,12 +39,16 @@
 								que acessem ponteiro do elemento corrente, para
 								que a função aborte antes de o programa voar.
 								+ Testa.bat abrindo acumulador de contadores.
-01/12	1h			redigir script de testes	Casos para modos de deturpação 1, 2 e 3.
+01/12	1h			redigir script de testes	Casos para contadores 1, 2 e 3.
 01/12	1h			revisar código módulo		Feitos os ajustes necessários para casos de testes
-								para modos de deturpação 1, 2 e 3.
-01/12	2h			redigir script de testes	Casos para modos de deturpação 4 a 10.
+								para contadores 1, 2 e 3.
+01/12	2h			redigir script de testes	Casos para contadores 4 a 10.
 01/12	2h			revisar código módulo		Feitos os ajustes necessários para casos de testes
-								para modos de deturpação 4 a 10.
-01/12	2h			redigir script de testes	Casos para modos de deturpação 11 e 12.
+								para contadores 4 a 10.
+01/12	2h			redigir script de testes	Casos para contadores 11 e 12.
 01/12	2h			revisar código módulo		Feitos os ajustes necessários para casos de testes
-								para modos de deturpação 11 e 12.
+								para contadores 11 e 12.
+01/12	1h			redigir script de testes	Casos para contadores 4b, 5b e 6b.
+01/12	1h			redigir código módulo		Comandos que facilitam a redação dos scripts de
+								teste -- liberarinativos e tornarinativos
+01/12	1h			revisar código módulo		Adaptações necessárias para contadores 4b, 5b e 6b.

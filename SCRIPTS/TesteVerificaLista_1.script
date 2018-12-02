@@ -48,6 +48,9 @@
 =declararparm   DeturpaFinalLixo      int 15
 =declararparm   DeturpaNumElemNeg     int 16
 =declararparm   DeturpaCorrElemNovo   int 17
+=declararparm   DeturpaCorrPontLista  int 18
+=declararparm   DeturpaOrigPontLista  int 19
+=declararparm   DeturpaFinalPontLista int 20
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
 =declararparm   ArqCntSaida     string "ContadoresLista.count"
@@ -116,9 +119,9 @@
 =verificar lista2 0
 =inselemantes lista2 str0 OK
 =verificar lista2 0
-=deturpar lista2 DeturpaCorrLixo
-=deturpar lista2 DeturpaOrigLixo
-=deturpar lista2 DeturpaFinalLixo
+=deturpar lista2 DeturpaCorrPontLista
+=deturpar lista2 DeturpaOrigPontLista
+=deturpar lista2 DeturpaFinalPontLista
 =verificar lista2 3
 =AceitaFalhasAcumuladas 3
 =tornarinativos

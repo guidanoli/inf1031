@@ -646,7 +646,8 @@
             #endif
 
             /* Função é abortada antes que o programa voe. */
-            return 1;
+            LixoNosPonteiros = 1;
+            numFalhas++;
          } /* if */
       } /* else if */
 
@@ -672,7 +673,8 @@
             #endif
 
             /* Função é abortada antes que o programa voe. */
-            return 1;
+            LixoNosPonteiros = 1;
+            numFalhas++;
          } /* if */
       } /* else if */
 
@@ -698,7 +700,8 @@
             #endif
 
             /* Função é abortada antes que o programa voe. */
-            return 1;
+            LixoNosPonteiros = 1;
+            numFalhas++;
          } /* if */
       } /* else if */
 
