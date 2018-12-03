@@ -76,8 +76,11 @@ Membros do trio:
 [ Funcionalidades ]
 
 Para gerar o log de saída, basta rodar o batch "TestaTudo.bat". Ele executará o arcabouço de testes, analisando
-os três scripts de testes e gerará três logs de saída distintos:
+os três scripts de testes e gerará três logs de saída distintos e dois acumulares de contadores:
 
-* SaidaTesteListaComDeturp.log	...	log da execução de TesteVerificaLista.script
-* SaidaTesteListaRelease.log	...	log da execução de TesteLista.script
-* SaidaTesteListaSemDeturp.log	...	log da execução de TesteVerificaListaSemDeturpacoes.script
+* SaidaTesteListaComDeturp.log		...	log da execução de TesteVerificaLista.script
+* SaidaTesteListaRelease.log		...	log da execução de TesteLista.script
+* SaidaTesteListaSemDeturp.log		...	log da execução de TesteVerificaListaSemDeturpacoes.script
+
+* ContadoresListaComDeturp.count	...	contadores de TesteVerificaLista.script
+* ContadoresListaSemDeturp.count	...	contadores de TesteVerificaListaSemDeturpacoes.script
