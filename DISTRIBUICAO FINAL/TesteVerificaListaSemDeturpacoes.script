@@ -35,7 +35,7 @@
 =declararparm   pNaoNULL       int  1
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
-=declararparm   ArqCntSaida     string "ContadoresLista.count"
+=declararparm   ArqCntSaida     string "ContadoresListaSemDeturp.count"
 
 == Inicializar contador
 =inicializarcontadores ""

@@ -1,0 +1,246 @@
+
+
+LES - Laboratório de Engenharia de Software DI/PUC-Rio
+      Arcabouço de teste de módulos C  (c) 2006
+
+---------------------------------------------
+      Construto sob teste: TRAB4-1.exe
+
+      Arquivo de teste:    TesteVerificaLista.script
+
+
+!!!    0  Linha:     1  //////////////////////////////////////////////////////////////////////////////// 
+!!!    0  Linha:     2  // 
+!!!    0  Linha:     3  // 	Script:    TesteVerificaLista.script 
+!!!    0  Linha:     4  // 	Autor:     Guilherme Dantas 
+!!!    0  Linha:     5  // 	Data:      03/12/2018 
+!!!    0  Linha:     6  // 	Propósito: Testa a função deturpa e verifica na estrutura de LISTA 
+!!!    0  Linha:     7  // 
+!!!    0  Linha:     8  //////////////////////////////////////////////////////////////////////////////// 
+   10  == Inicializar valores
+   75  == Inicializar contador
+   81  == Verificar lista vazia
+>>>    1  Linha:    82  Tentou verificar cabeça de lista inexistente. 
+<<<    0  Linha:    83  Falhas registradas eram esperadas e foram recuperadas. 
+   85  == Criar lista
+   89  == Deturpar ponteiro fim, orig e corr, mas a lista é vazia então OK
+   95  == Deturpar ponteiro fim, orig e corr para lista com um elemento
+>>>    1  Linha:   100  Campo de número de elementos incorreto (percorrendo pela origem). Deveria ser: 0  É: 1
+>>>    2  Linha:   100  Campo de número de elementos incorreto (percorrendo pelo final). Deveria ser: 0  É: 1
+>>>    3  Linha:   100  Vazamento de espaço de memória detectado. 
+>>>    4  Linha:   100  Vazamento de espaço de memória detectado. 
+>>>    5  Linha:   100  O número de elementos é inconsistente. 
+<<<    0  Linha:   101  Falhas registradas eram esperadas e foram recuperadas. 
+  104  == Deturpar ponteiro para lista, liberando-a com free ( pLista != NULL )
+>>>    1  Linha:   108  Controle do espaço acusou erro. 
+<<<    0  Linha:   109  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   110  // Não é preciso destruir a lista, pois já foi liberada 
+  112  == Verificar ponteiro que não aponta para uma lista
+>>>    1  Linha:   113  Id do tipo do espaço de dados não é cabeça de lista. Deveria ser: 2  É: 0
+<<<    0  Linha:   114  Falhas registradas eram esperadas e foram recuperadas. 
+  116  == Deturpar lista para que ponteiros da cabeça aponte para lixo
+>>>    1  Linha:   122  Controle do espaço acusou erro. 
+>>>    2  Linha:   122  Controle do espaço acusou erro. 
+>>>    3  Linha:   122  Controle do espaço acusou erro. 
+<<<    0  Linha:   123  Falhas registradas eram esperadas e foram recuperadas. 
+>>>    1  Linha:   125  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   125  Vazamento de espaço de memória detectado. 
+>>>    3  Linha:   125  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   126  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   127  // Os três espaços que vazaram são a lista, a estrutura e o elemento. 
+!!!    0  Linha:   128  // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que 
+!!!    0  Linha:   129  // acessa ao ponteiro origem, que está com LIXO! 
+  131  == Deturpar lista para que ponteiros da cabeça aponte para a lista
+>>>    1  Linha:   137  Id do tipo do espaço de dados não é elemento. Deveria ser: 1  É: 2
+>>>    2  Linha:   137  Id do tipo do espaço de dados não é elemento. Deveria ser: 1  É: 2
+>>>    3  Linha:   137  Id do tipo do espaço de dados não é elemento. Deveria ser: 1  É: 2
+<<<    0  Linha:   138  Falhas registradas eram esperadas e foram recuperadas. 
+>>>    1  Linha:   140  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   140  Vazamento de espaço de memória detectado. 
+>>>    3  Linha:   140  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   141  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   142  // [!] Não é chamada a função de destruir a lista, pois o programa voará, já que 
+!!!    0  Linha:   143  // acessa ao ponteiro origem, que está apontando para LISTA! 
+  145  == Deturpa lista, desencadeando nó corrente, mas sem liberá-lo
+>>>    1  Linha:   153  Campo de número de elementos incorreto (percorrendo pela origem). Deveria ser: 2  É: 3
+>>>    2  Linha:   153  Não achou elemento corrente (percorrendo pela origem). 
+>>>    3  Linha:   153  Campo de número de elementos incorreto (percorrendo pelo final). Deveria ser: 2  É: 3
+>>>    4  Linha:   153  Não achou elemento corrente (percorrendo pelo final). 
+>>>    5  Linha:   153  O número de elementos é inconsistente. 
+<<<    0  Linha:   154  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   155  // Não há vazamento pois o ponteiro pCorr da cabeça ainda aponta para o elemento desencadeado 
+!!!    0  Linha:   156  // Como perecebeu-se a contagem de elementos diferiu da calculada através do percorrimento 
+!!!    0  Linha:   157  // da lista por ambos os sentidos. 
+>>>    1  Linha:   160  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   160  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   161  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   162  // Aqui são liberados dois espaços: o elemento e estrutura desencadeados. 
+!!!    0  Linha:   163  // Não foram liberados na função Destruirlista pois esta não faz uso do ponteiro para 
+!!!    0  Linha:   164  // elemento corrente mas sim do ponteiro para origem. 
+  166  == Deturpa contador de elementos para número negativo
+>>>    1  Linha:   170  Campo de número de elementos incorreto (percorrendo pela origem). Deveria ser: 1  É: -1
+>>>    2  Linha:   170  Campo de número de elementos incorreto (percorrendo pelo final). Deveria ser: 1  É: -1
+>>>    3  Linha:   170  Número de elementos negativo. 
+>>>    4  Linha:   170  O número de elementos é inconsistente. 
+<<<    0  Linha:   171  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   172  // Além de verificado que o número não corresponde ao número real de elementos na lista, 
+!!!    0  Linha:   173  // o verificador percebe que o número de elementos é negativo. 
+  176  == Deturpa ponteiro corrente de lista vazia para apontar para novo elemento
+>>>    1  Linha:   179  pCorr deve ser NULL para numElem = 0. 
+<<<    0  Linha:   180  Falhas registradas eram esperadas e foram recuperadas. 
+>>>    1  Linha:   183  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   183  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   184  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   185  // É necessário liberar o elemento e a estrutura, pois a função DestruirLista não 
+!!!    0  Linha:   186  // leva em consideração o ponteiro pCorr porque assume que este aponta para um elemento 
+!!!    0  Linha:   187  // pertecente à lista (através dos ponteiros pOrigem e pFinal) 
+  189  == Deturpa lista unitária ao anular ponteiro corrente
+>>>    1  Linha:   193  Não achou elemento corrente (percorrendo pela origem). 
+>>>    2  Linha:   193  Não achou elemento corrente (percorrendo pelo final). 
+>>>    3  Linha:   193  pCorr deve ser diferente de NULL para numElem = 1. 
+>>>    4  Linha:   193  pFinal e pCorr devem apontar para o mesmo elemento para numElem = 1. Deveria ser: 004EB672  É: 00000000
+>>>    5  Linha:   193  pOrig e pCorr devem apontar para o mesmo elemento para numElem = 1. Deveria ser: 004EB672  É: 00000000
+<<<    0  Linha:   194  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   196  // Como o ponteiro corrente é nulo, não é possível localizá-lo ao percorrer a lista 
+!!!    0  Linha:   197  // Além disso, foi sinalizado que pCorr = pOrig para numElem = 1 e que pCorr = pFinal 
+!!!    0  Linha:   198  // para numElem = 1, o que é coerente. 
+  200  == Deturpa lista unitária com origem apontando para outro elemento
+>>>    1  Linha:   204  Não achou elemento corrente (percorrendo pela origem). 
+>>>    2  Linha:   204  pOrig e pFinal devem apontar para o mesmo elemento para numElem = 1. Deveria ser: 004EBC12  É: 004EBB82
+>>>    3  Linha:   204  pOrig e pCorr devem apontar para o mesmo elemento para numElem = 1. Deveria ser: 004EBC12  É: 004EBB82
+>>>    4  Linha:   204  Elemento corrente tem pAnt nulo mas não é origem da lista. Deveria ser: 004EBB82  É: 004EBC12
+<<<    0  Linha:   205  Falhas registradas eram esperadas e foram recuperadas. 
+>>>    1  Linha:   208  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   208  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   209  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   210  // Não achou elemento corrente ao pecorrer pela origem pois a origem aponta para 
+!!!    0  Linha:   211  // outro elemento. Já pelo final, o elemento corrente foi achado normalmente. 
+!!!    0  Linha:   212  // Naturalmente, pOrigem e pFinal são diferente, como é o foco principal desse caso 
+!!!    0  Linha:   213  // de teste. A mesma coisa para pOrigem e pCorr. 
+!!!    0  Linha:   214  // O elemento da lista original não é excluído pois pOrigem aponta para outro 
+!!!    0  Linha:   215  // elemento (criado ""artificialmente""). Portanto este elemento e a estrutura 
+!!!    0  Linha:   216  // que aponta devem ser liberados. 
+  218  == Deturpa lista com mais de um elemento ao anular ponteiro corrente
+>>>    1  Linha:   224  Não achou elemento corrente (percorrendo pela origem). 
+>>>    2  Linha:   224  Não achou elemento corrente (percorrendo pelo final). 
+>>>    3  Linha:   224  pCorr deve ser diferente de NULL para numElem > 1. 
+<<<    0  Linha:   225  Falhas registradas eram esperadas e foram recuperadas. 
+  228  == Deturpa elemento corrente, fazendo pCab nulo
+>>>    1  Linha:   232  Elemento corrente não faz parte da lista. Deveria ser: 004EBAF2  É: 00000000
+<<<    0  Linha:   233  Falhas registradas eram esperadas e foram recuperadas. 
+  236  == Deturpa lista, duplicando elemento corrente
+>>>    1  Linha:   244  Não achou elemento corrente (percorrendo pelo final). 
+>>>    2  Linha:   244  Elemento corrente não está corretamente encadeado pela direita. Deveria ser: 004EBEE2  É: 004EB942
+<<<    0  Linha:   245  Falhas registradas eram esperadas e foram recuperadas. 
+>>>    1  Linha:   247  Não achou elemento corrente (percorrendo pelo final). 
+>>>    2  Linha:   247  Elemento corrente tem pAnt nulo mas não é origem da lista. Deveria ser: 004EBEE2  É: 004EB282
+>>>    3  Linha:   247  Elemento corrente não está corretamente encadeado pela direita. Deveria ser: 004EBEE2  É: 004EB942
+<<<    0  Linha:   248  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   249  // Elemento corrente não é origem mas tem pAnt nulo, não interferindo na 
+!!!    0  Linha:   250  // contagem de números por percurso. Além disso, causa erro de encadeamento 
+!!!    0  Linha:   251  // pela direita e o percurso do final para origem não acha o elemento 
+!!!    0  Linha:   252  // corrente pela configuração dos ponteiros pAnt e pProx. 
+>>>    1  Linha:   255  Não achou elemento corrente (percorrendo pela origem). 
+>>>    2  Linha:   255  Elemento corrente não está corretamente encadeado pela esquerda. Deveria ser: 004EB942  É: 004EBEE2
+<<<    0  Linha:   256  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   257  // Esta é um pouco difícil de entender. Basicamente, temos uma lista em que, 
+!!!    0  Linha:   258  // se caminharmos da origem para o final, perpassamos o elemento corrente, 
+!!!    0  Linha:   259  // mas se caminharmos do final para a origem, perpassamos o elemento clonado 
+!!!    0  Linha:   260  // ( mesmo pCab, pProx, pAnt ). Isso nos permite verificar dois contadores 
+!!!    0  Linha:   261  // que dizem respeito ao fundamento básico de uma lista duplamente encadeada: 
+!!!    0  Linha:   262  // O caminho que se faz em um sentido é o oposto do que se faz pelo outro, 
+!!!    0  Linha:   263  // que é desobedecido nesse caso de teste. 
+>>>    1  Linha:   265  Não achou elemento corrente (percorrendo pela origem). 
+>>>    2  Linha:   265  Elemento corrente não está corretamente encadeado pela esquerda. Deveria ser: 004EB942  É: 004EBEE2
+>>>    3  Linha:   265  Elemento corrente tem pProx nulo mas não é fim da lista. Deveria ser: 004EB942  É: 004EB792
+<<<    0  Linha:   266  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   267  // Elemento clonado não é final mas tem pProx nulo, não interferindo na 
+!!!    0  Linha:   268  // contagem de números por percurso. Além disso, causa erro de encadeamento 
+!!!    0  Linha:   269  // pela esquerda e o percurso da origem para o final não acha o elemento 
+!!!    0  Linha:   270  // clonado pela configuração dos ponteiros pAnt e pProx. 
+>>>    1  Linha:   273  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   273  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   274  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   275  // O espaço clonado não é liberado pois quando a lista é percorrida pela 
+!!!    0  Linha:   276  // função DestruirLista, vai da origem para o final. Portanto, deve-se 
+!!!    0  Linha:   277  // liberar tanto este elemento clonado quanto a estrutura apontada por ele. 
+  279  == Deturpa tipo de valor do elemento corrente
+>>>    1  Linha:   283  Elemento corrente tem tipo de valor diferente da cabeça. Deveria ser: 's'  É: 't'
+<<<    0  Linha:   284  Falhas registradas eram esperadas e foram recuperadas. 
+  287  == Deturpa tamanho para número negativo
+>>>    1  Linha:   291  Elemento corrente acusa tamanho negativo 
+>>>    2  Linha:   291  Tamanho da estrutura apontada pelo elemento corrente não confere Deveria ser: -1  É: 8
+<<<    0  Linha:   292  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   293  // Veja que, além de acusar que o número é negativo, acusa que é diferente 
+!!!    0  Linha:   294  // do real tamanho do espaço alocado 
+  297  == Deturpar pValor, apontando para lixo
+>>>    1  Linha:   301  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   301  Controle do espaço acusou erro. 
+<<<    0  Linha:   302  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   303  // Como o ponteiro pValor aponta para lixo, a antiga estrutura antes apontada 
+!!!    0  Linha:   304  // por pCorr->pValor agora está "perdida no limbo"... Por isso o verificador 
+!!!    0  Linha:   305  // acusa vazamento de memória, que é sanada logo em seguida, sendo liberada. 
+!!!    0  Linha:   306  // Além disso, o verificador acusa que há espaço apontado por pValor -- o que 
+!!!    0  Linha:   307  // é óbvio, pois aponta para lixo. 
+>>>    1  Linha:   309  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   309  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   310  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   311  // Não é chamada a função destruirLista, pois esta tentaria liberar pValor, 
+!!!    0  Linha:   312  // que aponta para lixo... Então liberamos a memória do jeito "burocrático". 
+!!!    0  Linha:   313  // Duas estruturas são liberadas: a cabeça e o elemento. 
+!!!    0  Linha:   314  // Como o ponteiro para lista não é nula, o módulo de teste não 
+!!!    0  Linha:   315  // permitirá que uma nova lista será criada neste lugar, por isso, como 
+!!!    0  Linha:   316  // já se fez neste mesmo script diversas vezes, será usado outro índice do 
+!!!    0  Linha:   317  // vetor de listas para alocar a nova lista. 
+  319  == Deturpa pValor, apontando para o próprio elemento
+>>>    1  Linha:   323  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   323  Id do tipo do espaço de dados não é estrutura. Deveria ser: 3  É: 1
+<<<    0  Linha:   324  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   325  // Duas falhas são levantadas: a estrutura é "perdida no limbo" pois nenhum 
+!!!    0  Linha:   326  // ponteiro na estrutura aponta para ela, e o espaço apontado por pValor não 
+!!!    0  Linha:   327  // corresponde a uma estrutura, mas sim a um elemento. A estrutura é liberada 
+!!!    0  Linha:   328  // ao percorrer a LEA. 
+>>>    1  Linha:   330  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   330  Vazamento de espaço de memória detectado. 
+<<<    0  Linha:   331  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   332  // Novamente não é chamada a função destruirLista, pois tentaria liberar o 
+!!!    0  Linha:   333  // espaço do elemento duas vezes. Na segunda vez, o programa voaria. 
+!!!    0  Linha:   334  // Duas estruturas são liberadas: a cabeça e o elemento. 
+  336  == Deturpar lista com elemento com pValor nulo, modificando tam para 1.
+>>>    1  Linha:   341  Vazamento de espaço de memória detectado. 
+>>>    2  Linha:   341  Elemento corrente sem estrutura acusa tamanho diferente de zero 
+<<<    0  Linha:   342  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   343  // Duas falhas ocorrem: vazamento de memória da estrutura que para de ser apontada 
+!!!    0  Linha:   344  // por pCorr->pValor, que é logo em seguida liberada, e tamanho diferente de zero 
+!!!    0  Linha:   345  // para elemento com pValor NULL. 
+  348  == Fazendo pAnt e pProx apontarem para lixo
+>>>    1  Linha:   353  Controle do espaço acusou erro. 
+>>>    2  Linha:   353  Controle do espaço acusou erro. 
+<<<    0  Linha:   354  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   355  // Foram acusadas duas falhas pois os dois ponteiros pAnt e pProx apontam para lixo 
+!!!    0  Linha:   358  // Escolheu-se deturpar os ponteiros pProx e pAnt para NULL novamente somente para 
+!!!    0  Linha:   359  // a última lista do vetor ser reutilizada para o próximo caso de teste, mas poder-se-ia 
+!!!    0  Linha:   360  // ter usado os comandos de varredura de espaços inativos, como tem-se empregado ao 
+!!!    0  Linha:   361  // decorrer desse script... Desse modo, pode-se usar a função DestruirLista 
+  364  == Fazer pAnt e pProx apontarem para cabeça
+>>>    1  Linha:   369  Id do tipo do espaço de dados não é elemento. Deveria ser: 1  É: 2
+>>>    2  Linha:   369  Id do tipo do espaço de dados não é elemento. Deveria ser: 1  É: 2
+<<<    0  Linha:   370  Falhas registradas eram esperadas e foram recuperadas. 
+!!!    0  Linha:   371  // Foram acusadas duas falhas pois os dois ponteiros pAnt e pProx apontam para cabeça 
+!!!    0  Linha:   374  // Escolheu-se deturpar os ponteiros pProx e pAnt para NULL novamente somente para 
+!!!    0  Linha:   375  // a última lista do vetor ser reutilizada para o próximo caso de teste, mas poder-se-ia 
+!!!    0  Linha:   376  // ter usado os comandos de varredura de espaços inativos, como tem-se empregado ao 
+!!!    0  Linha:   377  // decorrer desse script... Desse modo, pode-se usar a função DestruirLista 
+  380  == Verificar que não há vazamento
+  384  == Terminar contador
+!!!    0  Linha:   390  // fim 
+
+!!! Número de linhas lidas:         390
+!!! Número de casos de teste:        27
+!!! Número comandos corretos:       240
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

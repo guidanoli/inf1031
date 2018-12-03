@@ -70,7 +70,7 @@
 =declararparm   DeturpaProxApontaCab  int 29
 
 =declararparm	ArqDefCnt      	string "DefContadoresLista.def"
-=declararparm   ArqCntSaida     string "ContadoresLista.count"
+=declararparm   ArqCntSaida     string "ContadoresListaComDeturp.count"
 
 == Inicializar contador
 =inicializarcontadores ""

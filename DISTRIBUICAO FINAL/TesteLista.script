@@ -1,15 +1,8 @@
-////////////////////////////////////////////////////////////////////////////////
+// Script:    TesteLista.script
+// Autor:     Arndt von Staa
+// Data:      02/abr/2008
+// Propósito: Testar superficialmente o módulo lista genérica duplamente encadeada
 //
-// 	Script:    TesteLista.script
-// 	Autores:   Arndt von Staa, Guilherme Dantas
-// 	Data:      02/abr/2008, 30/11/2018, respectivamente
-// 	Propósito: Testar superficialmente o módulo lista genérica duplamente
-//                 encadeada e verificar a estrutura. Este módulo não tem como
-//                 intuito contribuir para os casos testes. Nenhum contador é
-//                 alterado. Prova no final que não há vazamento de memória
-//                 (quanto ao módulo LISTA ou TESTLIS).
-//
-////////////////////////////////////////////////////////////////////////////////
 
 == Inicializar valores
 =declararparm   lista0  int 0
@@ -21,67 +14,44 @@
 =declararparm   str2    string  "xxx"
 =declararparm   str3    string  "xpto"
 
-=declararparm   corr	string  "ElemCorr"
-
 =declararparm   OK             int  0
 =declararparm   ListaVazia     int  1
 =declararparm   FimLista       int  2
 =declararparm   NaoAchou       int  3
 =declararparm   FaltouMemoria  int  4
-=declararparm   ErroEstrutura  int  5
-=declararparm   ErroParam      int  6
 
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
 
-=declararparm	ArqDefCnt      	string "DefContadoresLista.def"
-=declararparm   ArqCntSaida     string "ContadoresLista.count"
-
-== Inicializar contador
-=inicializarcontadores ""
-=lercontadores ArqDefCnt
-=registraracumulador ArqCntSaida
-=iniciarcontagem
-
 == Criar a lista 0
 =criarlista      lista0 
-=verificar lista0 0
 
 == Verificar ObterValor relativo a lista vazia
 =obtervalorelem  lista0   "???"     pNULL
 
 == Inserir elemento em lista vazia
 =inselemantes    lista0   str0   OK
-=verificar lista0 0
 =obtervalorelem  lista0   str0   pNaoNULL
 
 == Inserir elemento após primeiro
 =inselemapos     lista0   str1   OK
-=verificar lista0 0
 =obtervalorelem  lista0   str1   pNaoNULL
 
 == Inserir elemento antes do último
 =inselemantes    lista0   str2   OK
-=verificar lista0 0
 =obtervalorelem  lista0   str2   pNaoNULL
 
 == Excluir elemento do meio
 =obtervalorelem  lista0   str2   pNaoNULL
-=verificar lista0 0
 =excluirelem     lista0             OK
-=verificar lista0 0
 
 == Excluir elemento do início
 =obtervalorelem  lista0   str0   pNaoNULL
-=verificar lista0 0
 =excluirelem     lista0             OK
-=verificar lista0 0
 
 == Excluir elemento final, único 
 =obtervalorelem  lista0   str1   pNaoNULL
-=verificar lista0 0
 =excluirelem     lista0             OK
-=verificar lista0 0
 
 == Ver se a lista ficou vazia
 =obtervalorelem  lista0   "???"     pNULL
@@ -91,15 +61,11 @@
 
 == Criar uma lista com dois elementos
 =criarlista      lista1 
-=verificar lista1 0
 =inselemapos     lista1   str0   OK
-=verificar lista1 0
 =inselemapos     lista1   str1   OK
-=verificar lista1 0
 
 == Esvaziar a lista e ver se ficou vazia
 =esvaziarlista   lista1
-=verificar lista1 0
 =obtervalorelem  lista1   "???"     pNULL
 
 == Destruir a lista
@@ -107,79 +73,40 @@
 
 == Criar uma lista com quatro elementos
 =criarlista      lista2 
-=verificar lista2 0
 =inselemapos     lista2   str0   OK
-=verificar lista2 0
 =inselemapos     lista2   str1   OK
-=verificar lista2 0
 =inselemapos     lista2   str2   OK
-=verificar lista2 0
 =inselemapos     lista2   str3   OK
 
 == Verificar a lista de trás para diante
 =obtervalorelem  lista2   str3   pNaoNULL
 =avancarelem     lista2   -1     OK
-=verificar lista2 0
 =obtervalorelem  lista2   str2   pNaoNULL
 =avancarelem     lista2   -1     OK
-=verificar lista2 0
 =obtervalorelem  lista2   str1   pNaoNULL
 =avancarelem     lista2   -1     OK
-=verificar lista2 0
 =obtervalorelem  lista2   str0   pNaoNULL
 =avancarelem     lista2   -1     FimLista
-=verificar lista2 0
 
 == Verificar a lista de frente para trás
 =obtervalorelem  lista2   str0   pNaoNULL
 =avancarelem     lista2   1      OK
-=verificar lista2 0
 =obtervalorelem  lista2   str1   pNaoNULL
 =avancarelem     lista2   1      OK
-=verificar lista2 0
 =obtervalorelem  lista2   str2   pNaoNULL
 =avancarelem     lista2   1      OK
-=verificar lista2 0
 =obtervalorelem  lista2   str3   pNaoNULL
 =avancarelem     lista2   1      FimLista
-=verificar lista2 0
 
 == Verificar a lista andando demais de trás para diante
 =avancarelem     lista2   -10     FimLista
-=verificar lista2 0
 =obtervalorelem  lista2   str0   pNaoNULL
 
 == Verificar a lista andando demais de frente para trás
 =avancarelem     lista2   10     FimLista
-=verificar lista2 0
 =obtervalorelem  lista2   str3   pNaoNULL
-
-== Procurar valor inexistente
-=procurarvalor lista2 str2 NaoAchou
-=verificar lista2 0
-
-== Procurar valor do elemento corrente
-=procurarvalor lista2 corr OK
-=verificar lista2 0
-
-== Ir início e fim da lista
-=irinicio lista2
-=verificar lista2 0
-=irfinal lista2
-=verificar lista2 0
 
 == Destruir a lista
 =destruirlista   lista2
-
-== Verificar que não há vazamento
-=tornarinativos
-=liberaresplista 0
-
-== Terminar contador
-=pararcontagem
-=gravarcontadores ArqCntSaida
-=verificarcontagens 37
-=AceitaFalhasAcumuladas 37
-=terminarcontadores
 
 // fim

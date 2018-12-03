@@ -1,0 +1,3 @@
+﻿Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
+-------------------------------------------------------------------------------------------------------------------
+DD/MM	HH:MM			--				--
