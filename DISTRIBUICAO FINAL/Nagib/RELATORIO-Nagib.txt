@@ -1,3 +1,11 @@
 ﻿Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
-12/11	1h			estudar				Ler enunciado, CESPDIN.H e CONTA.H
+12/11   1h                      estudar                         Ler enunciado, CESPDIN.H e CONTA.H
+21/11	1h			codificar módulo		Alteração da estrutura de Lista para adição dos
+								campos tam, pCab, TipoValor no elemento, e TipoValor
+								na cabeça, além da devida implementação da atribuição
+								desses valores aos seus devidos campos.
+21/11	1h			projetar			Fazer modelo da lista até o momento, com as
+								modificações descritas acima.
+30/11   1.5h                    codificar módulo                Fazer a função de deturpação com 10 tipos de 
+								deturpação iniciais.
