@@ -1,0 +1,92 @@
+*********************************
+ARCABOUÇO DE TESTE AUTOMATIZADO
+PARA MÓDULO LISTA INSTRUMENTADO
+--------------------------------
+   PUC-Rio INF1301 2018.2 T4
+*********************************
+
+Professor: Flávio Bevilacqua
+Turma: 3WB
+Membros do trio:
+	Caique Soares
+	Guilherme Dantas
+	Nagib Suaid
+
+[ Diretórios ]
+.\Caique	relatório e caderno de Caique
+.\Guilherme	relatório e caderno de Guilherme
+.\Nagib		relatório e caderno de Nagib
+.\Tabelas	tabelas de tipos de espaços de dados
+
+[ Arquivos ]
+
+	-- BATCHES --
+	TestaTudo.bat	...	roda todos os scripts incluídos na pasta com os
+				correspondentes constructos
+
+	-- BIBLIOTECAS --
+		
+		-ESTÁTICAS:
+		ArcaboucoTeste.lib	...	Arcabouço de teste
+
+		-DINÂMICAS:
+		<não há>
+
+	-- CONSTRUTOS --
+	TRAB4-1.EXE	...	testa o módulo LISTA VERSÃO DEBUG (INSTRUMENTADO)
+	TRAB4-2.EXE	...	testa o módulo LISTA VERSÃO RELEASE
+
+	-- ESCLARECIMENTOS --
+	LEIAME.txt		...	este documento
+	T4-GUICAINAG.pdf	...	Modelo, assertivas estruturais, comandos
+					usados no módulo de testes e modos de deturpação
+
+	-- MÓDULOS --
+
+		- IMPLEMENTAÇÃO:
+		CESPDIN.C	Controlador de espaços de dados alocados dinamicamente
+		CONTA.C		Contadores de passagem
+		GERAALT.C	Gerador de números aleatórios
+		INTRPCNT.C	Interpretador de contadores
+		LISTA.C		Lista duplamente encadeada
+		TABSIMB.C	Tabela de símbolos
+		TESTLIS.C	Teste lista duplamente encadeada
+
+		- DEFINIÇÃO:
+		CESPDIN.H	Controlador de espaços de dados alocados dinamicamente
+		CONTA.H		Contadores de passagem
+		GENERICO.H	Controlador de teste genérico
+		GERAALT.H	Gerador de números aleatórios
+		INTRPCNT.H	Interpretador de contadores
+		LERPARM.H	Ler parâmetros de comandos
+		LISTA.H		Lista duplamente encadeada
+		TABSIMB.H	Tabela de símbolos
+		TST_ESPC.H	Interface de teste específico
+
+	-- SCRIPTS --
+	TesteLista.script				Testa lista ( versão release - TRAB4-2.EXE )
+	TesteVerificaLista.script			Testa lista c/ deturpação ( versão debug - TRAB4-1.EXE )
+	TesteVerificaListaSemDeturpacoes.script		Testa lista s/ deturpação ( versão debug - TRAB4-1.EXE )
+
+	-- TABELAS --
+	DefContadoresLista.def		Definição dos contadores
+	Tabelas\IdTiposEspaco.def	Definição dos espaços de dados padrões
+	Tabelas\TiposEspacosLista.def	Definição dos espaços de dados do módulo LISTA
+
+[ Funcionalidades ]
+
+Para gerar o log de saída, basta rodar o batch "TestaTudo.bat". Ele executará o arcabouço de testes, analisando
+os três scripts de testes e gerará três logs de saída distintos e dois arquivos de totalização de contadores:
+
+>> LOGS DE SAÍDA
+
+	* SaidaTesteListaComDeturp.log		...	log da execução de TesteVerificaLista.script
+	* SaidaTesteListaRelease.log		...	log da execução de TesteLista.script
+	* SaidaTesteListaSemDeturp.log		...	log da execução de TesteVerificaListaSemDeturpacoes.script
+
+>> ARQUIVOS DE TOTALIZAÇÃO DOS CONTADORES
+
+	* ContadoresListaComDeturp.count	...	contadores de TesteVerificaLista.script
+	* ContadoresListaSemDeturp.count	...	contadores de TesteVerificaListaSemDeturpacoes.script
+
+OBS: Os arquivos de totalização dos contadores serão gerados apenas após rodar o batch "TestaTudo.bat".

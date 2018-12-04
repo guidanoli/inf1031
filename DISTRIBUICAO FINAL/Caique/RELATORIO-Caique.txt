@@ -1,4 +1,3 @@
-Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
+﻿Data	Horas Trabalhadas	Tipo de Tarefa			Descrição da Tarefa Realizada
 -------------------------------------------------------------------------------------------------------------------
-
-12/11 1h estudar Ler enunciado, CESPDIN.H e CONTA.H
+12/11	1h			estudar				Ler enunciado, CESPDIN.H e CONTA.H
